@@ -1,0 +1,24 @@
+{
+  "name": "opdb-base-repository",
+  "version": "0.0.1",
+  "description": "OpBD Base Repository",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpDatabase/base.git"
+  },
+  "author": "OpDB / Marvin Scharle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpDatabase/base/issues"
+  },
+  "homepage": "https://github.com/OpDatabase/base#readme",
+  "devDependencies": {
+    "prettier": "^1.19.1",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  }
+}
