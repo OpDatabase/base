@@ -18,7 +18,7 @@ jobs:
           # file: # optional
           # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
           # flags: # optional
-          # Specify the location of the .codecov.yml config file
-          yml: ./.codecov.yml
+          # Specify the location of the codecov.yml config file
+          yml: codecov.yml
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
           # fail_ci_if_error: # optional
