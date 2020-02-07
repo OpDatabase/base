@@ -4,6 +4,24 @@ on:
   - pull_request
 
 jobs:
+  Build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+            - run: yarn
+            - run: cd src/base && yarn
+            - run: yarn test
+              env:
+                CI: true
+
   Codecov:
     runs-on: ubuntu-latest
     steps:
