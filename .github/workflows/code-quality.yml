@@ -1,0 +1,24 @@
+name: Code Quality Check
+on:
+  - push
+  - pull_request
+
+jobs:
+  Codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.5
+        with:
+          # User defined upload name. Visible in Codecov UI
+          name: opdb/base
+          # Repository upload token - get it from codecov.io
+          token: ${{ secrets.CODECOV_API_TOKEN }}
+          # Path to coverage file to upload
+          # file: # optional
+          # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
+          # flags: # optional
+          # Specify the location of the .codecov.yml config file
+          # yml: # optional
+          # Specify whether or not CI build should fail if Codecov runs into an error during upload
+          # fail_ci_if_error: # optional
