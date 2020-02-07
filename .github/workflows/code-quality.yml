@@ -16,11 +16,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-            - run: yarn
-            - run: cd src/base && yarn
-            - run: yarn test
-              env:
-                CI: true
+      - run: yarn
+      - run: cd src/base && yarn
+      - run: yarn test
+        env:
+          CI: true
 
   Codecov:
     runs-on: ubuntu-latest
