@@ -7,7 +7,7 @@ export class Logger {
   /**
    * The logger that shall be used for printing out information.
    */
-  public static defaultLogger = console;
+  public static defaultLogger: ConsoleHandler = console;
 
   /**
    * Logs the execution of an SQL query.
@@ -93,4 +93,24 @@ export interface LogQueryPlaceholderPayload {
    */
   // tslint:disable-next-line:no-any
   value: any;
+}
+
+export interface ConsoleHandler {
+  /**
+   * Default console output.
+   */
+  // tslint:disable-next-line:no-any
+  log(...args: any[]): any;
+
+  /**
+   * Error console output.
+   */
+  // tslint:disable-next-line:no-any
+  error(...args: any[]): any;
+
+  /**
+   * Debug console output.
+   */
+  // tslint:disable-next-line:no-any
+  debug(...args: any[]): any;
 }
