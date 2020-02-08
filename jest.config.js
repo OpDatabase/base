@@ -13,7 +13,7 @@ module.exports = {
     '^testing-tools/(.*)$': '<rootDir>/testing-tools/$1',
   },
   snapshotSerializers: [],
-  testMatch: ['**/*.spec.(js|jsx|ts|tsx)'],
+  testMatch: ['**/*.spec.(ts|tsx)'],
   testURL: 'http://localhost/',
   collectCoverage: true,
   coveragePathIgnorePatterns: [
@@ -23,6 +23,7 @@ module.exports = {
     'node_modules',
     'exceptions',
     'tests',
+    'dist',
   ],
   coverageThreshold: {
     global: {

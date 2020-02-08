@@ -1,3 +1,4 @@
+import 'zone.js';
 import { MockFailOnConnectAdapter } from '../../tests/mock-fail-on-connect.adapter';
 import { MockAdapter } from '../../tests/mock.adapter';
 import { ConnectionPool } from './connection-pool.class';
