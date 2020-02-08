@@ -1,18 +1,28 @@
 import uuid from 'uuid';
-import { BaseClass } from './base.class';
-import { ZoneNames } from './const/zone-names.enum';
-import { DatabaseClient } from './interfaces/adapter.interfaces';
+import { Base } from './base.class';
+import { ExecutionContextProperties, ZoneNames } from './const/zone-names.enum';
 import { Logger } from './logger.class';
 
+/**
+ * Handles the execution context for each database call.
+ */
 export abstract class ExecutionContext {
+  /**
+   * If set to true, more debug information will be logged.
+   */
   public static showDebugInfo = false;
 
-  public static async create(context: () => Promise<any>, properties: Partial<ExecutionContextProperties> = {}) {
+  /**
+   * Creates a new execution context that wraps all calls inside context.
+   * Additional parameters can be supplied that will be passed inside the context.
+   */
+  // tslint:disable-next-line:no-any
+  public static async create(context: () => Promise<any>, properties: Partial<ExecutionContextProperties> = {}): Promise<void> {
     let closeConnectionOnComplete = false;
 
     // Check if new database client is enforced or given in the current Zone
-    if (properties.__opdb_database_client == null && BaseClass.connection == null) {
-      properties.__opdb_database_client = await BaseClass.connectionPool.getConnection();
+    if (properties.__opdb_database_client == null && Base.connection == null) {
+      properties.__opdb_database_client = await Base.connectionPool.getConnection();
       properties.__opdb_database_client_id = this.random();
       closeConnectionOnComplete = true;
     }
@@ -23,7 +33,7 @@ export abstract class ExecutionContext {
       properties,
     });
 
-    return await new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       zone.runGuarded(async () => {
         try {
           if (this.showDebugInfo) {
@@ -49,7 +59,7 @@ export abstract class ExecutionContext {
 
           // The current Zone initialized the database connection
           // Now: Close the database connection
-          BaseClass.connection?.release();
+          Base.connection?.release();
         }
 
         resolve();
@@ -57,20 +67,26 @@ export abstract class ExecutionContext {
     });
   }
 
+  /**
+   * Wraps the contents of context in a transaction. The transaction will be committed,
+   * once the context is left. On any exception emitted by the context, the transaction
+   * will be aborted.
+   */
+  // tslint:disable-next-line:no-any
   public static async createTransaction(context: () => Promise<any>) {
-    return await this.create(async () => {
+    return this.create(async () => {
       // Initialize Transaction
-      await BaseClass.execute('BEGIN');
+      await Base.execute('BEGIN');
 
       try {
         // Run callback function
         await context();
 
         // Close transaction
-        await BaseClass.execute('COMMIT');
+        await Base.execute('COMMIT');
 
       } catch (e) {
-        await BaseClass.execute('ROLLBACK');
+        await Base.execute('ROLLBACK');
         throw e;
       }
 
@@ -92,8 +108,3 @@ export abstract class ExecutionContext {
   }
 }
 
-export interface ExecutionContextProperties {
-  __opdb_database_client: DatabaseClient;
-  __opdb_database_client_id: string;
-  __opdb_transaction_id: string;
-}

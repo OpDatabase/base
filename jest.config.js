@@ -22,12 +22,12 @@ module.exports = {
     'migrations',
     'node_modules',
   ],
-  // coverageThreshold: {
-  //   global: {
-  //     branches: 99,
-  //     functions: 99,
-  //     lines: 99,
-  //     statements: 99,
-  //   },
-  // },
+  coverageThreshold: {
+    global: {
+      branches: 99,
+      functions: 99,
+      lines: 99,
+      statements: 99,
+    },
+  },
 };

@@ -1,9 +1,18 @@
 import chalk = require('chalk');
 
+/**
+ * OpDB Logger class
+ */
 export class Logger {
+  /**
+   * The logger that shall be used for printing out information.
+   */
   public static defaultLogger = console;
 
-  public static logQuery(prefix: string, sql: string, placeholdersWithName: Array<{ name: string, value: any }>) {
+  /**
+   * Logs the execution of an SQL query.
+   */
+  public static logQuery(prefix: string, sql: string, placeholdersWithName: LogQueryPlaceholderPayload[]) {
     const firstExpression = sql.replace(/ .*/, '').toLowerCase();
     const queryPrefix = chalk.grey(prefix);
     const placeholderSuffixes: string[] = [];
@@ -56,11 +65,32 @@ export class Logger {
     }
   }
 
+  /**
+   * Logs an error.
+   */
+  // tslint:disable-next-line:no-any
   public static error(...params: any[]) {
     this.defaultLogger.error(chalk.bgRed.white(...params));
   }
 
+  /**
+   * Logs an debug statement.
+   */
+  // tslint:disable-next-line:no-any
   public static debug(...params: any[]) {
     this.defaultLogger.debug(chalk.grey(...params));
   }
+}
+
+export interface LogQueryPlaceholderPayload {
+  /**
+   * The name of the placeholder.
+   */
+  name: string;
+
+  /**
+   * The value the placeholder will be exchanged for.
+   */
+  // tslint:disable-next-line:no-any
+  value: any;
 }
