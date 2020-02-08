@@ -14,13 +14,14 @@ import { Logger } from './logger.class';
  * Manages the connections between OpDB and the database.
  */
 export class ConnectionPool {
+  // tslint:disable-next-line:no-any
   private static adapters: { [identifier: string]: DatabaseAdapterConstructor<any> } = {};
   private adapter: DatabaseAdapter | null = null;
 
   /**
    * Registers a new database adapter.
    */
-  public static registerAdapter(type: DatabaseAdapterConstructor<any>): void {
+  public static registerAdapter<T extends DatabaseAdapter>(type: DatabaseAdapterConstructor<T>): void {
     const instance = new type();
     this.adapters[instance.getIdentifier()] = type;
     Logger.debug(`(Connection Pool) Registered adapter "${instance.getIdentifier()}"`);
@@ -59,11 +60,14 @@ export class ConnectionPool {
       throw new ConnectionPoolNoConfigGivenException();
     }
 
+    let connection;
     try {
-      return await this.adapter.getConnection();
+      connection = await this.adapter.getConnection();
     } catch (e) {
       Logger.error(e);
       throw new ConnectionPoolConnectionFailedException();
     }
+
+    return connection;
   }
 }
