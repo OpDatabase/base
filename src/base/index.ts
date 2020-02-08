@@ -5,3 +5,4 @@ export * from './connection-pool.class';
 export * from './execution-context.class';
 export * from './logger.class';
 export * from './interfaces/adapter.interfaces';
+export { ExecutionContextProperties } from './const/zone-names.enum';
