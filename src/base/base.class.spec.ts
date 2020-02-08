@@ -1,4 +1,5 @@
 import 'zone.js';
+import { provideIntrospectPlaceholdersAdapter } from '../../tests/mock-introspect-placeholders.adapter';
 import { MockAdapterException, provideMockAdapter } from '../../tests/mock.adapter';
 import { Base } from './base.class';
 import { ConnectionPool } from './connection-pool.class';
@@ -68,6 +69,15 @@ describe('Base', () => {
       } catch (e) {
         expect(e).toBeInstanceOf(MockAdapterException);
       }
+    });
+
+    it('should pass placeholders properly to client class', async () => {
+      const client = await provideIntrospectPlaceholdersAdapter(passedPlaceholders => {
+        const realPlaceholders = client.resolvePlaceholders('SELECT * FROM test WHERE a = $1', { a: 1 });
+        expect(passedPlaceholders).toEqual(realPlaceholders);
+      });
+
+      await Base.execute('SELECT * FROM test WHERE a = $1', { a: 1 });
     });
   });
 

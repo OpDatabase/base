@@ -31,7 +31,7 @@ export class Base {
       // Therefore: Create new execution context
       let executionContextResult;
       await ExecutionContext.create(async () => {
-        executionContextResult = await Base.execute(sql);
+        executionContextResult = await Base.execute(sql, placeholders);
       });
 
       return executionContextResult;

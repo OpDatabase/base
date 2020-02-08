@@ -59,7 +59,8 @@ export abstract class ExecutionContext {
 
           // The current Zone initialized the database connection
           // Now: Close the database connection
-          Base.connection?.release();
+          // At this instance, there has to be a database client (bang operator).
+          Base.connection!.release();
         }
 
         resolve();
@@ -98,7 +99,7 @@ export abstract class ExecutionContext {
   private static executionContextInfo() {
     return {
       clientId: Zone.current.get(ZoneNames.DatabaseClientId),
-      client: Zone.current.get(ZoneNames.DatabaseClient) == null ? 'null' : 'not null',
+      client: Zone.current.get(ZoneNames.DatabaseClient),
       transactionId: Zone.current.get(ZoneNames.TransactionId),
     };
   }

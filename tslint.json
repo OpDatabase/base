@@ -51,7 +51,7 @@
     "no-inferred-empty-object-type": true,
     "no-invalid-template-strings": true,
     "no-invalid-this": true,
-    "no-return-await": true,
+    "no-return-await": false,
     "no-shadowed-variable": true,
     "no-string-literal": true,
     "no-string-throw": true,
@@ -89,47 +89,6 @@
     "callable-types": true,
     "class-name": true,
     "comment-format": true,
-    "completed-docs": [
-      true,
-      {
-        "enums": {
-          "visibilities": "exported"
-        },
-        "functions": {
-          "visibilities": "exported"
-        },
-        "classes": {
-          "visibilities": "exported"
-        },
-        "enum-members": {
-          "visibilities": "exported"
-        },
-        "interfaces": {
-          "visibilities": "exported"
-        },
-        "methods": {
-          "privacies": [
-            "public",
-            "protected"
-          ]
-        },
-        "namespaces": {
-          "visibilities": "exported"
-        },
-        "properties": {
-          "privacies": [
-            "public",
-            "protected"
-          ]
-        },
-        "types": {
-          "visibilities": "exported"
-        },
-        "variables": {
-          "visibilities": "exported"
-        }
-      }
-    ],
     "encoding": true,
     "file-name-casing": [
       true,
