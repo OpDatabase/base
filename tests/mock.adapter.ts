@@ -50,6 +50,11 @@ export class MockAdapter implements DatabaseAdapter {
 
 // tslint:disable-next-line:max-classes-per-file
 export class MockDatabaseClient implements DatabaseClient {
+  /**
+   * All SQL statements executed by this client.
+   */
+  public executedSqlStatement: string[] = [];
+
   constructor(
     private readonly config: MockAdapterConfig,
   ) {
@@ -63,6 +68,7 @@ export class MockDatabaseClient implements DatabaseClient {
       throw new MockAdapterException();
     }
     Logger.debug('MOCK:', JSON.stringify(input));
+    this.executedSqlStatement.push(input.statement);
 
     return Promise.resolve();
   }

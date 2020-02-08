@@ -21,6 +21,8 @@ module.exports = {
     'testing-tools',
     'migrations',
     'node_modules',
+    'exceptions',
+    'tests',
   ],
   coverageThreshold: {
     global: {
