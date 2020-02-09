@@ -4,6 +4,7 @@
   "description": "OpDB Base Classes",
   "main": "index.js",
   "scripts": {
+    "build": "tsc -p tsconfig.build.json"
   },
   "repository": {
     "type": "git",

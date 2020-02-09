@@ -2,27 +2,25 @@
 
 set -e
 
-export DB_PORT=5433
-export DB_NAME=test-opdb
-export POSTGRES_USER=test-opdb
-export POSTGRES_PASSWORD=test-opdb
+export TEST_PG_DB_PORT=5433
+export TEST_PG_DB_NAME=test-opdb
+export TEST_PG_USER=test-opdb
+export TEST_PG_PASSWORD=test-opdb
+export TEST_PG_DB_URL="postgres://$TEST_PG_USER:$TEST_PG_PASSWORD@127.0.0.1:$TEST_PG_DB_PORT/$TEST_PG_DB_NAME"
 
-(docker kill $DB_NAME || true) > /dev/null 2> /dev/null
+(docker kill $TEST_PG_DB_NAME || true) > /dev/null 2> /dev/null
 docker run \
-  --name $DB_NAME \
+  --name $TEST_PG_DB_NAME \
   --detach --rm \
-  -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-  -e POSTGRES_USER=$POSTGRES_USER \
-  -p $DB_PORT:5432 \
+  -e POSTGRES_PASSWORD=$TEST_PG_PASSWORD \
+  -e POSTGRES_USER=$TEST_PG_USER \
+  -p $TEST_PG_DB_PORT:5432 \
   postgres \
   > /dev/null
 
 sleep 5
 
-# postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
-export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@127.0.0.1:$DB_PORT/${DB_NAME}"
-
 # shellcheck disable=SC2068
-DATABASE_LOGGING="error,warn" yarn jest --config jest.config.js --runInBand $@
+yarn jest --config jest.config.js --runInBand $@
 
-docker kill $DB_NAME > /dev/null
+docker kill $TEST_PG_DB_NAME > /dev/null

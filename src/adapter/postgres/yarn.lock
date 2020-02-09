@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@opdb/base@../../base":
+"@opdb/base@../../../dist/opdb-base":
   version "0.0.1"
   dependencies:
     chalk "^3.0.0"

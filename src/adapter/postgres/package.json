@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "OpDB PostrgeSQL Adapter",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OpDatabase/base.git"
@@ -18,7 +20,7 @@
     "@opdb/base": "^0.0.1"
   },
   "devDependencies": {
-    "@opdb/base": "../../base",
+    "@opdb/base": "../../../dist/opdb-base",
     "@types/pg": "^7.14.1"
   },
   "dependencies": {

@@ -18,6 +18,12 @@ module.exports = {
   testURL: 'http://localhost/',
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+  modulePathIgnorePatterns: [
+    'node_modules',
+    'exceptions',
+    'tests',
+    'dist',
+  ],
   coveragePathIgnorePatterns: [
     'node_modules',
     'exceptions',
