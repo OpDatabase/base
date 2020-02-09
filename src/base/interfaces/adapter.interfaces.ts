@@ -23,14 +23,15 @@ export interface DatabaseClient {
   execute(input: SqlQueryWithTransposedPlaceholders): Promise<any>;
 
   /**
-   * Resolves the given statement and placeholder for a database client specific SQL string.
-   */
-  resolvePlaceholders(statement: string, placeholders?: SqlQueryPlaceholders): SqlQueryWithTransposedPlaceholders;
-
-  /**
    * Releases the connection.
    */
   release(): void;
+
+  /**
+   * If given, this replacement handler will be used instead of the built-in replacement
+   * handler for placeholders inside the SQL statement.
+   */
+  placeholderReplacementHandler?(mark: number): string;
 }
 
 export interface SqlQueryPlaceholders {

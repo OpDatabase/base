@@ -1,14 +1,13 @@
 import {
   Base,
+  BaseException,
   ConnectionPool,
   DatabaseAdapter,
   DatabaseAdapterConfigPayload,
   DatabaseClient,
   Logger,
-  SqlQueryPlaceholders,
   SqlQueryWithTransposedPlaceholders,
 } from '../src/base';
-import { BaseException } from '../src/base/exceptions/exception';
 
 export function provideMockAdapter() {
   beforeEach(() => {
@@ -79,19 +78,6 @@ export class MockDatabaseClient implements DatabaseClient {
   public release(): void {
     // Intentionally blank
   }
-
-  /**
-   * Mocks resolving the placeholders for the given SQL statement.
-   */
-  public resolvePlaceholders(statement: string, placeholders?: SqlQueryPlaceholders): SqlQueryWithTransposedPlaceholders {
-    return {
-      statement,
-      inputPlaceholders: placeholders || {},
-      transposedPlaceholders: [],
-      usedPlaceholders: [],
-    };
-  }
-
 }
 
 // tslint:disable-next-line:max-classes-per-file

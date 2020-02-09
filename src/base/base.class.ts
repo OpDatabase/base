@@ -1,6 +1,7 @@
 import { ConnectionPool } from './connection-pool.class';
 import { ZoneNames } from './const/zone-names.enum';
 import { ExecutionContext } from './execution-context.class';
+import { resolvePlaceholders } from './helper/resolve-placeholders.func';
 import { DatabaseClient, SqlQueryPlaceholders } from './interfaces/adapter.interfaces';
 import { Logger } from './logger.class';
 
@@ -38,7 +39,11 @@ export class Base {
     }
 
     const start = Date.now();
-    const payload = connection.resolvePlaceholders(sql, placeholders);
+    const payload = resolvePlaceholders(
+      sql,
+      placeholders,
+      connection.placeholderReplacementHandler == null ? undefined : connection.placeholderReplacementHandler,
+    );
     const placeholdersWithName = payload.usedPlaceholders.map((name, i) => ({
       name,
       value: payload.transposedPlaceholders[i],

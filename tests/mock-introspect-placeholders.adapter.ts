@@ -4,7 +4,6 @@ import {
   DatabaseAdapter,
   DatabaseAdapterConfigPayload,
   DatabaseClient,
-  SqlQueryPlaceholders,
   SqlQueryWithTransposedPlaceholders,
 } from '../src/base';
 
@@ -36,13 +35,8 @@ export async function provideIntrospectPlaceholdersAdapter(
       // Intentionally blank
     }
 
-    public resolvePlaceholders(statement: string, placeholders?: SqlQueryPlaceholders): SqlQueryWithTransposedPlaceholders {
-      return {
-        statement,
-        inputPlaceholders: placeholders || {},
-        transposedPlaceholders: Object.keys(placeholders || {}),
-        usedPlaceholders: Object.keys(placeholders || {}),
-      };
+    public placeholderReplacementHandler(mark: number): string {
+      return `@${mark}`;
     }
   }
 
