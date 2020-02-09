@@ -1,0 +1,27 @@
+{
+  "name": "@opdb/postgres",
+  "version": "0.0.1",
+  "description": "OpDB PostrgeSQL Adapter",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpDatabase/base.git"
+  },
+  "author": "OpDB / Marvin Scharle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpDatabase/base/issues"
+  },
+  "homepage": "https://github.com/OpDatabase/base#readme",
+  "peerDependencies": {
+    "@opdb/base": "^0.0.1"
+  },
+  "devDependencies": {
+    "@opdb/base": "../../base",
+    "@types/pg": "^7.14.1"
+  },
+  "dependencies": {
+    "pg": "^7.18.1"
+  }
+}
