@@ -12,12 +12,14 @@ export class Logger {
   /**
    * Logs the execution of an SQL query.
    */
+  // tslint:disable-next-line:no-any
   public static logQuery(prefix: string, sql: string, placeholdersWithName: LogQueryPlaceholderPayload[]) {
     const firstExpression = sql.replace(/ .*/, '').toLowerCase();
     const queryPrefix = chalk.grey(prefix);
     const placeholderSuffixes: string[] = [];
 
     for (const placeholder of placeholdersWithName) {
+      // tslint:disable-next-line:no-any
       placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value.toString())}`);
     }
 
@@ -91,8 +93,7 @@ export interface LogQueryPlaceholderPayload {
   /**
    * The value the placeholder will be exchanged for.
    */
-  // tslint:disable-next-line:no-any
-  value: any;
+  value: { toString(): string };
 }
 
 export interface ConsoleHandler {

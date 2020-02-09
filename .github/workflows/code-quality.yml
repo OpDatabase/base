@@ -17,26 +17,37 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
-      - run: cd src/base && yarn
+      - run: yarn build
       - run: yarn test
+        env:
+          CI: true
+
+  Tslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Codecov
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
+      - run: yarn
+      - run: yarn build
+      - run: yarn run tslint -p ./tsconfig.json -c ./tslint.json
         env:
           CI: true
 
   Codecov:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Codecov
-        uses: codecov/codecov-action@v1.0.5
+        uses: actions/setup-node@v1
         with:
-          # User defined upload name. Visible in Codecov UI
-          name: opdb/base
-          # Repository upload token - get it from codecov.io
-          token: ${{ secrets.CODECOV_API_TOKEN }}
-          # Path to coverage file to upload
-          # file: # optional
-          # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
-          # flags: # optional
-          # Specify the location of the codecov.yml config file
-          yml: codecov.yml
-          # Specify whether or not CI build should fail if Codecov runs into an error during upload
-          # fail_ci_if_error: # optional
+          node-version: 13.x
+      - run: yarn
+      - run: yarn build
+      - run: yarn test || true
+      - run: curl -s https://codecov.io/bash | bash
+        env:
+          CI: true
+          CODECOV_TOKEN: ${{ secrets.CODECOV_API_TOKEN }}

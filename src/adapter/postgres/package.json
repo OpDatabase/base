@@ -1,7 +1,7 @@
 {
-  "name": "@opdb/base",
+  "name": "@opdb/postgres",
   "version": "0.0.1",
-  "description": "OpDB Base Classes",
+  "description": "OpDB PostrgeSQL Adapter",
   "main": "index.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json"
@@ -16,14 +16,14 @@
     "url": "https://github.com/OpDatabase/base/issues"
   },
   "homepage": "https://github.com/OpDatabase/base#readme",
-  "dependencies": {
-    "chalk": "^3.0.0",
-    "uuid": "^3.4.0",
-    "zone.js": "^0.10.2"
+  "peerDependencies": {
+    "@opdb/base": "^0.0.1"
   },
   "devDependencies": {
-    "@types/chalk": "^2.2.0",
-    "@types/uuid": "^3.4.7",
-    "@types/zone.js": "^0.5.12"
+    "@opdb/base": "../../../dist/opdb-base",
+    "@types/pg": "^7.14.1"
+  },
+  "dependencies": {
+    "pg": "^7.18.1"
   }
 }

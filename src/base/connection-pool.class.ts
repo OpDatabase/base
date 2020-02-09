@@ -33,15 +33,18 @@ export class ConnectionPool {
    */
   public reset(): void {
     ConnectionPool.adapters = {};
-    this.adapter = null;
+    if (this.adapter != null) {
+      this.adapter.stop();
+      this.adapter = null;
+    }
   }
 
   /**
    * Connects using the given database adapter config.
    */
-  public connect(config: DatabaseAdapterConfigPayload & DatabaseAdapterDeclaration): void {
+  public connect<T extends DatabaseAdapter>(config: DatabaseAdapterConfigPayload & DatabaseAdapterDeclaration): void {
     // Find adapter
-    const adapterConstructor = ConnectionPool.adapters[config.adapter];
+    const adapterConstructor = ConnectionPool.adapters[config.adapter] as DatabaseAdapterConstructor<T>;
     if (adapterConstructor == null) {
       throw new ConnectionPoolInitializeUnknownAdapterException(config.adapter);
     }

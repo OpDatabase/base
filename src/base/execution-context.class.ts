@@ -90,9 +90,6 @@ export abstract class ExecutionContext {
         await Base.execute('ROLLBACK');
         throw e;
       }
-
-      return;
-
     }, { __opdb_transaction_id: this.random() });
   }
 

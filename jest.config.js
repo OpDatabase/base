@@ -1,6 +1,7 @@
 process.env.TESTING = 'true';
 
 module.exports = {
+  rootDir: __dirname,
   preset: 'ts-jest',
   testEnvironment: 'node',
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
@@ -10,20 +11,25 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^src/(.*)$': '<rootDir>/src/$1',
-    '^testing-tools/(.*)$': '<rootDir>/testing-tools/$1',
+    '^tests/(.*)$': '<rootDir>/testing-tools/$1',
   },
   snapshotSerializers: [],
   testMatch: ['**/*.spec.(ts|tsx)'],
   testURL: 'http://localhost/',
   collectCoverage: true,
-  coveragePathIgnorePatterns: [
-    '(^src)',
-    'testing-tools',
-    'migrations',
+  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+  modulePathIgnorePatterns: [
     'node_modules',
     'exceptions',
     'tests',
     'dist',
+  ],
+  coveragePathIgnorePatterns: [
+    'node_modules',
+    'exceptions',
+    'tests',
+    'dist',
+    'index.ts',
   ],
   coverageThreshold: {
     global: {

@@ -4,7 +4,8 @@
   "description": "OpBD Base Repository",
   "main": "index.js",
   "scripts": {
-    "test": "./run-tests.sh",
+    "test": "sh ./run-tests.sh",
+    "build": "sh ./build.sh",
     "lint": "tslint -p tsconfig.json -c tslint.json"
   },
   "repository": {
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@types/jest": "^25.1.2",
     "@types/node": "^8",
+    "cpx": "^1.5.0",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "ts-jest": "^25.2.0",

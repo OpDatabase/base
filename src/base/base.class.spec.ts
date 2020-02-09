@@ -6,6 +6,7 @@ import { ConnectionPool } from './connection-pool.class';
 import { ZoneNames } from './const/zone-names.enum';
 import { ConnectionPoolNoConfigGivenException } from './exceptions/connection-pool/no-config-given.exception';
 import { ExecutionContext } from './execution-context.class';
+import { resolvePlaceholders } from './helper/resolve-placeholders.func';
 import { DatabaseClient } from './interfaces/adapter.interfaces';
 
 ExecutionContext.showDebugInfo = true;
@@ -73,11 +74,15 @@ describe('Base', () => {
 
     it('should pass placeholders properly to client class', async () => {
       const client = await provideIntrospectPlaceholdersAdapter(passedPlaceholders => {
-        const realPlaceholders = client.resolvePlaceholders('SELECT * FROM test WHERE a = $1', { a: 1 });
+        const realPlaceholders = resolvePlaceholders(
+          'SELECT * FROM test WHERE a = $a',
+          { a: 1 },
+          client.placeholderReplacementHandler,
+        );
         expect(passedPlaceholders).toEqual(realPlaceholders);
       });
 
-      await Base.execute('SELECT * FROM test WHERE a = $1', { a: 1 });
+      await Base.execute('SELECT * FROM test WHERE a = $a', { a: 1 });
     });
   });
 
