@@ -29,4 +29,13 @@ export class PostgresAdapter implements DatabaseAdapter {
       throw new PostgresAdapterException('Cannot establish connection to database. Please ensure that your credentials are supplied correctly');
     }
   }
+
+  // todo: move to interface
+  public async stop(): Promise<void> {
+    if (this.nativeConnectionPool == null) {
+      return;
+    }
+
+    return this.nativeConnectionPool.end();
+  }
 }
