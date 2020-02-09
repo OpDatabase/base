@@ -18,7 +18,7 @@ export class Base {
    * Returns the database client that is available in the current execution context.
    */
   public static get connection(): DatabaseClient | null {
-    return Zone.current.get(ZoneNames.DatabaseClient) || null;
+    return Zone.current.get(ZoneNames.DatabaseClient) as DatabaseClient | undefined || null;
   }
 
   /**

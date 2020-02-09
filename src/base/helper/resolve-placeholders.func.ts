@@ -6,6 +6,7 @@ export function resolvePlaceholders(
   replacementHandler: (mark: number) => string = defaultReplacementHandler,
 ) {
   // Transform placeholders to array of values with placeholders $1, $2, $3...
+  // tslint:disable-next-line:no-any
   const transposedPlaceholders: any[] = [];
   const usedPlaceholders: string[] = [];
   const locatedPlaceholders = statement.match(/(\$[\w_]*)/gi) || [];

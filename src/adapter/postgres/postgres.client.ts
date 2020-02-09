@@ -8,7 +8,7 @@ export class PostgresClient implements DatabaseClient {
   }
 
   // tslint:disable-next-line:no-any
-  public execute<R extends QueryResultRow = any>(input: SqlQueryWithTransposedPlaceholders): Promise<QueryResult<R>> {
+  public async execute<R extends QueryResultRow = any>(input: SqlQueryWithTransposedPlaceholders): Promise<QueryResult<R>> {
     return this.nativeClient.query<R>(input.statement, input.transposedPlaceholders);
   }
 
