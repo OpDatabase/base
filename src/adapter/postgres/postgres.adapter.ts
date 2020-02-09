@@ -30,7 +30,6 @@ export class PostgresAdapter implements DatabaseAdapter {
     }
   }
 
-  // todo: move to interface
   public async stop(): Promise<void> {
     if (this.nativeConnectionPool == null) {
       return;

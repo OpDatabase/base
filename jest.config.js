@@ -29,6 +29,7 @@ module.exports = {
     'exceptions',
     'tests',
     'dist',
+    'index.ts',
   ],
   coverageThreshold: {
     global: {

@@ -45,6 +45,10 @@ export class MockAdapter implements DatabaseAdapter {
   public loadConfig(config: MockAdapterConfig): void {
     this.config = config;
   }
+
+  public stop(): void {
+    // Intentionally blank
+  }
 }
 
 // tslint:disable-next-line:max-classes-per-file

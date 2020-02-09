@@ -8,7 +8,7 @@ export function resolvePlaceholders(
   // Transform placeholders to array of values with placeholders $1, $2, $3...
   const transposedPlaceholders: any[] = [];
   const usedPlaceholders: string[] = [];
-  const locatedPlaceholders = statement.match(/(\$\S*)/gi) || [];
+  const locatedPlaceholders = statement.match(/(\$[\w_]*)/gi) || [];
   let placeholderMark = 1;
 
   for (const placeholder of locatedPlaceholders) {

@@ -13,6 +13,12 @@ export interface DatabaseAdapter {
    * Returns the database client connection.
    */
   getConnection(): Promise<DatabaseClient>;
+
+  /**
+   * Stops the database connection, intended for internal use
+   * @internal
+   */
+  stop(): Promise<void> | void;
 }
 
 export interface DatabaseClient {

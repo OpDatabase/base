@@ -33,7 +33,10 @@ export class ConnectionPool {
    */
   public reset(): void {
     ConnectionPool.adapters = {};
-    this.adapter = null;
+    if (this.adapter != null) {
+      this.adapter.stop();
+      this.adapter = null;
+    }
   }
 
   /**

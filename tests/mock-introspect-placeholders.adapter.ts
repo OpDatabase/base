@@ -23,6 +23,10 @@ export async function provideIntrospectPlaceholdersAdapter(
     public async getConnection(): Promise<MockIntrospectDatabaseClient> {
       return new MockIntrospectDatabaseClient();
     }
+
+    public stop(): void {
+      // Intentionally blank
+    }
   }
 
   // tslint:disable-next-line:max-classes-per-file
