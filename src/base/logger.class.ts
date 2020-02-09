@@ -13,7 +13,7 @@ export class Logger {
    * Logs the execution of an SQL query.
    */
   // tslint:disable-next-line:no-any
-  public static logQuery<T extends { toString(): string }>(prefix: string, sql: string, placeholdersWithName: Array<LogQueryPlaceholderPayload<T>>) {
+  public static logQuery(prefix: string, sql: string, placeholdersWithName: LogQueryPlaceholderPayload[]) {
     const firstExpression = sql.replace(/ .*/, '').toLowerCase();
     const queryPrefix = chalk.grey(prefix);
     const placeholderSuffixes: string[] = [];
@@ -84,7 +84,7 @@ export class Logger {
   }
 }
 
-export interface LogQueryPlaceholderPayload<T extends { toString(): string }> {
+export interface LogQueryPlaceholderPayload {
   /**
    * The name of the placeholder.
    */
@@ -93,7 +93,7 @@ export interface LogQueryPlaceholderPayload<T extends { toString(): string }> {
   /**
    * The value the placeholder will be exchanged for.
    */
-  value: T;
+  value: { toString(): string };
 }
 
 export interface ConsoleHandler {
