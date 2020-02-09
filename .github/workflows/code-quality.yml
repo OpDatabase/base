@@ -32,7 +32,8 @@ jobs:
           node-version: 13.x
       - run: yarn
       - run: cd src/base && yarn
-      - run: sh ./run-codecov.sh
+      - run: yarn test
+      - run: curl -s https://codecov.io/bash | bash
         env:
           CI: true
           CODECOV_TOKEN: ${{ secrets.CODECOV_API_TOKEN }}
