@@ -4,7 +4,6 @@
   "description": "OpBD Base Repository",
   "main": "index.js",
   "scripts": {
-    "pretest": "sh ./build.sh",
     "test": "sh ./run-tests.sh",
     "build": "sh ./build.sh",
     "lint": "tslint -p tsconfig.json -c tslint.json"

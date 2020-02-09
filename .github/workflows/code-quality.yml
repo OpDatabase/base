@@ -17,8 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
-      - run: cd src/base && yarn
-      - run: cd src/adapter/postgres && yarn
+      - run: yarn build
       - run: yarn test
         env:
           CI: true
@@ -32,8 +31,7 @@ jobs:
         with:
           node-version: 13.x
       - run: yarn
-      - run: cd src/base && yarn
-      - run: cd src/adapter/postgres && yarn
+      - run: yarn build
       - run: yarn run tslint -p ./tsconfig.json -c ./tslint.json
         env:
           CI: true
@@ -47,8 +45,7 @@ jobs:
         with:
           node-version: 13.x
       - run: yarn
-      - run: cd src/base && yarn
-      - run: cd src/adapter/postgres && yarn
+      - run: yarn build
       - run: yarn test || true
       - run: curl -s https://codecov.io/bash | bash
         env:
