@@ -1,6 +1,6 @@
 import { DatabaseAdapter, Logger } from '@opdb/base';
 import { Pool, PoolConfig } from 'pg';
-import { PostgresAdapterException } from './postgres-adapter.exception';
+import { PostgresAdapterException } from './exceptions/postgres-adapter.exception';
 import { PostgresClient } from './postgres.client';
 
 export class PostgresAdapter implements DatabaseAdapter {

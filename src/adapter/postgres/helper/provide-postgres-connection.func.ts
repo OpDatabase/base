@@ -1,6 +1,6 @@
 import { Base, ConnectionPool } from '@opdb/base';
 import { PoolConfig } from 'pg';
-import { PostgresAdapter } from './postgres.adapter';
+import { PostgresAdapter } from '../postgres.adapter';
 
 /**
  * Provides a connection to a PostgreSQL server.

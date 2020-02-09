@@ -1,4 +1,4 @@
 export * from './postgres.adapter';
 export * from './postgres.client';
-export * from './postgres-adapter.exception';
-export * from './provide-postgres-connection.func';
+export * from './exceptions/postgres-adapter.exception';
+export * from './helper/provide-postgres-connection.func';
