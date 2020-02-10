@@ -27,3 +27,12 @@ cd "$baseDir"
 yarn cpx "./src/adapter/postgres/dist/**/*.{ts,js}" "./dist/opdb-postgres"
 yarn cpx "./src/adapter/postgres/package.json" "./dist/opdb-postgres"
 rm -rf ./src/adapter/postgres/dist
+
+# @opdb/mysql
+cd ./src/adapter/mysql
+yarn
+yarn build
+cd "$baseDir"
+yarn cpx "./src/adapter/mysql/dist/**/*.{ts,js}" "./dist/opdb-mysql"
+yarn cpx "./src/adapter/mysql/package.json" "./dist/opdb-mysql"
+rm -rf ./src/adapter/mysql/dist
