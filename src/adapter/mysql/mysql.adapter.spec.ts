@@ -20,6 +20,21 @@ describe('MysqlAdapter', () => {
       await adapter.stop();
     });
 
+    it('should initialize the adapter correctly when using non-url as connection data', async () => {
+      const adapter = new MysqlAdapter();
+      expect(() => {
+        adapter.loadConfig({
+          database: process.env.TEST_MYSQL_DB_NAME,
+          host: '127.0.0.1',
+          port: parseInt(process.env.TEST_MYSQL_DB_PORT || ''),
+          user: process.env.TEST_MYSQL_DB_USER,
+          password: process.env.TEST_MYSQL_DB_PASSWORD,
+        });
+      }).not.toThrow();
+      expect((adapter as any).nativePool).not.toBeNull();
+      await adapter.stop();
+    });
+
     it('should not initialize the adapter twice', async () => {
       const adapter = new MysqlAdapter();
       adapter.loadConfig({ url: process.env.TEST_MYSQL_DB_URL });
