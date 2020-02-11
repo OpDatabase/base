@@ -11,11 +11,13 @@ export class MysqlAdapter implements DatabaseAdapter {
     return 'mysql';
   }
 
-  public loadConfig(config: PoolConfig): void {
+  public loadConfig(config: PoolConfig & { url?: string }): void {
     if (this.nativePool != null) {
       throw new MysqlAdapterException('Configuration for MysqlAdapter has already been loaded.');
     }
-    this.nativePool = mysql.createPool(config);
+
+    // If url is given, use url instead
+    this.nativePool = mysql.createPool(config.url != null ? config.url : config);
   }
 
   public async getConnection(): Promise<MysqlClient> {

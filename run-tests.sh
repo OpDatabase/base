@@ -34,12 +34,13 @@ docker run \
   --detach --rm \
   -e MYSQL_DATABASE=$TEST_MYSQL_DB_NAME \
   -e MYSQL_USER=$TEST_MYSQL_USER \
-  -e TEST_MYSQL_PASSWORD=$TEST_MYSQL_PASSWORD \
+  -e MYSQL_PASSWORD=$TEST_MYSQL_PASSWORD \
+  -e MYSQL_ROOT_PASSWORD=$TEST_MYSQL_PASSWORD \
   -p $TEST_MYSQL_DB_PORT:3306 \
-  mysql \
+  mysql --default-authentication-plugin=mysql_native_password \
   > /dev/null
 
-sleep 5
+sleep 10
 
 # shellcheck disable=SC2068
 yarn jest --config jest.config.js --runInBand $@
