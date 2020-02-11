@@ -39,17 +39,12 @@ export class MysqlAdapter implements DatabaseAdapter {
   }
 
   public async stop(): Promise<void> {
-    return await new Promise(((resolve, reject) => {
+    return await new Promise((resolve => {
       if (this.nativePool == null) {
         return resolve();
       }
-
-      this.nativePool.end(err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
+      this.nativePool.end(() => {
+        resolve();
       });
     }));
   }
