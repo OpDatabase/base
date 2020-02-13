@@ -29,23 +29,23 @@ export class MysqlAdapter implements DatabaseAdapter {
       this.nativePool!.getConnection(((err, connection) => {
         if (err) {
           Logger.error(err);
-
-          return reject(new MysqlAdapterException('Cannot establish connection to database. Please ensure that your credentials are supplied correctly'));
+          reject(new MysqlAdapterException('Cannot establish connection to database. Please ensure that your credentials are supplied correctly'));
+        } else {
+          resolve(new MysqlClient(connection));
         }
-
-        resolve(new MysqlClient(connection));
       }));
     });
   }
 
   public async stop(): Promise<void> {
-    return await new Promise((resolve => {
+    await new Promise((resolve => {
       if (this.nativePool == null) {
-        return resolve();
-      }
-      this.nativePool.end(() => {
         resolve();
-      });
+      } else {
+        this.nativePool.end(() => {
+          resolve();
+        });
+      }
     }));
   }
 }

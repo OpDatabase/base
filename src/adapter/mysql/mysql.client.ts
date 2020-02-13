@@ -3,7 +3,7 @@ import { PoolConnection } from 'mysql';
 
 export class MysqlClient implements DatabaseClient {
   constructor(
-    private nativeConnection: PoolConnection,
+    private readonly nativeConnection: PoolConnection,
   ) {
   }
 
@@ -13,7 +13,7 @@ export class MysqlClient implements DatabaseClient {
         if (err) {
           reject(err);
         } else {
-          resolve(results);
+          resolve(results as T[]);
         }
       });
     });
