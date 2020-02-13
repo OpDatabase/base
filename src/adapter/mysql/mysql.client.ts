@@ -7,7 +7,7 @@ export class MysqlClient implements DatabaseClient {
   ) {
   }
 
-  public async execute(input: SqlQueryWithTransposedPlaceholders): Promise<any> { // todo
+  public async execute(input: SqlQueryWithTransposedPlaceholders): Promise<any> { // todo for all execute blocks (all adapters)
     return await new Promise((resolve, reject) => {
       this.nativeConnection.query(input.statement, input.transposedPlaceholders, (err, results) => {
         if (err) {

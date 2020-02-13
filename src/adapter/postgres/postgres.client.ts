@@ -2,9 +2,7 @@ import { DatabaseClient, SqlQueryWithTransposedPlaceholders } from '@opdb/base';
 import { PoolClient, QueryResult, QueryResultRow } from 'pg';
 
 export class PostgresClient implements DatabaseClient {
-  constructor(
-    private readonly nativeClient: PoolClient,
-  ) {
+  constructor(private readonly nativeClient: PoolClient) {
   }
 
   // tslint:disable-next-line:no-any
