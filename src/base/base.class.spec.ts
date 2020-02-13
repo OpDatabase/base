@@ -45,13 +45,13 @@ describe('Base', () => {
   describe('execute', () => {
     it('should implicitly create a new execution context when run on root level', async () => {
       Base.connectionPool.connect({ adapter: 'mock', simulate: 'success' });
-      expect(await Base.execute('SELECT * FROM mock')).toBe(void 0);
+      expect(await Base.execute('SELECT * FROM mock')).toStrictEqual([]);
     });
 
     it('should work within an explicitly started execution context', async () => {
       Base.connectionPool.connect({ adapter: 'mock', simulate: 'success' });
       await ExecutionContext.create(async () => {
-        expect(await Base.execute('SELECT * FROM mock')).toBe(void 0);
+        expect(await Base.execute('SELECT * FROM mock')).toStrictEqual([]);
       });
     });
 
