@@ -31,8 +31,9 @@ export async function provideIntrospectPlaceholdersAdapter(
 
   // tslint:disable-next-line:max-classes-per-file
   class MockIntrospectDatabaseClient implements DatabaseClient {
-    public async execute(input: SqlQueryWithTransposedPlaceholders): Promise<void> {
+    public async execute<T>(input: SqlQueryWithTransposedPlaceholders): Promise<T[]> {
       callback(input);
+      return [];
     }
 
     public release(): void {

@@ -66,14 +66,14 @@ export class MockDatabaseClient implements DatabaseClient {
   /**
    * Mocks the execution of the given SQL statement.
    */
-  public execute(input: SqlQueryWithTransposedPlaceholders): Promise<void> {
+  public async execute<T>(input: SqlQueryWithTransposedPlaceholders): Promise<T[]> {
     if (this.config.simulate === 'failure') {
       throw new MockAdapterException();
     }
     Logger.debug('MOCK:', JSON.stringify(input));
     this.executedSqlStatement.push(input.statement);
 
-    return Promise.resolve();
+    return [];
   }
 
   /**

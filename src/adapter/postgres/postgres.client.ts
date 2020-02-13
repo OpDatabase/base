@@ -1,15 +1,12 @@
 import { DatabaseClient, SqlQueryWithTransposedPlaceholders } from '@opdb/base';
-import { PoolClient, QueryResult, QueryResultRow } from 'pg';
+import { PoolClient } from 'pg';
 
 export class PostgresClient implements DatabaseClient {
-  constructor(
-    private readonly nativeClient: PoolClient,
-  ) {
+  constructor(private readonly nativeClient: PoolClient) {
   }
 
-  // tslint:disable-next-line:no-any
-  public async execute<R extends QueryResultRow = any>(input: SqlQueryWithTransposedPlaceholders): Promise<QueryResult<R>> {
-    return this.nativeClient.query<R>(input.statement, input.transposedPlaceholders);
+  public async execute<T>(input: SqlQueryWithTransposedPlaceholders): Promise<T[]> {
+    return (await this.nativeClient.query<T>(input.statement, input.transposedPlaceholders)).rows;
   }
 
   public release(): void {

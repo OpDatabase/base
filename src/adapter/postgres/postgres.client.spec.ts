@@ -39,7 +39,7 @@ describe('PostgresClient', () => {
         transposedPlaceholders: [1],
       });
 
-      expect(response.rows).toEqual([{ id: 1, text: 'Test' }]);
+      expect(response).toEqual([{ id: 1, text: 'Test' }]);
       client.release();
       await adapter.stop();
     });
@@ -90,7 +90,7 @@ describe('PostgresClient', () => {
       await Base.execute('CREATE TABLE "test_integration"("id" INTEGER, "text" VARCHAR(50))');
       await Base.execute('INSERT INTO "test_integration" ("id", "text") VALUES ($id, $text)', { id: 1, text: 'Hello world!' });
       const response = await Base.execute('SELECT * FROM "test_integration" WHERE "id" = $id', { id: 1 });
-      expect(response.rows).toEqual([{ id: 1, text: 'Hello world!' }]);
+      expect(response).toEqual([{ id: 1, text: 'Hello world!' }]);
 
       // Cleanup
       Base.connectionPool.reset();
@@ -108,7 +108,7 @@ describe('PostgresClient', () => {
         await Base.execute('CREATE TABLE "test_transaction"("id" INTEGER, "text" VARCHAR(50))');
         await Base.execute('INSERT INTO "test_transaction" ("id", "text") VALUES ($id, $text)', { id: 1, text: 'Hello world!' });
         const response = await Base.execute('SELECT * FROM "test_transaction" WHERE "id" = $id', { id: 1 });
-        expect(response.rows).toEqual([{ id: 1, text: 'Hello world!' }]);
+        expect(response).toEqual([{ id: 1, text: 'Hello world!' }]);
       });
 
       // Cleanup

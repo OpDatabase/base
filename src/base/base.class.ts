@@ -24,15 +24,14 @@ export class Base {
   /**
    * Executes an sql statement with given placeholders.
    */
-  // tslint:disable-next-line:no-any
-  public static async execute(sql: string, placeholders: SqlQueryPlaceholders = {}): Promise<any> {
+  public static async execute<T>(sql: string, placeholders: SqlQueryPlaceholders = {}): Promise<T[]> {
     const connection = Base.connection;
     if (connection == null) {
       // The SQL statement is not part of any ExecutionContext
       // Therefore: Create new execution context
-      let executionContextResult;
+      let executionContextResult: T[] = [];
       await ExecutionContext.create(async () => {
-        executionContextResult = await Base.execute(sql, placeholders);
+        executionContextResult = await Base.execute<T>(sql, placeholders);
       });
 
       return executionContextResult;
@@ -50,7 +49,7 @@ export class Base {
     }));
 
     // todo: maybe throw QueryFailedException here instead of native exception
-    const result = await connection.execute(payload);
+    const result = await connection.execute<T>(payload);
     Logger.logQuery(`SQL (${Date.now() - start}ms)`, payload.statement, placeholdersWithName);
 
     return result;

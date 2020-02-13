@@ -25,8 +25,7 @@ export interface DatabaseClient {
   /**
    * Executes the given SQL statement, returning any value.
    */
-  // tslint:disable-next-line:no-any
-  execute(input: SqlQueryWithTransposedPlaceholders): Promise<any>;
+  execute<T>(input: SqlQueryWithTransposedPlaceholders): Promise<T[]>;
 
   /**
    * Releases the connection.
