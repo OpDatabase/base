@@ -18,6 +18,7 @@ cd "$baseDir"
 yarn cpx "./src/base/dist/**/*.{ts,js}" "./dist/opdb-base"
 yarn cpx "./src/base/package.json" "./dist/opdb-base"
 yarn cpx "./src/base/README.md" "./dist/opdb-base"
+yarn cpx "./.npmrc" "./dist/opdb-base"
 node ./adjust-package-file.js ./dist/opdb-base/package.json
 rm -rf ./src/base/dist
 
@@ -29,6 +30,7 @@ cd "$baseDir"
 yarn cpx "./src/adapter/postgres/dist/**/*.{ts,js}" "./dist/opdb-postgres"
 yarn cpx "./src/adapter/postgres/package.json" "./dist/opdb-postgres"
 yarn cpx "./src/adapter/postgres/README.md" "./dist/opdb-postgres"
+yarn cpx "./.npmrc" "./dist/opdb-postgres"
 node ./adjust-package-file.js ./dist/opdb-postgres/package.json
 rm -rf ./src/adapter/postgres/dist
 
@@ -40,5 +42,6 @@ cd "$baseDir"
 yarn cpx "./src/adapter/mysql/dist/**/*.{ts,js}" "./dist/opdb-mysql"
 yarn cpx "./src/adapter/mysql/package.json" "./dist/opdb-mysql"
 yarn cpx "./src/adapter/mysql/README.md" "./dist/opdb-mysql"
+yarn cpx "./.npmrc" "./dist/opdb-mysql"
 node ./adjust-package-file.js ./dist/opdb-mysql/package.json
 rm -rf ./src/adapter/mysql/dist
