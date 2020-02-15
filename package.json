@@ -6,7 +6,6 @@
   "scripts": {
     "test": "sh ./run-tests.sh",
     "build": "sh ./build.sh",
-    "publish:packages": "sh ./publish.sh",
     "lint": "tslint -p tsconfig.json -c tslint.json"
   },
   "repository": {
