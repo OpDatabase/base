@@ -1,0 +1,29 @@
+{
+  "name": "@opdb/base",
+  "version": "0.0.0-VERSION-STRING",
+  "description": "OpDB Base Classes",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpDatabase/base.git"
+  },
+  "author": "OpDB / Marvin Scharle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpDatabase/base/issues"
+  },
+  "homepage": "https://github.com/OpDatabase/base#readme",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "uuid": "^3.4.0",
+    "zone.js": "^0.10.2"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/uuid": "^3.4.7",
+    "@types/zone.js": "^0.5.12"
+  }
+}

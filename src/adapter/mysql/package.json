@@ -1,0 +1,29 @@
+{
+  "name": "@opdb/mysql",
+  "version": "0.0.0-VERSION-STRING",
+  "description": "OpDB MySQL Adapter",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpDatabase/base.git"
+  },
+  "author": "OpDB / Marvin Scharle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpDatabase/base/issues"
+  },
+  "homepage": "https://github.com/OpDatabase/base#readme",
+  "peerDependencies": {
+    "@opdb/base": "0.0.0-VERSION-STRING"
+  },
+  "devDependencies": {
+    "@opdb/base": "../../../dist/opdb-base",
+    "@types/mysql": "^2.15.8"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}

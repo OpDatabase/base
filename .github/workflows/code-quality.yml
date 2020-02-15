@@ -1,0 +1,53 @@
+name: Code Quality Check
+on:
+  - push
+  - pull_request
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 13.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn
+      - run: yarn build
+      - run: yarn test
+        env:
+          CI: true
+
+  Tslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Codecov
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
+      - run: yarn
+      - run: yarn build
+      - run: yarn run tslint -p ./tsconfig.json -c ./tslint.json
+        env:
+          CI: true
+
+  Codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Codecov
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
+      - run: yarn
+      - run: yarn build
+      - run: yarn test || true
+      - run: curl -s https://codecov.io/bash | bash
+        env:
+          CI: true
+          CODECOV_TOKEN: ${{ secrets.CODECOV_API_TOKEN }}
