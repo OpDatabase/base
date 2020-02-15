@@ -21,7 +21,6 @@ jobs:
       - run: yarn test
         env:
           CI: true
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   Tslint:
     runs-on: ubuntu-latest
@@ -36,7 +35,6 @@ jobs:
       - run: yarn run tslint -p ./tsconfig.json -c ./tslint.json
         env:
           CI: true
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   Codecov:
     runs-on: ubuntu-latest
@@ -53,4 +51,3 @@ jobs:
         env:
           CI: true
           CODECOV_TOKEN: ${{ secrets.CODECOV_API_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
