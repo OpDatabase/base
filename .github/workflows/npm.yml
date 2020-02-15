@@ -1,0 +1,21 @@
+name: Publish to NPM
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Codecov
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
+      - run: yarn
+      - run: yarn build
+      - run: yarn publish:packages
+        env:
+          CI: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
