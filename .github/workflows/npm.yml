@@ -15,7 +15,7 @@ jobs:
           node-version: 13.x
       - run: yarn
       - run: yarn build
-      - run: yarn publish:packages
+      - run: sh ./publish.sh
         env:
           CI: true
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
