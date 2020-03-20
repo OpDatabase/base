@@ -1,13 +1,12 @@
-import { MissingPlaceholderException, SqlQueryPlaceholders } from '..';
+import { MissingPlaceholderException, SqlQueryPlaceholders, SqlQueryWithTransposedPlaceholders } from '..';
 
 export function resolvePlaceholders(
   statement: string,
   placeholders: SqlQueryPlaceholders = {},
   replacementHandler: (mark: number) => string = defaultReplacementHandler,
-) {
+): SqlQueryWithTransposedPlaceholders {
   // Transform placeholders to array of values with placeholders $1, $2, $3...
-  // tslint:disable-next-line:no-any
-  const transposedPlaceholders: any[] = [];
+  const transposedPlaceholders: unknown[] = [];
   const usedPlaceholders: string[] = [];
   const locatedPlaceholders = statement.match(/(\$[\w_]*)/gi) || [];
   let placeholderMark = 1;
