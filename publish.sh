@@ -4,12 +4,15 @@ baseDir=$(pwd)
 
 # @opdb/base
 cd "$baseDir/dist/opdb-base"
-npm publish
+npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+npm publish --access public
 
 # @opdb/postgres
 cd "$baseDir/dist/opdb-postgres"
-npm publish
+npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+npm publish --access public
 
 # @opdb/mysql
 cd "$baseDir/dist/opdb-mysql"
-npm publish
+npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+npm publish --access public
