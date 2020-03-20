@@ -40,13 +40,11 @@ export interface DatabaseClient {
 }
 
 export interface SqlQueryPlaceholders {
-  // tslint:disable-next-line:no-any
-  [placeholder: string]: any;
+  [placeholder: string]: unknown;
 }
 
 export interface DatabaseAdapterConfigPayload {
-  // tslint:disable-next-line:no-any
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface DatabaseAdapterDeclaration {
@@ -72,8 +70,7 @@ export interface SqlQueryWithTransposedPlaceholders {
   /**
    * The transposed placeholders.
    */
-  // tslint:disable-next-line:no-any
-  transposedPlaceholders: any[];
+  transposedPlaceholders: unknown[];
 
   /**
    * The placeholders that have been used.

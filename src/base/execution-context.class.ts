@@ -17,7 +17,7 @@ export abstract class ExecutionContext {
    * Additional parameters can be supplied that will be passed inside the context.
    */
   // tslint:disable-next-line:no-any
-  public static async create(context: () => Promise<any>, properties: Partial<ExecutionContextProperties> = {}): Promise<void> {
+  public static async create(context: () => Promise<unknown>, properties: Partial<ExecutionContextProperties> = {}): Promise<void> {
     let closeConnectionOnComplete = false;
 
     // Check if new database client is enforced or given in the current Zone
@@ -74,7 +74,7 @@ export abstract class ExecutionContext {
    * will be aborted.
    */
   // tslint:disable-next-line:no-any
-  public static async createTransaction(context: () => Promise<any>) {
+  public static async createTransaction(context: () => Promise<any>): Promise<void> {
     return this.create(async () => {
       // Initialize Transaction
       await Base.execute('BEGIN');
