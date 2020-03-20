@@ -45,7 +45,7 @@ export class Base {
     );
     const placeholdersWithName = payload.usedPlaceholders.map((name, i) => ({
       name,
-      value: payload.transposedPlaceholders[i],
+      value: payload.transposedPlaceholders[i] as { toString(): string },
     }));
 
     // todo: maybe throw QueryFailedException here instead of native exception
@@ -60,8 +60,7 @@ export class Base {
    * once the context is left. On any exception emitted by the context, the transaction
    * will be aborted.
    */
-  // tslint:disable-next-line:no-any
-  public static async transaction(context: () => Promise<any>) {
+  public static async transaction(context: () => Promise<unknown>): Promise<void> {
     return ExecutionContext.createTransaction(context);
   }
 }
