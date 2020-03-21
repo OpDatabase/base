@@ -42,6 +42,13 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     );
   }
 
+  public async addTimestamps(tableName: string): Promise<void> {
+    await Promise.all([
+      this.addColumn(tableName, 'created_at', DataType.datetime),
+      this.addColumn(tableName, 'updated_at', DataType.datetime),
+    ]);
+  }
+
   public async createJoinTable(tableName1: string, tableName2: string): Promise<void>;
   public async createJoinTable(tableName1: string, tableName2: string, configBlock: CreateTableConfigBlock): Promise<void>;
   public async createJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;

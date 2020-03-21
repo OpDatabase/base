@@ -127,6 +127,12 @@ export interface MigrationOperations extends NativeMigrationOperations {
   addIndex(tableName: string, columnName: string, options: AddIndexOptions): Promise<void>;
 
   /**
+   * Adds the columns "created_at" and "updated_at" to the table.
+   * @param tableName Name of the target table
+   */
+  addTimestamps(tableName: string): Promise<void>;
+
+  /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
    * @param tableName1 name of the first table
    * @param tableName2 name of the second table
