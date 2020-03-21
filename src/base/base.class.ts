@@ -49,7 +49,15 @@ export class Base {
     }));
 
     // todo: maybe throw QueryFailedException here instead of native exception
-    const result = await connection.execute<T>(payload);
+    let result;
+    try {
+      result = await connection.execute<T>(payload);
+    } catch (e) {
+      // todo: combine into one error log: logQueryError (something like that)
+      Logger.error('QUERY FAILED');
+      Logger.logQuery(`SQL (${Date.now() - start}ms)`, payload.statement, placeholdersWithName);
+      throw e;
+    }
     Logger.logQuery(`SQL (${Date.now() - start}ms)`, payload.statement, placeholdersWithName);
 
     return result;
