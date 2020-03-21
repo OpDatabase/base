@@ -1,22 +1,22 @@
 import { MigrationException } from '../exceptions/migration.exception';
-import { DataTypes } from '../interfaces/data-types.enum';
+import { DataType } from '../interfaces/data-type.enum';
 import { AddColumnNumericOptions, AddColumnOptions } from '../interfaces/migration-operations.interface';
 
 // tslint:disable:no-magic-numbers
 
-export function postgresDataTypeToSql(type: DataTypes, options: AddColumnNumericOptions | AddColumnOptions): string {
+export function postgresDataTypeToSql(type: DataType, options: AddColumnNumericOptions | AddColumnOptions): string {
   switch (type) {
-    case DataTypes.boolean:
+    case DataType.boolean:
       return integerToSql(1);
 
-    case DataTypes.date:
+    case DataType.date:
       return 'DATE';
 
-    case DataTypes.datetime:
-    case DataTypes.timestamp:
+    case DataType.datetime:
+    case DataType.timestamp:
       return 'TIMESTAMP';
 
-    case DataTypes.decimal:
+    case DataType.decimal:
       const numericOptions = options as AddColumnNumericOptions;
       if (numericOptions.precision === undefined && numericOptions.scale === undefined) {
         return 'DECIMAL';
@@ -27,22 +27,22 @@ export function postgresDataTypeToSql(type: DataTypes, options: AddColumnNumeric
 
       return numericOptions.scale === undefined ? `DECIMAL(${numericOptions.precision})` : `DECIMAL(${numericOptions.precision},${numericOptions.scale})`;
 
-    case DataTypes.float:
+    case DataType.float:
       return 'FLOAT';
 
-    case DataTypes.integer:
+    case DataType.integer:
       return integerToSql(options.limit || 4);
 
-    case DataTypes.primaryKey:
+    case DataType.primaryKey:
       return 'SERIAL PRIMARY KEY';
 
-    case DataTypes.string:
+    case DataType.string:
       return `VARCHAR(${options.limit || 255})`;
 
-    case DataTypes.text:
+    case DataType.text:
       return textToSql(options.limit || 65535);
 
-    case DataTypes.time:
+    case DataType.time:
       return 'TIME';
   }
 }

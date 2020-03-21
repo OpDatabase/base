@@ -1,4 +1,4 @@
-export enum DataTypes {
+export enum DataType {
   boolean,
   date,
   datetime,

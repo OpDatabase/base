@@ -1,21 +1,68 @@
-import { DataTypes } from './data-types.enum';
+import { DataType } from './data-type.enum';
 
-export interface MigrationOperationsInternal {
-  createTable(name: string, options: CreateTableOptions, config: CreateTableConfigBlock): Promise<void>;
-
-  addColumn(tableName: string, columnName: string, type: DataTypes, options: AddColumnNumericOptions | AddColumnOptions): Promise<void>;
-}
-
-export interface MigrationOperations extends MigrationOperationsInternal {
-  createTable(name: string, configBlock: CreateTableConfigBlock): Promise<void>;
-
+/**
+ * Interface for native migration operation handlers
+ */
+export interface NativeMigrationOperations {
+  /**
+   * Creates a new table.
+   * @param name Name of the new table
+   * @param options Advanced configuration options for the new table
+   * @param configBlock block to supply tables and indices for the new table
+   */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
-  addColumn(tableName: string, columnName: string, type: DataTypes, options: AddColumnOptions): Promise<void>;
+  /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnNumericOptions | AddColumnOptions): Promise<void>;
+}
 
-  addColumn(tableName: string, columnName: string, type: DataTypes.decimal, options: AddColumnNumericOptions): Promise<void>;
+export interface MigrationOperations extends NativeMigrationOperations {
+  /**
+   * Creates a new table.
+   * @param name Name of the new table
+   * @param configBlock block to supply tables and indices for the new table
+   */
+  createTable(name: string, configBlock: CreateTableConfigBlock): Promise<void>;
 
-  addColumn(tableName: string, columnName: string, type: DataTypes): Promise<void>;
+  /**
+   * Creates a new table.
+   * @param name Name of the new table
+   * @param options Advanced configuration options for the new table
+   * @param configBlock block to supply tables and indices for the new table
+   */
+  createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+
+  /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<void>;
+
+  /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<void>;
+
+  /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType): Promise<void>;
 }
 
 export interface CreateTableOptions {
@@ -34,14 +81,102 @@ export interface CreateTableOptions {
 }
 
 export interface CreateTableConfigBlockParameter {
-  column(columnName: string, type: DataTypes, options: AddColumnOptions): void;
+  /**
+   * Adds a new column to the table.
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  column(columnName: string, type: DataType, options: AddColumnOptions): void;
 
-  column(columnName: string, type: DataTypes.decimal, options: AddColumnNumericOptions): void;
+  /**
+   * Adds a new column to the table.
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  column(columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): void;
 
-  column(columnName: string, type: DataTypes): void;
+  /**
+   * Adds a new column to the table.
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   */
+  column(columnName: string, type: DataType): void;
 
-  // todo: index();
+  /**
+   * Adds the columns "created_at" and "updated_at" to the table.
+   */
   timestamps(): void;
+
+  /**
+   * Adds a new column of type string to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  string(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type text to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  text(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type integer to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  integer(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type float to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  float(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type decimal to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  decimal(columnName: string, options?: AddColumnNumericOptions): void;
+
+  /**
+   * Adds a new column of type datetime to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  datetime(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type timestamp to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  timestamp(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type time to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  time(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type date to the table.
+   * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
+   */
+  date(columnName: string, options?: AddColumnOptions): void;
+
+  /**
+   * Adds a new column of type boolean to the table.
+   * @param columnName Name of the new table column to be added
+   */
+  boolean(columnName: string): void;
 
   // todo:  t.change # changes the column definition. Ex: t.change(:name, :string, :limit => 80)
   //        t.change_default # changes the column default value.
@@ -53,26 +188,7 @@ export interface CreateTableConfigBlockParameter {
   //        t.remove_belongs_to
   //        t.remove_index
   //        t.remove_timestamps
-
-  string(columnName: string, options?: AddColumnOptions): void;
-
-  text(columnName: string, options?: AddColumnOptions): void;
-
-  integer(columnName: string, options?: AddColumnOptions): void;
-
-  float(columnName: string, options?: AddColumnOptions): void;
-
-  decimal(columnName: string, options?: AddColumnNumericOptions): void;
-
-  datetime(columnName: string, options?: AddColumnOptions): void;
-
-  timestamp(columnName: string, options?: AddColumnOptions): void;
-
-  time(columnName: string, options?: AddColumnOptions): void;
-
-  date(columnName: string, options?: AddColumnOptions): void;
-
-  boolean(columnName: string): void;
+  //        t.index
 }
 
 export type CreateTableConfigBlock = (table: CreateTableConfigBlockParameter) => Promise<unknown> | unknown;
