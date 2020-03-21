@@ -3,9 +3,10 @@ import {
   AddColumnNumericOptions,
   AddColumnOptions,
   AddIndexOptions,
-  CreateJoinTableOptions,
   CreateTableConfigBlock,
   CreateTableOptions,
+  DropTableOptions,
+  JoinTableOptions,
   MigrationOperations,
   NativeMigrationOperations,
 } from './interfaces/migration-operations.interface';
@@ -42,17 +43,17 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
 
   public async createJoinTable(tableName1: string, tableName2: string): Promise<void>;
   public async createJoinTable(tableName1: string, tableName2: string, configBlock: CreateTableConfigBlock): Promise<void>;
-  public async createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions): Promise<void>;
+  public async createJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
   public async createJoinTable(
     tableName1: string,
     tableName2: string,
-    options: CreateJoinTableOptions,
+    options: JoinTableOptions,
     configBlock: CreateTableConfigBlock,
   ): Promise<void>;
   public async createJoinTable(
     tableName1: string,
     tableName2: string,
-    optionsOrConfigBlock?: CreateTableConfigBlock | CreateJoinTableOptions,
+    optionsOrConfigBlock?: CreateTableConfigBlock | JoinTableOptions,
     configBlock?: CreateTableConfigBlock,
   ): Promise<void> {
     const placeholderCallback = () => void 0;
@@ -81,5 +82,17 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     } else {
       return await this.internalHandler.createTable(name, optionsOrConfigBlock, configBlock || placeholderCallback);
     }
+  }
+
+  public async dropJoinTable(tableName1: string, tableName2: string): Promise<void>;
+  public async dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
+  public async dropJoinTable(tableName1: string, tableName2: string, options?: JoinTableOptions): Promise<void> {
+    return await this.internalHandler.dropJoinTable(tableName1, tableName2, options || {});
+  }
+
+  public async dropTable(name: string): Promise<void>;
+  public async dropTable(name: string, options: DropTableOptions): Promise<void>;
+  public async dropTable(name: string, options?: DropTableOptions): Promise<void> {
+    return await this.internalHandler.dropTable(name, options || {});
   }
 }

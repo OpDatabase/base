@@ -5,9 +5,10 @@ import {
   AddColumnNumericOptions,
   AddColumnOptions,
   AddIndexOptions,
-  CreateJoinTableOptions,
   CreateTableConfigBlock,
   CreateTableOptions,
+  DropTableOptions,
+  JoinTableOptions,
   NativeMigrationOperations,
 } from '../interfaces/migration-operations.interface';
 import { MigrationHandler } from './migration-handler.class';
@@ -33,15 +34,14 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
   public async createJoinTable(
     tableName1: string,
     tableName2: string,
-    options: CreateJoinTableOptions,
+    options: JoinTableOptions,
     configBlock: CreateTableConfigBlock,
   ): Promise<void> {
-    const tableNames = [tableName1, tableName2].sort((a, b) => a > b ? 1 : -1);
-    const joinColumnName = options.tableName || `${tableNames[0]}_${tableNames[1]}`;
-    await this.createTable(joinColumnName, { id: false }, async table => {
+    const joinTableName = options.tableName || generateJoinTableName([tableName1, tableName2]);
+    await this.createTable(joinTableName, { id: false }, async table => {
       // Add join columns
-      table.integer(`${pluralize.singular(tableNames[0])}_id`);
-      table.integer(`${pluralize.singular(tableNames[1])}_id`);
+      table.integer(`${pluralize.singular(tableName1)}_id`);
+      table.integer(`${pluralize.singular(tableName2)}_id`);
 
       // Run config block
       await configBlock(table);
@@ -96,6 +96,27 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     // Add indices
     await Promise.all(indices.map(i => this.addIndex(name, i.columnNames, i.options)));
   }
+
+  public async dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void> {
+    await this.dropTable(
+      options.tableName || generateJoinTableName([tableName1, tableName2]),
+      {},
+    );
+  }
+
+  public async dropTable(name: string, options: DropTableOptions): Promise<void> {
+    if (options.ifExists) {
+      await this.execute(`DROP TABLE IF EXISTS "${name}"`);
+    } else {
+      await this.execute(`DROP TABLE "${name}"`);
+    }
+  }
+}
+
+function generateJoinTableName(columnNames: string[]): string {
+  const tableNames = columnNames.sort((a, b) => a > b ? 1 : -1);
+
+  return `${tableNames[0]}_${tableNames[1]}`;
 }
 
 function columnDefinition(

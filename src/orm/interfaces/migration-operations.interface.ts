@@ -28,7 +28,7 @@ export interface NativeMigrationOperations {
    * @param options advanced options for the join table
    * @param configBlock configBlock block to supply columns and indices for the new join table
    */
-  createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+  createJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
   /**
    * Creates a new table.
@@ -37,6 +37,10 @@ export interface NativeMigrationOperations {
    * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+
+  dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
+
+  dropTable(name: string, options: DropTableOptions): Promise<void>;
 }
 
 export interface MigrationOperations extends NativeMigrationOperations {
@@ -117,7 +121,7 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param tableName2 name of the second table
    * @param options advanced options for the join table
    */
-  createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions): Promise<void>;
+  createJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
 
   /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
@@ -126,7 +130,7 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param options advanced options for the join table
    * @param configBlock configBlock block to supply columns and indices for the new join table
    */
-  createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+  createJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
   /**
    * Creates a new table.
@@ -148,6 +152,14 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+
+  dropJoinTable(tableName1: string, tableName2: string): Promise<void>;
+
+  dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
+
+  dropTable(name: string): Promise<void>;
+
+  dropTable(name: string, options: DropTableOptions): Promise<void>;
 }
 
 export interface AddColumnOptions {
@@ -195,7 +207,7 @@ export interface AddIndexOptions {
   name?: string;
 }
 
-export interface CreateJoinTableOptions {
+export interface JoinTableOptions {
   /**
    * Sets the table name, overriding the default.
    */
@@ -215,6 +227,10 @@ export interface CreateTableOptions {
    * @default "id"
    */
   primaryKey?: string;
+}
+
+export interface DropTableOptions {
+  ifExists?: boolean;
 }
 
 export interface CreateTableConfigBlockParameter {
