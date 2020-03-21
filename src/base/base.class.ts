@@ -84,6 +84,6 @@ export class Base {
    * will be aborted.
    */
   public async transaction(context: () => Promise<unknown>): Promise<void> {
-    return await Base.transaction(context);
+    await Base.transaction(context);
   }
 }
