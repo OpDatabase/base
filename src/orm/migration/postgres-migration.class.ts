@@ -1,8 +1,10 @@
+import pluralize from 'pluralize';
 import { postgresDataTypeToSql } from '../data-types/postgres.data-types';
 import { DataType } from '../interfaces/data-type.enum';
 import {
   AddColumnNumericOptions,
   AddColumnOptions,
+  CreateJoinTableOptions,
   CreateTableConfigBlock,
   CreateTableOptions,
   NativeMigrationOperations,
@@ -10,6 +12,24 @@ import {
 import { MigrationHandler } from './migration-handler.class';
 
 export class PostgresMigration extends MigrationHandler implements NativeMigrationOperations {
+  public async createJoinTable(
+    tableName1: string,
+    tableName2: string,
+    options: CreateJoinTableOptions,
+    configBlock: CreateTableConfigBlock,
+  ): Promise<void> {
+    const tableNames = [tableName1, tableName2].sort((a, b) => a > b ? 1 : -1);
+    const joinColumnName = options.tableName || `${tableNames[0]}_${tableNames[1]}`;
+    await this.createTable(joinColumnName, { id: false }, async table => {
+      // Add join columns
+      table.integer(`${pluralize.singular(tableNames[0])}_id`);
+      table.integer(`${pluralize.singular(tableNames[1])}_id`);
+
+      // Run config block
+      await configBlock(table);
+    });
+  }
+
   public async createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void> {
     const columnDefinitions: string[] = [];
     let placeholders: { [key: string]: unknown } = {};

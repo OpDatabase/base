@@ -5,10 +5,19 @@ import { DataType } from './data-type.enum';
  */
 export interface NativeMigrationOperations {
   /**
+   * Creates a new join table with the name created using the lexical order of the first two arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   * @param options advanced options for the join table
+   * @param configBlock configBlock block to supply columns and indices for the new join table
+   */
+  createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+
+  /**
    * Creates a new table.
    * @param name Name of the new table
    * @param options Advanced configuration options for the new table
-   * @param configBlock block to supply tables and indices for the new table
+   * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
@@ -24,9 +33,47 @@ export interface NativeMigrationOperations {
 
 export interface MigrationOperations extends NativeMigrationOperations {
   /**
+   * Creates a new join table with the name created using the lexical order of the first two arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   */
+  createJoinTable(tableName1: string, tableName2: string): Promise<void>;
+
+  /**
+   * Creates a new join table with the name created using the lexical order of the first two arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   * @param configBlock configBlock block to supply columns and indices for the new join table
+   */
+  createJoinTable(tableName1: string, tableName2: string, configBlock: CreateTableConfigBlock): Promise<void>;
+
+  /**
+   * Creates a new join table with the name created using the lexical order of the first two arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   * @param options advanced options for the join table
+   */
+  createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions): Promise<void>;
+
+  /**
+   * Creates a new join table with the name created using the lexical order of the first two arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   * @param options advanced options for the join table
+   * @param configBlock configBlock block to supply columns and indices for the new join table
+   */
+  createJoinTable(tableName1: string, tableName2: string, options: CreateJoinTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+
+  /**
    * Creates a new table.
    * @param name Name of the new table
-   * @param configBlock block to supply tables and indices for the new table
+   */
+  createTable(name: string): Promise<void>;
+
+  /**
+   * Creates a new table.
+   * @param name Name of the new table
+   * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, configBlock: CreateTableConfigBlock): Promise<void>;
 
@@ -34,7 +81,7 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * Creates a new table.
    * @param name Name of the new table
    * @param options Advanced configuration options for the new table
-   * @param configBlock block to supply tables and indices for the new table
+   * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
@@ -63,6 +110,13 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param type Data type for the new table column
    */
   addColumn(tableName: string, columnName: string, type: DataType): Promise<void>;
+}
+
+export interface CreateJoinTableOptions {
+  /**
+   * Sets the table name, overriding the default.
+   */
+  tableName?: string;
 }
 
 export interface CreateTableOptions {
