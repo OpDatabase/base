@@ -256,6 +256,12 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param options Advanced options for dropping the index
    */
   removeIndex(tableName: string, columnName: string, options: IndexOptions): Promise<void>;
+
+  /**
+   * Removes the columns "created_at" and "updated_at" from the table.
+   * @param tableName Name of the target table
+   */
+  removeTimestamps(tableName: string): Promise<void>;
 }
 
 export interface AddColumnOptions {

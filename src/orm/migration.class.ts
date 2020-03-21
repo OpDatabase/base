@@ -123,4 +123,8 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
       options || {},
     );
   }
+
+  public async removeTimestamps(tableName: string): Promise<void> {
+    return await this.removeColumns(tableName, 'created_at', 'updated_at');
+  }
 }
