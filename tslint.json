@@ -38,7 +38,7 @@
     "no-magic-numbers": true,
     "prefer-for-of": true,
     "promise-function-async": true,
-    "unified-signatures": true,
+    "unified-signatures": false,
     "await-promise": true,
     "no-bitwise": true,
     "no-console": true,
@@ -94,7 +94,7 @@
     "interface-over-type-literal": true,
     "no-angle-bracket-type-assertion": true,
     "no-boolean-literal-compare": true,
-    "no-redundant-jsdoc": true,
+    "no-redundant-jsdoc": false,
     "no-unnecessary-callback-wrapper": true,
     "one-variable-per-declaration": true,
     "prefer-function-over-method": [
