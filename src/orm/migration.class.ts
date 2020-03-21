@@ -127,4 +127,16 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   public async removeTimestamps(tableName: string): Promise<void> {
     return await this.removeColumns(tableName, 'created_at', 'updated_at');
   }
+
+  public async renameColumn(tableName: string, columnName: string, newColumnName: string): Promise<void> {
+    return await this.internalHandler.renameColumn(tableName, columnName, newColumnName);
+  }
+
+  public async renameIndex(tableName: string, indexName: string, newIndexName: string): Promise<void> {
+    return await this.internalHandler.renameIndex(tableName, indexName, newIndexName);
+  }
+
+  public async renameTable(tableName: string, newTableName: string): Promise<void> {
+    return await this.internalHandler.renameTable(tableName, newTableName);
+  }
 }

@@ -67,6 +67,29 @@ export interface NativeMigrationOperations {
    * @param options Advanced options for dropping the index
    */
   removeIndex(tableName: string, columnNames: string[], options: IndexOptions): Promise<void>;
+
+  /**
+   * Renames a column.
+   * @param tableName Name of the parent target table
+   * @param columnName Current name of the column
+   * @param newColumnName New name of the column
+   */
+  renameColumn(tableName: string, columnName: string, newColumnName: string): Promise<void>;
+
+  /**
+   * Renames an index.
+   * @param tableName Name of the parent target table
+   * @param indexName Current name of the index
+   * @param newIndexName New name of the index
+   */
+  renameIndex(tableName: string, indexName: string, newIndexName: string): Promise<void>;
+
+  /**
+   * Renames a table.
+   * @param tableName Current name of the table
+   * @param newTableName New name of the table
+   */
+  renameTable(tableName: string, newTableName: string): Promise<void>;
 }
 
 export interface MigrationOperations extends NativeMigrationOperations {
@@ -475,7 +498,6 @@ export interface CreateTableConfigBlockParameter {
   //        t.remove_belongs_to
   //        t.remove_index
   //        t.remove_timestamps
-  //        t.index
 }
 
 export type CreateTableConfigBlock = (table: CreateTableConfigBlockParameter) => Promise<unknown> | unknown;

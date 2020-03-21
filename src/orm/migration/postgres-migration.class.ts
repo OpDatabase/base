@@ -119,6 +119,21 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     const indexName = options.name || generateIndexName(tableName, columnNames);
     await this.execute(`DROP INDEX "${indexName}"`);
   }
+
+  public async renameColumn(tableName: string, columnName: string, newColumnName: string): Promise<void> {
+    // todo: rename column index as well if given
+    await this.execute(`ALTER TABLE "${tableName}" RENAME COLUMN "${columnName}" TO "${newColumnName}"`);
+  }
+
+  public async renameIndex(tableName: string, indexName: string, newIndexName: string): Promise<void> {
+    tableName = `${tableName}`; // tableName is not required for PostgreSQL. To avoid Typescript error, use this syntax.
+    await this.execute(`ALTER INDEX "${indexName}" RENAME TO "${newIndexName}"`);
+  }
+
+  public async renameTable(tableName: string, newTableName: string): Promise<void> {
+    // todo: rename all column indices
+    await this.execute(`ALTER TABLE "${tableName}" RENAME TO "${newTableName}"`);
+  }
 }
 
 function generateJoinTableName(columnNames: string[]): string {
