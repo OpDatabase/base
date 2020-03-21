@@ -5,6 +5,23 @@ import { DataType } from './data-type.enum';
  */
 export interface NativeMigrationOperations {
   /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnNumericOptions | AddColumnOptions): Promise<void>;
+
+  /**
+   * Adds a new index to an existing table.
+   * @param tableName Name of the target table
+   * @param columnNames Name of the columns to index
+   * @param options Advanced config options for the new index
+   */
+  addIndex(tableName: string, columnNames: string[], options: AddIndexOptions): Promise<void>;
+
+  /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
    * @param tableName1 name of the first table
    * @param tableName2 name of the second table
@@ -20,6 +37,17 @@ export interface NativeMigrationOperations {
    * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+}
+
+export interface MigrationOperations extends NativeMigrationOperations {
+  /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   * @param options Advanced config options for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<void>;
 
   /**
    * Adds a new column to an existing table.
@@ -28,10 +56,46 @@ export interface NativeMigrationOperations {
    * @param type Data type for the new table column
    * @param options Advanced config options for the new table column
    */
-  addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnNumericOptions | AddColumnOptions): Promise<void>;
-}
+  addColumn(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<void>;
 
-export interface MigrationOperations extends NativeMigrationOperations {
+  /**
+   * Adds a new column to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the new table column to be added
+   * @param type Data type for the new table column
+   */
+  addColumn(tableName: string, columnName: string, type: DataType): Promise<void>;
+
+  /**
+   * Adds a new index to an existing table.
+   * @param tableName Name of the target table
+   * @param columnNames Name of the columns to index
+   */
+  addIndex(tableName: string, columnNames: string[]): Promise<void>;
+
+  /**
+   * Adds a new index to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the column to index
+   */
+  addIndex(tableName: string, columnName: string): Promise<void>;
+
+  /**
+   * Adds a new index to an existing table.
+   * @param tableName Name of the target table
+   * @param columnNames Name of the columns to index
+   * @param options Advanced config options for the new index
+   */
+  addIndex(tableName: string, columnNames: string[], options: AddIndexOptions): Promise<void>;
+
+  /**
+   * Adds a new index to an existing table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the column to index
+   * @param options Advanced config options for the new index
+   */
+  addIndex(tableName: string, columnName: string, options: AddIndexOptions): Promise<void>;
+
   /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
    * @param tableName1 name of the first table
@@ -84,32 +148,51 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param configBlock block to supply columns and indices for the new table
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
+}
+
+export interface AddColumnOptions {
+  /**
+   * Requests a maximum column length. This is the number of characters for a string column and
+   * number of bytes for text, binary and integer columns.
+   * This option is ignored by some backends.
+   */
+  limit?: number;
 
   /**
-   * Adds a new column to an existing table.
-   * @param tableName Name of the target table
-   * @param columnName Name of the new table column to be added
-   * @param type Data type for the new table column
-   * @param options Advanced config options for the new table column
+   * The column’s default value. Use null for NULL.
+   * @default null
    */
-  addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<void>;
+  default?: unknown | null;
 
   /**
-   * Adds a new column to an existing table.
-   * @param tableName Name of the target table
-   * @param columnName Name of the new table column to be added
-   * @param type Data type for the new table column
-   * @param options Advanced config options for the new table column
+   * Allows or disallows NULL values in the column.
+   * @default true
    */
-  addColumn(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<void>;
+  null?: boolean;
+}
+
+export interface AddColumnNumericOptions extends AddColumnOptions {
+  /**
+   * Specifies the precision for the decimal and numeric columns.
+   */
+  precision?: number;
 
   /**
-   * Adds a new column to an existing table.
-   * @param tableName Name of the target table
-   * @param columnName Name of the new table column to be added
-   * @param type Data type for the new table column
+   * Specifies the scale for the decimal and numeric columns.
    */
-  addColumn(tableName: string, columnName: string, type: DataType): Promise<void>;
+  scale?: number;
+}
+
+export interface AddIndexOptions {
+  /**
+   * Sets if the index should be unique
+   */
+  unique?: boolean;
+
+  /**
+   * Sets the index name, overriding the default.
+   */
+  name?: string;
 }
 
 export interface CreateJoinTableOptions {
@@ -157,6 +240,14 @@ export interface CreateTableConfigBlockParameter {
    * @param type Data type for the new table column
    */
   column(columnName: string, type: DataType): void;
+
+  index(columnNames: string[]): void;
+
+  index(columnNames: string): void;
+
+  index(columnNames: string[], options: AddIndexOptions): void;
+
+  index(columnNames: string, options: AddIndexOptions): void;
 
   /**
    * Adds the columns "created_at" and "updated_at" to the table.
@@ -246,36 +337,3 @@ export interface CreateTableConfigBlockParameter {
 }
 
 export type CreateTableConfigBlock = (table: CreateTableConfigBlockParameter) => Promise<unknown> | unknown;
-
-export interface AddColumnOptions {
-  /**
-   * Requests a maximum column length. This is the number of characters for a string column and
-   * number of bytes for text, binary and integer columns.
-   * This option is ignored by some backends.
-   */
-  limit?: number;
-
-  /**
-   * The column’s default value. Use null for NULL.
-   * @default null
-   */
-  default?: unknown | null;
-
-  /**
-   * Allows or disallows NULL values in the column.
-   * @default true
-   */
-  null?: boolean;
-}
-
-export interface AddColumnNumericOptions extends AddColumnOptions {
-  /**
-   * Specifies the precision for the decimal and numeric columns.
-   */
-  precision?: number;
-
-  /**
-   * Specifies the scale for the decimal and numeric columns.
-   */
-  scale?: number;
-}

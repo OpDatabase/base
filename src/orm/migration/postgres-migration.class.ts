@@ -4,6 +4,7 @@ import { DataType } from '../interfaces/data-type.enum';
 import {
   AddColumnNumericOptions,
   AddColumnOptions,
+  AddIndexOptions,
   CreateJoinTableOptions,
   CreateTableConfigBlock,
   CreateTableOptions,
@@ -12,6 +13,23 @@ import {
 import { MigrationHandler } from './migration-handler.class';
 
 export class PostgresMigration extends MigrationHandler implements NativeMigrationOperations {
+  public async addColumn(
+    tableName: string,
+    columnName: string,
+    type: DataType,
+    options: AddColumnNumericOptions | AddColumnOptions,
+  ): Promise<void> {
+    const { statement, defaultPlaceholders } = columnDefinition(columnName, type, options);
+    await this.execute(`ALTER TABLE "${tableName}" ADD COLUMN ${statement}`, { ...defaultPlaceholders });
+  }
+
+  public async addIndex(tableName: string, columnNames: string[], options: AddIndexOptions): Promise<void> {
+    const indexName = options.name || `${tableName}_${columnNames.join('_')}_index`;
+    const statement = options.unique ? `CREATE UNIQUE INDEX "${indexName}"` : `CREATE INDEX "${indexName}"`;
+    const escapedColumnNames = columnNames.map(name => `"${name}"`);
+    await this.execute(`${statement} ON "${tableName}"(${escapedColumnNames.join(', ')})`);
+  }
+
   public async createJoinTable(
     tableName1: string,
     tableName2: string,
@@ -32,9 +50,10 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
 
   public async createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void> {
     const columnDefinitions: string[] = [];
+    const indices: Array<{ columnNames: string[], options: AddIndexOptions }> = [];
     let placeholders: { [key: string]: unknown } = {};
     const addColumn = (columnName: string, type: DataType, opts: AddColumnNumericOptions | AddColumnOptions) => {
-      const { statement, defaultPlaceholders } = this.columnDefinition(columnName, type, opts);
+      const { statement, defaultPlaceholders } = columnDefinition(columnName, type, opts);
       columnDefinitions.push(statement);
       placeholders = { ...placeholders, ...defaultPlaceholders };
     };
@@ -42,13 +61,19 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     // Create primary key
     if (options.id === true || options.id === undefined) {
       addColumn(options.primaryKey || 'id', DataType.primaryKey, {});
-      // await this.execute(`ALTER TABLE "${name}" ADD COLUMN "${primaryColumnName}" INTEGER`);
-      // await this.execute(`ALTER TABLE "${name}" ADD PRIMARY KEY ("${primaryColumnName}")`);
     }
 
     // Run config block
     await configBlock({
-      column: (columnName: string, type: DataType, opts?: AddColumnNumericOptions | AddColumnOptions) => addColumn(columnName, type, opts || {}),
+      column: (columnName: string, type: DataType, opts?: AddColumnNumericOptions | AddColumnOptions) => {
+        addColumn(columnName, type, opts || {});
+      },
+      index: (columnNames: string | string[], opts?: AddIndexOptions) => {
+        indices.push({
+          columnNames: typeof columnNames === 'string' ? [columnNames] : columnNames,
+          options: opts || {},
+        });
+      },
       timestamps: () => {
         addColumn('created_at', DataType.datetime, {});
         addColumn('updated_at', DataType.datetime, {});
@@ -67,34 +92,27 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
 
     // Run SQL statement
     await this.execute(`CREATE TABLE "${name}" (${columnDefinitions.join(', ')})`, placeholders);
+
+    // Add indices
+    await Promise.all(indices.map(i => this.addIndex(name, i.columnNames, i.options)));
+  }
+}
+
+function columnDefinition(
+  columnName: string,
+  type: DataType,
+  options: AddColumnNumericOptions | AddColumnOptions,
+): { statement: string, defaultPlaceholders: { [key: string]: unknown } } {
+  let statement = `"${columnName}" ${postgresDataTypeToSql(type, options)}`;
+  const defaultPlaceholders: { [key: string]: unknown } = {};
+  if (options.null === null || options.null === true) {
+    statement = `${statement} NOT NULL`;
+  }
+  if (options.default !== undefined) {
+    const placeholderName = `${columnName.replace(/\W/, '')}Default`;
+    statement = `${statement} DEFAULT $${placeholderName}`;
+    defaultPlaceholders[placeholderName] = options.default;
   }
 
-  public async addColumn(
-    tableName: string,
-    columnName: string,
-    type: DataType,
-    options: AddColumnNumericOptions | AddColumnOptions,
-  ): Promise<void> {
-    const { statement, defaultPlaceholders } = this.columnDefinition(columnName, type, options);
-    await this.execute(`ALTER TABLE "${tableName}" ADD COLUMN ${statement}`, { ...defaultPlaceholders });
-  }
-
-  private columnDefinition(
-    columnName: string,
-    type: DataType,
-    options: AddColumnNumericOptions | AddColumnOptions,
-  ): { statement: string, defaultPlaceholders: { [key: string]: unknown } } {
-    let statement = `"${columnName}" ${postgresDataTypeToSql(type, options)}`;
-    const defaultPlaceholders: { [key: string]: unknown } = {};
-    if (options.null === null || options.null === true) {
-      statement = `${statement} NOT NULL`;
-    }
-    if (options.default !== undefined) {
-      const placeholderName = `${columnName.replace(/\W/, '')}Default`;
-      statement = `${statement} DEFAULT $${placeholderName}`;
-      defaultPlaceholders[placeholderName] = options.default;
-    }
-
-    return { statement, defaultPlaceholders };
-  }
+  return { statement, defaultPlaceholders };
 }

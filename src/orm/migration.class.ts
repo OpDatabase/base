@@ -2,6 +2,7 @@ import { DataType } from './interfaces/data-type.enum';
 import {
   AddColumnNumericOptions,
   AddColumnOptions,
+  AddIndexOptions,
   CreateJoinTableOptions,
   CreateTableConfigBlock,
   CreateTableOptions,
@@ -14,6 +15,30 @@ import { PostgresMigration } from './migration/postgres-migration.class';
 export abstract class Migration extends MigrationHandler implements MigrationOperations {
   // todo: make dynamic based on config
   private internalHandler: NativeMigrationOperations = new PostgresMigration();
+
+  public async addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<void>;
+  public async addColumn(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<void>;
+  public async addColumn(tableName: string, columnName: string, type: DataType): Promise<void>;
+  public async addColumn(
+    tableName: string,
+    columnName: string,
+    type: DataType,
+    options?: AddColumnOptions | AddColumnNumericOptions,
+  ): Promise<void> {
+    return await this.internalHandler.addColumn(tableName, columnName, type, options || {});
+  }
+
+  public async addIndex(tableName: string, columnNames: string[]): Promise<void>;
+  public async addIndex(tableName: string, columnNames: string): Promise<void>;
+  public async addIndex(tableName: string, columnNames: string[], options: AddIndexOptions): Promise<void>;
+  public async addIndex(tableName: string, columnNames: string, options: AddIndexOptions): Promise<void>;
+  public async addIndex(tableName: string, columnNames: string[] | string, options?: AddIndexOptions): Promise<void> {
+    return await this.internalHandler.addIndex(
+      tableName,
+      typeof columnNames === 'string' ? [columnNames] : columnNames,
+      options || {},
+    );
+  }
 
   public async createJoinTable(tableName1: string, tableName2: string): Promise<void>;
   public async createJoinTable(tableName1: string, tableName2: string, configBlock: CreateTableConfigBlock): Promise<void>;
@@ -56,17 +81,5 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     } else {
       return await this.internalHandler.createTable(name, optionsOrConfigBlock, configBlock || placeholderCallback);
     }
-  }
-
-  public async addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<void>;
-  public async addColumn(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<void>;
-  public async addColumn(tableName: string, columnName: string, type: DataType): Promise<void>;
-  public async addColumn(
-    tableName: string,
-    columnName: string,
-    type: DataType,
-    options?: AddColumnOptions | AddColumnNumericOptions,
-  ): Promise<void> {
-    return await this.internalHandler.addColumn(tableName, columnName, type, options || {});
   }
 }
