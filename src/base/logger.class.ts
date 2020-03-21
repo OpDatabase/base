@@ -12,14 +12,12 @@ export class Logger {
   /**
    * Logs the execution of an SQL query.
    */
-  // tslint:disable-next-line:no-any
   public static logQuery(prefix: string, sql: string, placeholdersWithName: LogQueryPlaceholderPayload[]) {
     const firstExpression = sql.replace(/ .*/, '').toLowerCase();
     const queryPrefix = chalk.grey(prefix);
     const placeholderSuffixes: string[] = [];
 
     for (const placeholder of placeholdersWithName) {
-      // tslint:disable-next-line:no-any
       placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value.toString())}`);
     }
 
@@ -70,16 +68,14 @@ export class Logger {
   /**
    * Logs an error.
    */
-  // tslint:disable-next-line:no-any
-  public static error(...params: any[]) {
+  public static error(...params: unknown[]) {
     this.defaultLogger.error(chalk.bgRed.white(...params));
   }
 
   /**
    * Logs an debug statement.
    */
-  // tslint:disable-next-line:no-any
-  public static debug(...params: any[]) {
+  public static debug(...params: unknown[]) {
     this.defaultLogger.debug(chalk.grey(...params));
   }
 }
@@ -100,18 +96,15 @@ export interface ConsoleHandler {
   /**
    * Default console output.
    */
-  // tslint:disable-next-line:no-any
-  log(...args: any[]): any;
+  log(...args: unknown[]): unknown;
 
   /**
    * Error console output.
    */
-  // tslint:disable-next-line:no-any
-  error(...args: any[]): any;
+  error(...args: unknown[]): unknown;
 
   /**
    * Debug console output.
    */
-  // tslint:disable-next-line:no-any
-  debug(...args: any[]): any;
+  debug(...args: unknown[]): unknown;
 }

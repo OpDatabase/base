@@ -63,10 +63,8 @@ describe('Logger', () => {
   });
 });
 
-// tslint:disable-next-line:no-any
-function mockConsole(expectedMethod: keyof ConsoleHandler, ...expectedResponse: any[]) {
-  // tslint:disable-next-line:no-any
-  const validateCallback = (method: keyof ConsoleHandler, ...response: any[]) => {
+function mockConsole(expectedMethod: keyof ConsoleHandler, ...expectedResponse: unknown[]) {
+  const validateCallback = (method: keyof ConsoleHandler, ...response: unknown[]) => {
     expect(method).toBe(expectedMethod);
     for (let i = 0; i < expectedResponse.length; i++) {
       expect(response[i]).toBe(expectedResponse[i]);
@@ -77,24 +75,21 @@ function mockConsole(expectedMethod: keyof ConsoleHandler, ...expectedResponse: 
     /**
      * Mocks the debug statement.
      */
-    // tslint:disable-next-line:no-any
-    public debug(...args: any[]): any {
+    public debug(...args: unknown[]): void {
       validateCallback('debug', ...args);
     }
 
     /**
      * Mocks the error statement.
      */
-    // tslint:disable-next-line:no-any
-    public error(...args: any[]): any {
+    public error(...args: unknown[]): void {
       validateCallback('error', ...args);
     }
 
     /**
      * Mocks the log statement.
      */
-    // tslint:disable-next-line:no-any
-    public log(...args: any[]): any {
+    public log(...args: unknown[]): void {
       validateCallback('log', ...args);
     }
   }
