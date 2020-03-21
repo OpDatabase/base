@@ -38,9 +38,35 @@ export interface NativeMigrationOperations {
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
+  /**
+   * Drops the join table specified by the given arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   * @param options advanced options for dropping the join table
+   */
   dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
 
+  /**
+   * Drops a table from the database.
+   * @param name Name of the table to drop
+   * @param options Advanced options for dropping the table
+   */
   dropTable(name: string, options: DropTableOptions): Promise<void>;
+
+  /**
+   * Removes columns from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnNames Names of the columns to drop.
+   */
+  removeColumns(tableName: string, ...columnNames: string[]): Promise<void>;
+
+  /**
+   * Removes an index from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnNames Name of the indexed columns.
+   * @param options Advanced options for dropping the index
+   */
+  removeIndex(tableName: string, columnNames: string[], options: IndexOptions): Promise<void>;
 }
 
 export interface MigrationOperations extends NativeMigrationOperations {
@@ -153,13 +179,77 @@ export interface MigrationOperations extends NativeMigrationOperations {
    */
   createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
 
+  /**
+   * Drops the join table specified by the given arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   */
   dropJoinTable(tableName1: string, tableName2: string): Promise<void>;
 
+  /**
+   * Drops the join table specified by the given arguments.
+   * @param tableName1 name of the first table
+   * @param tableName2 name of the second table
+   * @param options advanced options for dropping the join table
+   */
   dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
 
+  /**
+   * Drops a table from the database.
+   * @param name Name of the table to drop
+   */
   dropTable(name: string): Promise<void>;
 
+  /**
+   * Drops a table from the database.
+   * @param name Name of the table to drop
+   * @param options Advanced options for dropping the table
+   */
   dropTable(name: string, options: DropTableOptions): Promise<void>;
+
+  /**
+   * Removes a column from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnName Name of the column to drop.
+   */
+  removeColumn(tableName: string, columnName: string): Promise<void>;
+
+  /**
+   * Removes columns from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnNames Names of the columns to drop.
+   */
+  removeColumns(tableName: string, ...columnNames: string[]): Promise<void>;
+
+  /**
+   * Removes an index from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnNames Name of the indexed columns.
+   */
+  removeIndex(tableName: string, columnNames: string[]): Promise<void>;
+
+  /**
+   * Removes an index from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnName Name of the indexed column.
+   */
+  removeIndex(tableName: string, columnName: string): Promise<void>;
+
+  /**
+   * Removes an index from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnNames Name of the indexed columns.
+   * @param options Advanced options for dropping the index
+   */
+  removeIndex(tableName: string, columnNames: string[], options: IndexOptions): Promise<void>;
+
+  /**
+   * Removes an index from a table.
+   * @param tableName Name of the table from which to drop.
+   * @param columnName Name of the indexed column.
+   * @param options Advanced options for dropping the index
+   */
+  removeIndex(tableName: string, columnName: string, options: IndexOptions): Promise<void>;
 }
 
 export interface AddColumnOptions {
@@ -195,16 +285,18 @@ export interface AddColumnNumericOptions extends AddColumnOptions {
   scale?: number;
 }
 
-export interface AddIndexOptions {
-  /**
-   * Sets if the index should be unique
-   */
-  unique?: boolean;
-
+export interface IndexOptions {
   /**
    * Sets the index name, overriding the default.
    */
   name?: string;
+}
+
+export interface AddIndexOptions extends IndexOptions {
+  /**
+   * Sets if the index should be unique
+   */
+  unique?: boolean;
 }
 
 export interface JoinTableOptions {
@@ -230,6 +322,9 @@ export interface CreateTableOptions {
 }
 
 export interface DropTableOptions {
+  /**
+   * If set to true, the table will only be dropped if it exists.
+   */
   ifExists?: boolean;
 }
 
@@ -257,13 +352,31 @@ export interface CreateTableConfigBlockParameter {
    */
   column(columnName: string, type: DataType): void;
 
+  /**
+   * Adds a new index to an existing table.
+   * @param columnNames Name of the columns to index
+   */
   index(columnNames: string[]): void;
 
-  index(columnNames: string): void;
+  /**
+   * Adds a new index to an existing table.
+   * @param columnName Name of the column to index
+   */
+  index(columnName: string): void;
 
+  /**
+   * Adds a new index to an existing table.
+   * @param columnNames Name of the columns to index
+   * @param options Advanced config options for the new index
+   */
   index(columnNames: string[], options: AddIndexOptions): void;
 
-  index(columnNames: string, options: AddIndexOptions): void;
+  /**
+   * Adds a new index to an existing table.
+   * @param columnName Name of the column to index
+   * @param options Advanced config options for the new index
+   */
+  index(columnName: string, options: AddIndexOptions): void;
 
   /**
    * Adds the columns "created_at" and "updated_at" to the table.
@@ -336,8 +449,9 @@ export interface CreateTableConfigBlockParameter {
   /**
    * Adds a new column of type boolean to the table.
    * @param columnName Name of the new table column to be added
+   * @param options Advanced config options for the new table column
    */
-  boolean(columnName: string): void;
+  boolean(columnName: string, options?: AddColumnOptions): void;
 
   // todo:  t.change # changes the column definition. Ex: t.change(:name, :string, :limit => 80)
   //        t.change_default # changes the column default value.

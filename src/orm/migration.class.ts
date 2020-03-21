@@ -6,6 +6,7 @@ import {
   CreateTableConfigBlock,
   CreateTableOptions,
   DropTableOptions,
+  IndexOptions,
   JoinTableOptions,
   MigrationOperations,
   NativeMigrationOperations,
@@ -94,5 +95,25 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   public async dropTable(name: string, options: DropTableOptions): Promise<void>;
   public async dropTable(name: string, options?: DropTableOptions): Promise<void> {
     return await this.internalHandler.dropTable(name, options || {});
+  }
+
+  public async removeColumn(tableName: string, columnName: string): Promise<void> {
+    return await this.removeColumns(tableName, columnName);
+  }
+
+  public async removeColumns(tableName: string, ...columnNames: string[]): Promise<void> {
+    return await this.internalHandler.removeColumns(tableName, ...columnNames);
+  }
+
+  public async removeIndex(tableName: string, columnNames: string[]): Promise<void>;
+  public async removeIndex(tableName: string, columnName: string): Promise<void>;
+  public async removeIndex(tableName: string, columnNames: string[], options: IndexOptions): Promise<void>;
+  public async removeIndex(tableName: string, columnName: string, options: IndexOptions): Promise<void>;
+  public async removeIndex(tableName: string, columnNames: string[] | string, options?: IndexOptions): Promise<void> {
+    return await this.internalHandler.removeIndex(
+      tableName,
+      typeof columnNames === 'string' ? [columnNames] : columnNames,
+      options || {},
+    );
   }
 }
