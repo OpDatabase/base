@@ -42,3 +42,14 @@ yarn cpx "./src/adapter/mysql/package.json" "./dist/opdb-mysql"
 yarn cpx "./src/adapter/mysql/README.md" "./dist/opdb-mysql"
 node ./adjust-package-file.js ./dist/opdb-mysql/package.json
 rm -rf ./src/adapter/mysql/dist
+
+# @opdb/orm
+cd ./src/orm
+yarn
+yarn build
+cd "$baseDir"
+yarn cpx "./src/orm/dist/**/*.{ts,js}" "./dist/opdb-orm"
+yarn cpx "./src/orm/package.json" "./dist/opdb-orm"
+yarn cpx "./src/orm/README.md" "./dist/opdb-orm"
+node ./adjust-package-file.js ./dist/opdb-orm/package.json
+rm -rf ./src/orm/dist
