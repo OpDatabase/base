@@ -1,3 +1,4 @@
+import { Base } from '@opdb/base';
 import { DataType } from './interfaces/data-type.enum';
 import {
   AddColumnNumericOptions,
@@ -9,14 +10,30 @@ import {
   IndexOptions,
   JoinTableOptions,
   MigrationOperations,
-  NativeMigrationOperations,
 } from './interfaces/migration-operations.interface';
 import { MigrationHandler } from './migration/migration-handler.class';
-import { PostgresMigration } from './migration/postgres-migration.class';
+import { getNativeMigrationHandler } from './migration/native-migration-handler.func';
 
 export abstract class Migration extends MigrationHandler implements MigrationOperations {
-  // todo: make dynamic based on config
-  private internalHandler: NativeMigrationOperations = new PostgresMigration();
+  private internalHandler = getNativeMigrationHandler(Base.connectionPool.adapterIdentifier);
+
+  // -----------------------------------
+  // Abstract methods
+  // -----------------------------------
+
+  /**
+   * Migrates the database from the current state to a new state.
+   */
+  public abstract async up(): Promise<unknown>;
+
+  /**
+   * Reverts the database's current state to its former state.
+   */
+  public abstract async down(): Promise<unknown>;
+
+  // -----------------------------------
+  // Migration operations
+  // -----------------------------------
 
   public async addColumn(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<void>;
   public async addColumn(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<void>;
