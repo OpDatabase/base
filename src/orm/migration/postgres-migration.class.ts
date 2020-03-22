@@ -32,6 +32,29 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     await this.execute(`${statement} ON "${tableName}"(${escapedColumnNames.join(', ')})`);
   }
 
+  public async changeColumnDefault(tableName: string, columnName: string, defaultValue: unknown | null): Promise<void> {
+    if (defaultValue === null) {
+      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP DEFAULT`);
+    } else {
+      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET DEFAULT ${defaultValue}`);
+    }
+  }
+
+  public async changeColumnNull(tableName: string, columnName: string, allowNull: boolean, replaceNullValuesWith?: unknown): Promise<void> {
+    // Replace null values if requested
+    if (replaceNullValuesWith !== undefined) {
+      await this.execute(`UPDATE "${tableName}" SET "${columnName}" = $value WHERE "${columnName}" IS NULL`, {
+        value: replaceNullValuesWith,
+      });
+    }
+
+    if (allowNull) {
+      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET NOT NULL`);
+    } else {
+      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP NOT NULL`);
+    }
+  }
+
   public async createJoinTable(
     tableName1: string,
     tableName2: string,

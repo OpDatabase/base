@@ -22,6 +22,30 @@ export interface NativeMigrationOperations {
   addIndex(tableName: string, columnNames: string[], options: AddIndexOptions): Promise<void>;
 
   /**
+   * Sets a new default value for a column.
+   * Setting the defaultValue to null effectively drops the default.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param defaultValue New default value or no default value if given null
+   */
+  changeColumnDefault(tableName: string, columnName: string, defaultValue: unknown | null): Promise<void>;
+
+  /**
+   * Sets or removes a NOT NULL constraint on a column.
+   *
+   * The method accepts an optional fourth argument to replace existing NULLs with some other value.
+   * Use that one when enabling the constraint if needed, since otherwise those rows would not be valid.
+   *
+   * Please note the fourth argument does not set a column’s default.
+   *
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param allowNull Set if the column shall accept null values
+   * @param replaceNullValuesWith Value to replace columns that are currently null with
+   */
+  changeColumnNull(tableName: string, columnName: string, allowNull: boolean, replaceNullValuesWith?: unknown): Promise<void>;
+
+  /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
    * @param tableName1 name of the first table
    * @param tableName2 name of the second table

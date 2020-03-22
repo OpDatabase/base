@@ -49,6 +49,14 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     ]);
   }
 
+  public async changeColumnDefault(tableName: string, columnName: string, defaultValue: unknown | null): Promise<void> {
+    return await this.internalHandler.changeColumnDefault(tableName, columnName, defaultValue);
+  }
+
+  public async changeColumnNull(tableName: string, columnName: string, allowNull: boolean, replaceNullValuesWith?: unknown): Promise<void> {
+    return await this.internalHandler.changeColumnNull(tableName, columnName, allowNull, replaceNullValuesWith);
+  }
+
   public async createJoinTable(tableName1: string, tableName2: string): Promise<void>;
   public async createJoinTable(tableName1: string, tableName2: string, configBlock: CreateTableConfigBlock): Promise<void>;
   public async createJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
