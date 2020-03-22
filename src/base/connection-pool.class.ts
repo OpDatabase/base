@@ -27,6 +27,10 @@ export class ConnectionPool {
     Logger.debug(`(Connection Pool) Registered adapter "${instance.getIdentifier()}"`);
   }
 
+  public get adapterIdentifier(): string | undefined {
+    return this.adapter?.getIdentifier();
+  }
+
   /**
    * Resets all adapters
    * @internal
