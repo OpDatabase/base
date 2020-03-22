@@ -12,7 +12,7 @@ import {
   MigrationOperations,
 } from './interfaces/migration-operations.interface';
 import { MigrationHandler } from './migration/migration-handler.class';
-import { getNativeMigrationHandler } from './migration/native-migration-handler.func';
+import { getNativeMigrationHandler } from './migration/native-migration-handler';
 
 export abstract class Migration extends MigrationHandler implements MigrationOperations {
   private internalHandler = getNativeMigrationHandler(Base.connectionPool.adapterIdentifier);
