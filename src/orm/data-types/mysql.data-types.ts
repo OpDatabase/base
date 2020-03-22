@@ -1,3 +1,5 @@
+// tslint:disable
+/*
 import { MigrationException } from '../exceptions/migration.exception';
 import { DataType } from '../interfaces/data-type.enum';
 import { AddColumnNumericOptions, AddColumnOptions } from '../interfaces/migration-operations.interface';
@@ -78,3 +80,4 @@ function textToSql(limit: number | null): string {
     throw new MigrationException(`No text type has byte length ${limit}`);
   }
 }
+*/
