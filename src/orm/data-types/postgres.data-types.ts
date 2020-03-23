@@ -25,7 +25,7 @@ export function postgresDataTypeToSql(type: DataType, options: AddColumnNumericO
         throw new MigrationException(`Error adding decimal column: precision cannot be empty if scale is specified`);
       }
 
-      return numericOptions.scale === undefined ? `DECIMAL(${numericOptions.precision})` : `DECIMAL(${numericOptions.precision}, ${numericOptions.scale})`;
+      return numericOptions.scale === undefined ? `NUMERIC(${numericOptions.precision})` : `NUMERIC(${numericOptions.precision}, ${numericOptions.scale})`;
 
     case DataType.float:
       return floatToSql(options.limit || 4);

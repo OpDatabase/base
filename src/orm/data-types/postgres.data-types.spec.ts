@@ -8,9 +8,9 @@ describe('postgresDataTypeToSql', () => {
     expect(postgresDataTypeToSql(DataType.date, {})).toStrictEqual('DATE');
     expect(postgresDataTypeToSql(DataType.datetime, {})).toStrictEqual('TIMESTAMP');
     expect(postgresDataTypeToSql(DataType.timestamp, {})).toStrictEqual('TIMESTAMP');
-    expect(postgresDataTypeToSql(DataType.decimal, {})).toStrictEqual('DECIMAL');
-    expect(postgresDataTypeToSql(DataType.decimal, { precision: 1 })).toStrictEqual('DECIMAL(1)');
-    expect(postgresDataTypeToSql(DataType.decimal, { precision: 1, scale: 2 })).toStrictEqual('DECIMAL(1,2)');
+    expect(postgresDataTypeToSql(DataType.decimal, {})).toStrictEqual('NUMERIC');
+    expect(postgresDataTypeToSql(DataType.decimal, { precision: 1 })).toStrictEqual('NUMERIC(1)');
+    expect(postgresDataTypeToSql(DataType.decimal, { precision: 1, scale: 2 })).toStrictEqual('NUMERIC(1, 2)');
     expect(() => {
       postgresDataTypeToSql(DataType.decimal, { scale: 2 });
     }).toThrowError(MigrationException);

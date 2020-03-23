@@ -49,9 +49,9 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     }
 
     if (allowNull) {
-      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET NOT NULL`);
-    } else {
       await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP NOT NULL`);
+    } else {
+      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET NOT NULL`);
     }
   }
 

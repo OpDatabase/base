@@ -1,9 +1,12 @@
+import { Base } from '@opdb/base';
 import { MockMigrationHandler } from '../../../tests/mock-migration-handler';
 import { MigrationException } from '../exceptions/migration.exception';
 import { getNativeMigrationHandler, thirdPartyMigrationHandlers } from './native-migration-handler';
 import { PostgresMigration } from './postgres-migration.class';
 
 describe('getNativeMigrationHandler', () => {
+  afterEach(() => Base.connectionPool.reset());
+
   it('should throw an exception if the requested identifier is undefined', async () => {
     expect(() => {
       getNativeMigrationHandler(undefined);
