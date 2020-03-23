@@ -1,5 +1,8 @@
+// @ts-ignore
+// tslint:disable-next-line:no-implicit-dependencies
+import * as pgUtils from 'pg/lib/utils';
 import pluralize from 'pluralize';
-import { postgresDataTypeToSql } from '../data-types/postgres.data-types';
+import { postgresDataTypeDefaultValueInformationSchema, postgresDataTypeSelector, postgresDataTypeToSql } from '../data-types/postgres.data-types';
 import { DataType } from '../interfaces/data-type.enum';
 import {
   AddColumnNumericOptions,
@@ -36,7 +39,7 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     if (defaultValue === null) {
       await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP DEFAULT`);
     } else {
-      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET DEFAULT ${defaultValue}`);
+      await this.execute(`ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET DEFAULT '${prepareValueNative(defaultValue)}'`);
     }
   }
 
@@ -157,6 +160,93 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     // todo: rename all column indices
     await this.execute(`ALTER TABLE "${tableName}" RENAME TO "${newTableName}"`);
   }
+
+  public async columnExists(
+    tableName: string,
+    columnName: string,
+    type: DataType | undefined,
+    options: AddColumnNumericOptions | AddColumnOptions | undefined,
+  ): Promise<boolean> {
+    let query = `SELECT DISTINCT 1 FROM information_schema.columns WHERE table_schema = $schema AND table_name = $tableName AND column_name = $columnName`;
+    let params: { [key: string]: unknown } = { schema: 'public', tableName, columnName };
+
+    if (type !== undefined) {
+      const { subQuery, placeholders } = postgresDataTypeSelector(type, options || {});
+      query = `${query} AND ${subQuery}`;
+      params = { ...params, ...placeholders };
+
+      if (options !== undefined) {
+        if (options.null !== undefined) {
+          query = `${query} AND is_nullable = $isNullable`;
+          params = { ...params, isNullable: options.null ? 'YES' : 'NO' };
+        }
+        if (options.default !== undefined) {
+          query = `${query} AND column_default = $columnDefault`;
+          params = {
+            ...params,
+            columnDefault: postgresDataTypeDefaultValueInformationSchema(
+              prepareValueNative(options.default),
+              type,
+              options,
+            ),
+          };
+        }
+      }
+    }
+
+    return (await this.execute(query, params)).length === 1;
+  }
+
+  public async columns(tableName: string): Promise<string[]> {
+    const records = await this.execute<{ column_name: string }>(
+      `SELECT column_name FROM information_schema.columns WHERE table_schema = $schema AND table_name = $tableName`,
+      { schema: 'public', tableName },
+    );
+
+    return records.map(r => r.column_name);
+  }
+
+  public async indexExists(tableName: string, columnNames: string[], options: IndexOptions): Promise<boolean> {
+    const indexName = options.name || generateIndexName(tableName, columnNames);
+    const records = await this.execute(
+      `SELECT DISTINCT 1 FROM pg_indexes WHERE schemaname = $schema AND tablename = $tableName AND indexname = $indexName`,
+      { schema: 'public', tableName, indexName },
+    );
+
+    return records.length === 1;
+  }
+
+  public async indexes(tableName: string): Promise<string[]> {
+    const records = await this.execute<{ indexname: string }>(
+      `SELECT indexname FROM pg_indexes WHERE schemaname = $schema AND tablename = $tableName`,
+      { schema: 'public', tableName },
+    );
+
+    return records.map(r => r.indexname);
+  }
+
+  public async tableExists(tableName: string): Promise<boolean> {
+    const records = await this.execute(
+      `SELECT DISTINCT 1 FROM information_schema.tables WHERE table_schema = $schema AND table_name = $tableName`,
+      { schema: 'public', tableName },
+    );
+
+    return records.length === 1;
+  }
+
+  public async tables(): Promise<string[]> {
+    const records = await this.execute<{ table_name: string }>(
+      `SELECT table_name FROM information_schema.tables WHERE table_schema = $schema`,
+      { schema: 'public' },
+    );
+
+    return records.map(r => r.table_name);
+  }
+
+}
+
+function prepareValueNative(value: unknown): string {
+  return `${pgUtils.prepareValue(value)}`;
 }
 
 function generateJoinTableName(columnNames: string[]): string {
@@ -166,6 +256,8 @@ function generateJoinTableName(columnNames: string[]): string {
 }
 
 function generateIndexName(tableName: string, columnNames: string[]): string {
+  columnNames = columnNames.sort((a, b) => a > b ? 1 : -1);
+
   return `${tableName}_${columnNames.join('_')}_index`;
 }
 
@@ -179,7 +271,7 @@ function columnDefinition(
     statement = `${statement} NOT NULL`;
   }
   if (options.default !== undefined) {
-    statement = `${statement} DEFAULT ${options.default}`;
+    statement = `${statement} DEFAULT '${prepareValueNative(options.default)}'`;
   }
 
   return statement;

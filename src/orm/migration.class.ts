@@ -164,4 +164,47 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   public async renameTable(tableName: string, newTableName: string): Promise<void> {
     return await this.internalHandler.renameTable(tableName, newTableName);
   }
+
+  public async tables(): Promise<string[]> {
+    return await this.internalHandler.tables();
+  }
+
+  public async columnExists(tableName: string, columnName: string): Promise<boolean>;
+  public async columnExists(tableName: string, columnName: string, type: DataType): Promise<boolean>;
+  public async columnExists(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<boolean>;
+  public async columnExists(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<boolean>;
+  public async columnExists(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<boolean>;
+  public async columnExists(
+    tableName: string,
+    columnName: string,
+    type?: DataType | DataType.decimal,
+    options?: AddColumnOptions | AddColumnNumericOptions,
+  ): Promise<boolean> {
+    return await this.internalHandler.columnExists(tableName, columnName, type, options);
+  }
+
+  public async columns(tableName: string): Promise<string[]> {
+    return await this.internalHandler.columns(tableName);
+  }
+
+  public async indexExists(tableName: string, columnNames: string[]): Promise<boolean>;
+  public async indexExists(tableName: string, columnName: string): Promise<boolean>;
+  public async indexExists(tableName: string, columnNames: string[], options: IndexOptions): Promise<boolean>;
+  public async indexExists(tableName: string, columnName: string, options: IndexOptions): Promise<boolean>;
+  public async indexExists(tableName: string, columnNames: string[] | string, options?: IndexOptions): Promise<boolean> {
+    return await this.internalHandler.indexExists(
+      tableName,
+      typeof columnNames === 'string' ? [columnNames] : columnNames,
+      options || {},
+    );
+  }
+
+  public async indexes(tableName: string): Promise<string[]> {
+    return await this.internalHandler.indexes(tableName);
+  }
+
+  public async tableExists(tableName: string): Promise<boolean> {
+    return await this.internalHandler.tableExists(tableName);
+  }
+
 }

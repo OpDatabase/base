@@ -46,6 +46,26 @@ export interface NativeMigrationOperations {
   changeColumnNull(tableName: string, columnName: string, allowNull: boolean, replaceNullValuesWith?: unknown): Promise<void>;
 
   /**
+   * Returns an array of Column objects for the table specified by tableName.
+   * @param tableName Name of the target table
+   */
+  columns(tableName: string): Promise<string[]>;
+
+  /**
+   * Checks to see if a column exists in a given table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param type Data type of the target column
+   * @param options Advanced table options
+   */
+  columnExists(
+    tableName: string,
+    columnName: string,
+    type: DataType | undefined,
+    options: AddColumnNumericOptions | AddColumnOptions | undefined,
+  ): Promise<boolean>;
+
+  /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
    * @param tableName1 name of the first table
    * @param tableName2 name of the second table
@@ -76,6 +96,20 @@ export interface NativeMigrationOperations {
    * @param options Advanced options for dropping the table
    */
   dropTable(name: string, options: DropTableOptions): Promise<void>;
+
+  /**
+   * Returns an array of index names for the given table.
+   * @param tableName Name of the target table
+   */
+  indexes(tableName: string): Promise<string[]>;
+
+  /**
+   * Checks to see if an index exists on a table for a given index definition.
+   * @param tableName Name of the target table
+   * @param columnNames Name of the target columns
+   * @param options Advanced index options
+   */
+  indexExists(tableName: string, columnNames: string[], options: IndexOptions): Promise<boolean>;
 
   /**
    * Removes columns from a table.
@@ -114,6 +148,17 @@ export interface NativeMigrationOperations {
    * @param newTableName New name of the table
    */
   renameTable(tableName: string, newTableName: string): Promise<void>;
+
+  /**
+   * Returns an array of all table names.
+   */
+  tables(): Promise<string[]>;
+
+  /**
+   * Checks to see if the table tableName exists on the database.
+   * @param tableName Name of the table to check
+   */
+  tableExists(tableName: string): Promise<boolean>;
 }
 
 export interface MigrationOperations extends NativeMigrationOperations {
@@ -178,6 +223,39 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param tableName Name of the target table
    */
   addTimestamps(tableName: string): Promise<void>;
+
+  /**
+   * Checks to see if a column exists in a given table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   */
+  columnExists(tableName: string, columnName: string): Promise<boolean>;
+
+  /**
+   * Checks to see if a column exists in a given table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param type Data type of the target column
+   */
+  columnExists(tableName: string, columnName: string, type: DataType): Promise<boolean>;
+
+  /**
+   * Checks to see if a column exists in a given table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param type Data type of the target column
+   * @param options Advanced table options
+   */
+  columnExists(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<boolean>;
+
+  /**
+   * Checks to see if a column exists in a given table.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param type Data type of the target column
+   * @param options Advanced table options
+   */
+  columnExists(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<boolean>;
 
   /**
    * Creates a new join table with the name created using the lexical order of the first two arguments.
@@ -259,6 +337,36 @@ export interface MigrationOperations extends NativeMigrationOperations {
    * @param options Advanced options for dropping the table
    */
   dropTable(name: string, options: DropTableOptions): Promise<void>;
+
+  /**
+   * Checks to see if an index exists on a table for a given index definition.
+   * @param tableName Name of the target table
+   * @param columnNames Name of the target columns
+   */
+  indexExists(tableName: string, columnNames: string[]): Promise<boolean>;
+
+  /**
+   * Checks to see if an index exists on a table for a given index definition.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   */
+  indexExists(tableName: string, columnName: string): Promise<boolean>;
+
+  /**
+   * Checks to see if an index exists on a table for a given index definition.
+   * @param tableName Name of the target table
+   * @param columnNames Name of the target columns
+   * @param options Advanced index options
+   */
+  indexExists(tableName: string, columnNames: string[], options: IndexOptions): Promise<boolean>;
+
+  /**
+   * Checks to see if an index exists on a table for a given index definition.
+   * @param tableName Name of the target table
+   * @param columnName Name of the target column
+   * @param options Advanced index options
+   */
+  indexExists(tableName: string, columnName: string, options: IndexOptions): Promise<boolean>;
 
   /**
    * Removes a column from a table.
