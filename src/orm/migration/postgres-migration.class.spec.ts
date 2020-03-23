@@ -1,6 +1,5 @@
 import { Base } from '@opdb/base';
 import { providePostgresConnection } from '@opdb/postgres';
-import flushPromises from 'flush-promises';
 import { DataType } from '../interfaces/data-type.enum';
 import { PostgresMigration } from './postgres-migration.class';
 
@@ -51,10 +50,6 @@ describe('PostgresMigration', () => {
   // Remove connection, reset adapter
   afterEach(async () => {
     Base.connectionPool.reset();
-  });
-
-  afterAll(async () => {
-    await flushPromises();
   });
 
   describe('schema statements', () => {
