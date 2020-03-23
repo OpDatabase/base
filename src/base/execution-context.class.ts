@@ -45,7 +45,6 @@ export abstract class ExecutionContext {
 
         } catch (e) {
           reject(e);
-          throw e;
         }
 
         if (this.showDebugInfo) {
