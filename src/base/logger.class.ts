@@ -18,7 +18,7 @@ export class Logger {
     const placeholderSuffixes: string[] = [];
 
     for (const placeholder of placeholdersWithName) {
-      placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value.toString())}`);
+      placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value == null ? 'NULL' : placeholder.value.toString())}`);
     }
 
     const log = (value: string) => {
@@ -89,7 +89,7 @@ export interface LogQueryPlaceholderPayload {
   /**
    * The value the placeholder will be exchanged for.
    */
-  value: { toString(): string };
+  value: { toString(): string } | null;
 }
 
 export interface ConsoleHandler {

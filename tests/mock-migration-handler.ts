@@ -41,4 +41,27 @@ export class MockMigrationHandler extends MigrationHandler implements NativeMigr
   public async renameTable(): Promise<void> {
   }
 
+  public async columnExists(): Promise<boolean> {
+    return false;
+  }
+
+  public async columns(): Promise<string[]> {
+    return [];
+  }
+
+  public async indexExists(): Promise<boolean> {
+    return false;
+  }
+
+  public async indexes(): Promise<string[]> {
+    return [];
+  }
+
+  public async tableExists(): Promise<boolean> {
+    return false;
+  }
+
+  public async tables(): Promise<string[]> {
+    return [];
+  }
 }
