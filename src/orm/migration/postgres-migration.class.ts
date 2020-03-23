@@ -1,6 +1,3 @@
-// @ts-ignore
-// tslint:disable-next-line:no-implicit-dependencies
-import * as pgUtils from 'pg/lib/utils';
 import pluralize from 'pluralize';
 import { postgresDataTypeDefaultValueInformationSchema, postgresDataTypeSelector, postgresDataTypeToSql } from '../data-types/postgres.data-types';
 import { DataType } from '../interfaces/data-type.enum';
@@ -246,6 +243,9 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
 }
 
 function prepareValueNative(value: unknown): string {
+  // tslint:disable-next-line:no-implicit-dependencies
+  const pgUtils = require('pg/lib/utils');
+
   return `${pgUtils.prepareValue(value)}`;
 }
 
