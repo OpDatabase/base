@@ -89,6 +89,7 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     optionsOrConfigBlock?: CreateTableConfigBlock | JoinTableOptions,
     configBlock?: CreateTableConfigBlock,
   ): Promise<void> {
+    /* istanbul ignore next */
     const placeholderCallback = () => void 0;
     if (optionsOrConfigBlock === undefined) {
       return await this.internalHandler.createJoinTable(tableName1, tableName2, {}, placeholderCallback);
@@ -101,12 +102,14 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
 
   public async createTable(name: string): Promise<void>;
   public async createTable(name: string, configBlock: CreateTableConfigBlock): Promise<void>;
+  public async createTable(name: string, options: CreateTableOptions): Promise<void>;
   public async createTable(name: string, options: CreateTableOptions, configBlock: CreateTableConfigBlock): Promise<void>;
   public async createTable(
     name: string,
     optionsOrConfigBlock?: CreateTableConfigBlock | CreateTableOptions,
     configBlock?: CreateTableConfigBlock,
   ): Promise<void> {
+    /* istanbul ignore next */
     const placeholderCallback = () => void 0;
     if (optionsOrConfigBlock === undefined) {
       return await this.internalHandler.createTable(name, {}, placeholderCallback);
@@ -171,7 +174,6 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
 
   public async columnExists(tableName: string, columnName: string): Promise<boolean>;
   public async columnExists(tableName: string, columnName: string, type: DataType): Promise<boolean>;
-  public async columnExists(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<boolean>;
   public async columnExists(tableName: string, columnName: string, type: DataType.decimal, options: AddColumnNumericOptions): Promise<boolean>;
   public async columnExists(tableName: string, columnName: string, type: DataType, options: AddColumnOptions): Promise<boolean>;
   public async columnExists(

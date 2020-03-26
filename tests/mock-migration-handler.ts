@@ -2,66 +2,107 @@ import { NativeMigrationOperations } from '../src/orm/interfaces/migration-opera
 import { MigrationHandler } from '../src/orm/migration/migration-handler.class';
 
 export class MockMigrationHandler extends MigrationHandler implements NativeMigrationOperations {
-  public async addColumn(): Promise<void> {
+  public static lastCalledMethod: string[] = [];
+  public static lastCalledArgs: unknown[][] = [];
+
+  public async addColumn(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('addColumn');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async addIndex(): Promise<void> {
+  public async addIndex(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('addIndex');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async changeColumnDefault(): Promise<void> {
+  public async changeColumnDefault(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('changeColumnDefault');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async changeColumnNull(): Promise<void> {
+  public async changeColumnNull(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('changeColumnNull');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async createJoinTable(): Promise<void> {
+  public async createJoinTable(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('createJoinTable');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async createTable(): Promise<void> {
+  public async createTable(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('createTable');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async dropJoinTable(): Promise<void> {
+  public async dropJoinTable(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('dropJoinTable');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async dropTable(): Promise<void> {
+  public async dropTable(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('dropTable');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async removeColumns(): Promise<void> {
+  public async removeColumns(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('removeColumns');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async removeIndex(): Promise<void> {
+  public async removeIndex(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('removeIndex');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async renameColumn(): Promise<void> {
+  public async renameColumn(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('renameColumn');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async renameIndex(): Promise<void> {
+  public async renameIndex(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('renameIndex');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async renameTable(): Promise<void> {
+  public async renameTable(...args: unknown[]): Promise<void> {
+    MockMigrationHandler.lastCalledMethod.push('renameTable');
+    MockMigrationHandler.lastCalledArgs.push(args);
   }
 
-  public async columnExists(): Promise<boolean> {
+  public async columnExists(...args: unknown[]): Promise<boolean> {
+    MockMigrationHandler.lastCalledMethod.push('columnExists');
+    MockMigrationHandler.lastCalledArgs.push(args);
     return false;
   }
 
-  public async columns(): Promise<string[]> {
+  public async columns(...args: unknown[]): Promise<string[]> {
+    MockMigrationHandler.lastCalledMethod.push('columns');
+    MockMigrationHandler.lastCalledArgs.push(args);
     return [];
   }
 
-  public async indexExists(): Promise<boolean> {
+  public async indexExists(...args: unknown[]): Promise<boolean> {
+    MockMigrationHandler.lastCalledMethod.push('indexExists');
+    MockMigrationHandler.lastCalledArgs.push(args);
     return false;
   }
 
-  public async indexes(): Promise<string[]> {
+  public async indexes(...args: unknown[]): Promise<string[]> {
+    MockMigrationHandler.lastCalledMethod.push('indexes');
+    MockMigrationHandler.lastCalledArgs.push(args);
     return [];
   }
 
-  public async tableExists(): Promise<boolean> {
+  public async tableExists(...args: unknown[]): Promise<boolean> {
+    MockMigrationHandler.lastCalledMethod.push('tableExists');
+    MockMigrationHandler.lastCalledArgs.push(args);
     return false;
   }
 
-  public async tables(): Promise<string[]> {
+  public async tables(...args: unknown[]): Promise<string[]> {
+    MockMigrationHandler.lastCalledMethod.push('tables');
+    MockMigrationHandler.lastCalledArgs.push(args);
     return [];
   }
 }
