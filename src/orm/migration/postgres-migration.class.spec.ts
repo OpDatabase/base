@@ -275,6 +275,20 @@ describe('PostgresMigration', () => {
         expect(columns).toContainEqual('b_object_id');
       });
 
+      it('should create a join table with default config and async configBlock', async () => {
+        // Create join table
+        await migrator.createJoinTable('a_objects', 'b_objects', {}, async () => void 0);
+
+        // Check for table
+        const tables = await getTables();
+        expect(tables).toContainEqual('a_objects_b_objects');
+
+        // Check for columns
+        const columns = await getColumns('a_objects_b_objects');
+        expect(columns).toContainEqual('a_object_id');
+        expect(columns).toContainEqual('b_object_id');
+      });
+
       it('should create a join table with default config + sort table names', async () => {
         // Create join table
         await migrator.createJoinTable('b_objects', 'a_objects', {}, () => void 0);
@@ -325,6 +339,19 @@ describe('PostgresMigration', () => {
       it('should create a new empty table', async () => {
         // Create table
         await migrator.createTable('new_table', {}, () => void 0);
+
+        // Check for table
+        const tables = await getTables();
+        expect(tables).toContainEqual('new_table');
+
+        // Check for columns
+        const columns = await getColumns('new_table');
+        expect(columns).toContainEqual('id');
+      });
+
+      it('should create a new empty table with an async configBlock', async () => {
+        // Create table
+        await migrator.createTable('new_table', {}, async () => void 0);
 
         // Check for table
         const tables = await getTables();
