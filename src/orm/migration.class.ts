@@ -15,7 +15,7 @@ import { MigrationHandler } from './migration/migration-handler.class';
 import { getNativeMigrationHandler } from './migration/native-migration-handler';
 
 export abstract class Migration extends MigrationHandler implements MigrationOperations {
-  private internalHandler = getNativeMigrationHandler(Base.connectionPool.adapterIdentifier);
+  private readonly internalHandler = getNativeMigrationHandler(Base.connectionPool.adapterIdentifier);
 
   // -----------------------------------
   // Abstract methods
@@ -44,7 +44,7 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     type: DataType,
     options?: AddColumnOptions | AddColumnNumericOptions,
   ): Promise<void> {
-    return await this.internalHandler.addColumn(tableName, columnName, type, options || {});
+    await this.internalHandler.addColumn(tableName, columnName, type, options || {});
   }
 
   public async addIndex(tableName: string, columnNames: string[]): Promise<void>;
@@ -52,7 +52,7 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   public async addIndex(tableName: string, columnNames: string[], options: AddIndexOptions): Promise<void>;
   public async addIndex(tableName: string, columnNames: string, options: AddIndexOptions): Promise<void>;
   public async addIndex(tableName: string, columnNames: string[] | string, options?: AddIndexOptions): Promise<void> {
-    return await this.internalHandler.addIndex(
+    await this.internalHandler.addIndex(
       tableName,
       typeof columnNames === 'string' ? [columnNames] : columnNames,
       options || {},
@@ -67,11 +67,11 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   }
 
   public async changeColumnDefault(tableName: string, columnName: string, defaultValue: unknown | null): Promise<void> {
-    return await this.internalHandler.changeColumnDefault(tableName, columnName, defaultValue);
+    await this.internalHandler.changeColumnDefault(tableName, columnName, defaultValue);
   }
 
   public async changeColumnNull(tableName: string, columnName: string, allowNull: boolean, replaceNullValuesWith?: unknown): Promise<void> {
-    return await this.internalHandler.changeColumnNull(tableName, columnName, allowNull, replaceNullValuesWith);
+    await this.internalHandler.changeColumnNull(tableName, columnName, allowNull, replaceNullValuesWith);
   }
 
   public async createJoinTable(tableName1: string, tableName2: string): Promise<void>;
@@ -92,11 +92,11 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     /* istanbul ignore next */
     const placeholderCallback = () => void 0;
     if (optionsOrConfigBlock === undefined) {
-      return await this.internalHandler.createJoinTable(tableName1, tableName2, {}, placeholderCallback);
+      await this.internalHandler.createJoinTable(tableName1, tableName2, {}, placeholderCallback);
     } else if (typeof optionsOrConfigBlock === 'function') {
-      return await this.internalHandler.createJoinTable(tableName1, tableName2, {}, optionsOrConfigBlock);
+      await this.internalHandler.createJoinTable(tableName1, tableName2, {}, optionsOrConfigBlock);
     } else {
-      return await this.internalHandler.createJoinTable(tableName1, tableName2, optionsOrConfigBlock, configBlock || placeholderCallback);
+      await this.internalHandler.createJoinTable(tableName1, tableName2, optionsOrConfigBlock, configBlock || placeholderCallback);
     }
   }
 
@@ -112,32 +112,32 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
     /* istanbul ignore next */
     const placeholderCallback = () => void 0;
     if (optionsOrConfigBlock === undefined) {
-      return await this.internalHandler.createTable(name, {}, placeholderCallback);
+      await this.internalHandler.createTable(name, {}, placeholderCallback);
     } else if (typeof optionsOrConfigBlock === 'function') {
-      return await this.internalHandler.createTable(name, {}, optionsOrConfigBlock);
+      await this.internalHandler.createTable(name, {}, optionsOrConfigBlock);
     } else {
-      return await this.internalHandler.createTable(name, optionsOrConfigBlock, configBlock || placeholderCallback);
+      await this.internalHandler.createTable(name, optionsOrConfigBlock, configBlock || placeholderCallback);
     }
   }
 
   public async dropJoinTable(tableName1: string, tableName2: string): Promise<void>;
   public async dropJoinTable(tableName1: string, tableName2: string, options: JoinTableOptions): Promise<void>;
   public async dropJoinTable(tableName1: string, tableName2: string, options?: JoinTableOptions): Promise<void> {
-    return await this.internalHandler.dropJoinTable(tableName1, tableName2, options || {});
+    await this.internalHandler.dropJoinTable(tableName1, tableName2, options || {});
   }
 
   public async dropTable(name: string): Promise<void>;
   public async dropTable(name: string, options: DropTableOptions): Promise<void>;
   public async dropTable(name: string, options?: DropTableOptions): Promise<void> {
-    return await this.internalHandler.dropTable(name, options || {});
+    await this.internalHandler.dropTable(name, options || {});
   }
 
   public async removeColumn(tableName: string, columnName: string): Promise<void> {
-    return await this.removeColumns(tableName, columnName);
+    await this.removeColumns(tableName, columnName);
   }
 
   public async removeColumns(tableName: string, ...columnNames: string[]): Promise<void> {
-    return await this.internalHandler.removeColumns(tableName, ...columnNames);
+    await this.internalHandler.removeColumns(tableName, ...columnNames);
   }
 
   public async removeIndex(tableName: string, columnNames: string[]): Promise<void>;
@@ -145,7 +145,7 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   public async removeIndex(tableName: string, columnNames: string[], options: IndexOptions): Promise<void>;
   public async removeIndex(tableName: string, columnName: string, options: IndexOptions): Promise<void>;
   public async removeIndex(tableName: string, columnNames: string[] | string, options?: IndexOptions): Promise<void> {
-    return await this.internalHandler.removeIndex(
+    await this.internalHandler.removeIndex(
       tableName,
       typeof columnNames === 'string' ? [columnNames] : columnNames,
       options || {},
@@ -153,19 +153,19 @@ export abstract class Migration extends MigrationHandler implements MigrationOpe
   }
 
   public async removeTimestamps(tableName: string): Promise<void> {
-    return await this.removeColumns(tableName, 'created_at', 'updated_at');
+    await this.removeColumns(tableName, 'created_at', 'updated_at');
   }
 
   public async renameColumn(tableName: string, columnName: string, newColumnName: string): Promise<void> {
-    return await this.internalHandler.renameColumn(tableName, columnName, newColumnName);
+    await this.internalHandler.renameColumn(tableName, columnName, newColumnName);
   }
 
   public async renameIndex(tableName: string, indexName: string, newIndexName: string): Promise<void> {
-    return await this.internalHandler.renameIndex(tableName, indexName, newIndexName);
+    await this.internalHandler.renameIndex(tableName, indexName, newIndexName);
   }
 
   public async renameTable(tableName: string, newTableName: string): Promise<void> {
-    return await this.internalHandler.renameTable(tableName, newTableName);
+    await this.internalHandler.renameTable(tableName, newTableName);
   }
 
   public async tables(): Promise<string[]> {

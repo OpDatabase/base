@@ -68,7 +68,10 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
       table.integer(`${pluralize.singular(tableName2)}_id`);
 
       // Run config block
-      await configBlock(table);
+      const blockResponse = configBlock(table);
+      if (blockResponse instanceof Promise) {
+        await blockResponse;
+      }
     });
   }
 
@@ -85,7 +88,7 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
     }
 
     // Run config block
-    await configBlock({
+    const blockResponse = configBlock({
       column: (columnName: string, type: DataType, opts?: AddColumnNumericOptions | AddColumnOptions) => {
         addColumn(columnName, type, opts || {});
       },
@@ -99,17 +102,40 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
         addColumn('created_at', DataType.datetime, {});
         addColumn('updated_at', DataType.datetime, {});
       },
-      string: (columnName, opts) => addColumn(columnName, DataType.string, opts || {}),
-      text: (columnName, opts) => addColumn(columnName, DataType.text, opts || {}),
-      integer: (columnName, opts) => addColumn(columnName, DataType.integer, opts || {}),
-      float: (columnName, opts) => addColumn(columnName, DataType.float, opts || {}),
-      decimal: (columnName, opts) => addColumn(columnName, DataType.decimal, opts || {}),
-      datetime: (columnName, opts) => addColumn(columnName, DataType.datetime, opts || {}),
-      timestamp: (columnName, opts) => addColumn(columnName, DataType.timestamp, opts || {}),
-      time: (columnName, opts) => addColumn(columnName, DataType.time, opts || {}),
-      date: (columnName, opts) => addColumn(columnName, DataType.date, opts || {}),
-      boolean: (columnName, opts) => addColumn(columnName, DataType.boolean, opts || {}),
+      string: (columnName, opts) => {
+        addColumn(columnName, DataType.string, opts || {});
+      },
+      text: (columnName, opts) => {
+        addColumn(columnName, DataType.text, opts || {});
+      },
+      integer: (columnName, opts) => {
+        addColumn(columnName, DataType.integer, opts || {});
+      },
+      float: (columnName, opts) => {
+        addColumn(columnName, DataType.float, opts || {});
+      },
+      decimal: (columnName, opts) => {
+        addColumn(columnName, DataType.decimal, opts || {});
+      },
+      datetime: (columnName, opts) => {
+        addColumn(columnName, DataType.datetime, opts || {});
+      },
+      timestamp: (columnName, opts) => {
+        addColumn(columnName, DataType.timestamp, opts || {});
+      },
+      time: (columnName, opts) => {
+        addColumn(columnName, DataType.time, opts || {});
+      },
+      date: (columnName, opts) => {
+        addColumn(columnName, DataType.date, opts || {});
+      },
+      boolean: (columnName, opts) => {
+        addColumn(columnName, DataType.boolean, opts || {});
+      },
     });
+    if (blockResponse instanceof Promise) {
+      await blockResponse;
+    }
 
     // Run SQL statement
     await this.execute(`CREATE TABLE "${name}" (${columnDefinitions.join(', ')})`);
@@ -244,7 +270,7 @@ export class PostgresMigration extends MigrationHandler implements NativeMigrati
 
 function prepareValueNative(value: unknown): string {
   // tslint:disable-next-line:no-implicit-dependencies
-  const pgUtils = require('pg/lib/utils');
+  const pgUtils = require('pg/lib/utils') as { prepareValue(param: unknown): unknown };
 
   return `${pgUtils.prepareValue(value)}`;
 }
