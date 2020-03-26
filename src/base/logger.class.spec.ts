@@ -39,12 +39,12 @@ describe('Logger', () => {
     });
     it('should output the correct complex query statement', async () => {
       const placeholderSuffixes: string[] = [];
-      const data = [{ name: '$1', value: 1 }, { name: '$2', value: 'abc' }];
+      const data = [{ name: '$1', value: 1 }, { name: '$2', value: 'abc' }, { name: '$3', value: null }];
       for (const placeholder of data) {
-        placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value.toString())}`);
+        placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value == null ? 'NULL' : placeholder.value.toString())}`);
       }
-      mockConsole('log', chalk.grey('[MOCK]'), chalk.blue('SELECT * FROM test WHERE a = $1 AND b = $2'), chalk.grey(`[${placeholderSuffixes.join(', ')}]`));
-      Logger.logQuery('[MOCK]', 'SELECT * FROM test WHERE a = $1 AND b = $2', data);
+      mockConsole('log', chalk.grey('[MOCK]'), chalk.blue('SELECT * FROM test WHERE a = $1 AND b = $2 AND c = $3'), chalk.grey(`[${placeholderSuffixes.join(', ')}]`));
+      Logger.logQuery('[MOCK]', 'SELECT * FROM test WHERE a = $1 AND b = $2 AND c = $3', data);
     });
   });
 
