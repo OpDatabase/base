@@ -78,6 +78,13 @@ export class Logger {
   public static debug(...params: unknown[]) {
     this.defaultLogger.debug(chalk.grey(...params));
   }
+
+  /**
+   * Logs an info statement.
+   */
+  public static info(...params: unknown[]) {
+    this.defaultLogger.info(chalk.blue(...params));
+  }
 }
 
 export interface LogQueryPlaceholderPayload {
@@ -107,4 +114,9 @@ export interface ConsoleHandler {
    * Debug console output.
    */
   debug(...args: unknown[]): unknown;
+
+  /**
+   * Info console output
+   */
+  info(...args: unknown[]): unknown;
 }

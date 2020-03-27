@@ -1,0 +1,24 @@
+import { providePostgresConnection } from '@opdb/postgres';
+
+/*
+  Use this file to configure your PostgreSQL database connection.
+  You can supply a "connectionString" or all required data fields manually.
+  For more details, see https://node-postgres.com/features/connecting
+ */
+
+providePostgresConnection({
+  // Connect using connection string:
+  // connectionString: 'postgresql://dbuser:secretpassword@database.server.com:3211/mydb',
+
+  // Connect manually:
+  // user: 'dbuser',
+  // host: 'database.server.com',
+  // database: 'mydb',
+  // password: 'secretpassword',
+  // port: 3211,
+
+  // Advanced options for connection pooling (see https://node-postgres.com/api/pool)
+  // connectionTimeoutMillis: 0,
+  // idleTimeoutMillis: 0,
+  // max: 10,
+});

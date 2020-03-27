@@ -49,6 +49,7 @@ yarn
 yarn build
 cd "$baseDir"
 yarn cpx "./src/orm/dist/**/*.{ts,js}" "./dist/opdb-orm"
+yarn cpx "./src/orm/**/*._ts" "./dist/opdb-orm"
 yarn cpx "./src/orm/package.json" "./dist/opdb-orm"
 yarn cpx "./src/orm/README.md" "./dist/opdb-orm"
 node ./adjust-package-file.js ./dist/opdb-orm/package.json

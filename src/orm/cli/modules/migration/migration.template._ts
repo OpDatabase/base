@@ -1,0 +1,13 @@
+import { Migration } from '@opdb/orm';
+
+export class __MIGRATION_NAME__ extends Migration {
+  public async up(): Promise<unknown> {
+    // Add your operations here for applying a new database state.
+    // Example: this.addTable(...);
+  }
+
+  public async down(): Promise<unknown> {
+    // Add your operations here for restoring the previous database state.
+    // Example: this.dropTable(...);
+  }
+}
