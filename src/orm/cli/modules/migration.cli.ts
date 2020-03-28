@@ -2,11 +2,17 @@ import { Logger } from '@opdb/base';
 import CliTable from 'cli-table';
 import commandLineArgs from 'command-line-args';
 import * as fs from 'fs';
-import path from 'path';
 import dasherize from 'string-dasherize';
+import { CliException } from '../../exceptions/cli.exception';
+import { MigrationFile, MigrationStatusCode } from '../../interfaces/migration-status.interface';
 import { MigrationRunner } from '../../migration-runner.class';
 import { Migration } from '../../migration.class';
+import { getPath, logFileCreated } from '../helper/paths.func';
 
+/**
+ * Handle calls for migration functions
+ * @param argv
+ */
 async function handler(argv: string[]) {
   const firstOption = commandLineArgs([
     { name: 'command', defaultOption: true },
@@ -26,11 +32,19 @@ async function handler(argv: string[]) {
       await getMigrationStatus(remainingArgv);
       break;
 
+    case 'revert':
+      await revertMigration(remainingArgv);
+      break;
+
     default:
-      throw new Error(`opdb migration: Unsupported command "${firstOption.command}". Supported commands: generate`);
+      throw new CliException(`opdb migration: Unsupported command "${firstOption.command}". Supported commands: generate`);
   }
 }
 
+/**
+ * Generates a new migration file within the user's db/migrate folder.
+ * @param argv
+ */
 async function generateMigration(argv: string[]) {
   const options = commandLineArgs([
     { name: 'migrationName', defaultOption: true },
@@ -38,12 +52,12 @@ async function generateMigration(argv: string[]) {
   ], { argv });
 
   if (options.migrationName == null) {
-    throw new Error(`opdb migration generate: Please specify your migration name like this: opdb migration generate YourMigrationName`);
+    throw new CliException(`opdb migration generate: Please specify your migration name like this: opdb migration generate YourMigrationName`);
   }
 
   // Read migration template, replace '__MIGRRATION_NAME__' with option.migrationName
-  const srcDirectoryPath = path.resolve(path.relative(process.cwd(), options.srcDirectory));
-  const templateDirectoryPath = path.resolve(path.relative(process.cwd(), './node_modules/@opdb/orm/cli/modules/migration'));
+  const srcDirectoryPath = getPath(options.srcDirectory);
+  const templateDirectoryPath = getPath('./node_modules/@opdb/orm/cli/modules/migration');
   const templateContents = fs.readFileSync(`${templateDirectoryPath}/migration.template._ts`).toString();
 
   // Create migration file
@@ -54,37 +68,51 @@ async function generateMigration(argv: string[]) {
     fileName,
     templateContents.replace('__MIGRATION_NAME__', options.migrationName),
   );
-  Logger.debug(`Create ${fileName}`);
+  logFileCreated(fileName);
 }
 
+/**
+ * Runs all pending migrations
+ * @param argv
+ */
 async function runMigrations(argv: string[]) {
   const options = commandLineArgs([
     { name: 'srcDirectory', alias: 'd', type: String, defaultValue: './' },
   ], { argv });
 
-  const srcDirectoryPath = path.resolve(path.relative(process.cwd(), options.srcDirectory));
-
-  // Import database configuration
-  Logger.debug(`Initializing database connection using "${srcDirectoryPath}/db/init.ts"...`);
-  require(`${srcDirectoryPath}/db/init.ts`);
-  const runner = new MigrationRunner();
+  const srcDirectoryPath = getPath(options.srcDirectory);
+  const runner = initializeMigrationRunner(srcDirectoryPath);
 
   // Find + apply all migrations
   const migrations = loadMigrationFiles(srcDirectoryPath);
   await runner.applyAll(migrations);
 }
 
+async function revertMigration(argv: string[]) {
+  const options = commandLineArgs([
+    { name: 'srcDirectory', alias: 'd', type: String, defaultValue: './' },
+    { name: 'until', alias: 'u', type: String },
+  ], { argv });
+
+  const srcDirectoryPath = getPath(options.srcDirectory);
+  const runner = initializeMigrationRunner(srcDirectoryPath);
+
+  // Find + apply all migrations
+  const migrations = loadMigrationFiles(srcDirectoryPath);
+  await runner.revertUntil(migrations, options.until || undefined);
+}
+
+/**
+ * Outputs the current migration status
+ * @param argv
+ */
 async function getMigrationStatus(argv: string[]) {
   const options = commandLineArgs([
     { name: 'srcDirectory', alias: 'd', type: String, defaultValue: './' },
   ], { argv });
 
-  const srcDirectoryPath = path.resolve(path.relative(process.cwd(), options.srcDirectory));
-
-  // Import database configuration
-  Logger.debug(`Initializing database connection using "${srcDirectoryPath}/db/init.ts"...`);
-  require(`${srcDirectoryPath}/db/init.ts`);
-  const runner = new MigrationRunner();
+  const srcDirectoryPath = getPath(options.srcDirectory);
+  const runner = initializeMigrationRunner(srcDirectoryPath);
 
   // Find all migrations
   const migrations = loadMigrationFiles(srcDirectoryPath);
@@ -92,11 +120,11 @@ async function getMigrationStatus(argv: string[]) {
   // Get migration status
   const data = await runner.migrationStatus(migrations);
   const table = new CliTable({
-    head: ['ID', 'Migration Class', 'Status'],
+    head: ['Version', 'Migration Class', 'Status'],
   });
   table.push(...data.map(d => [
-    d.id,
-    d.migration == null ? 'n/a' : d.migration.constructor.name,
+    d.version,
+    d.status === MigrationStatusCode.database ? 'n/a' : d.migration.constructor.name,
     d.status,
   ]));
 
@@ -105,9 +133,25 @@ async function getMigrationStatus(argv: string[]) {
   console.log(table.toString());
 }
 
+/**
+ * Initializes the database migration runner using the user-provided db/init.ts file.
+ * @param srcDirectoryPath
+ */
+function initializeMigrationRunner(srcDirectoryPath: string): MigrationRunner {
+  // Import database configuration
+  Logger.debug(`Initializing database connection using "${srcDirectoryPath}/db/init.ts"...`);
+  require(`${srcDirectoryPath}/db/init.ts`);
+
+  return new MigrationRunner();
+}
+
+/**
+ * Loads all migration files for the user's db/migrate folder
+ * @param srcDirectoryPath
+ */
 function loadMigrationFiles(srcDirectoryPath: string) {
   const files = fs.readdirSync(`${srcDirectoryPath}/db/migrate`);
-  const migrations: Array<{ id: string, migration: Migration }> = [];
+  const migrations: MigrationFile[] = [];
   Logger.debug(`Loading migrations from "${srcDirectoryPath}/db/migrate"...`);
   for (const file of files.filter(f => f.endsWith('.ts'))) {
     let imported: { [name: string]: unknown };
@@ -127,7 +171,7 @@ function loadMigrationFiles(srcDirectoryPath: string) {
           if (id == null) {
             continue;
           }
-          migrations.push({ id, migration });
+          migrations.push({ version: id, migration });
           break;
         }
       }

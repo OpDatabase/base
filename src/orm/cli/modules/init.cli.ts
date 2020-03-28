@@ -3,7 +3,8 @@ import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import path from 'path';
+import { CliException } from '../../exceptions/cli.exception';
+import { getPath, logFileCreated } from '../helper/paths.func';
 
 async function handler(argv: string[]) {
   const options = commandLineArgs([
@@ -12,27 +13,27 @@ async function handler(argv: string[]) {
   ], { argv });
 
   // Create database folder
-  const srcDirectoryPath = path.resolve(path.relative(process.cwd(), options.srcDirectory));
-  const templateDirectoryPath = path.resolve(path.relative(process.cwd(), './node_modules/@opdb/orm/cli/modules/init'));
-  Logger.debug(`Create ${srcDirectoryPath}/db`);
+  const srcDirectoryPath = getPath(options.srcDirectory);
+  const templateDirectoryPath = getPath('./node_modules/@opdb/orm/cli/modules/init');
   await mkdirp(`${srcDirectoryPath}/db`);
-  Logger.debug(`Create ${srcDirectoryPath}/db/migrate`);
+  logFileCreated(`${srcDirectoryPath}/db`);
   await mkdirp(`${srcDirectoryPath}/db/migrate`);
-  Logger.debug(`Create ${srcDirectoryPath}/db/migrate/.keep`);
+  logFileCreated(`${srcDirectoryPath}/db/migrate`);
   fs.closeSync(fs.openSync(`${srcDirectoryPath}/db/migrate/.keep`, 'w'));
+  logFileCreated(`${srcDirectoryPath}/db/migrate/.keep`);
 
   const requiredPackages: string[] = [];
 
   // Create config file for adapter
   switch (options.adapter) {
     case 'postgres':
-      Logger.debug(`Create ${srcDirectoryPath}/db/init.ts`);
       fs.copyFileSync(`${templateDirectoryPath}/postgres.template._ts`, `${srcDirectoryPath}/db/init.ts`);
+      logFileCreated(`${srcDirectoryPath}/db/init.ts`);
       requiredPackages.push('@opdb/postgres');
       break;
 
     default:
-      throw new Error(`Supplied --adapter "${options.adapter}" is not supported. Use one of the following adapters: postgres`);
+      throw new CliException(`Supplied --adapter "${options.adapter}" is not supported. Use one of the following adapters: postgres`);
   }
 
   // Final statements

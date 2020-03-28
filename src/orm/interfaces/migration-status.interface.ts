@@ -19,16 +19,37 @@ export enum MigrationStatusCode {
   inSync = 'in-sync',
 }
 
-export interface DefaultMigrationStatus {
-  id: string;
+export interface MigrationFile {
+  /**
+   * Version of the migration. When generated, this is typically the timestamp
+   * when the migration file has been created.
+   */
+  version: string;
+
+  /**
+   * An instance of the class associated to the migration version.
+   */
   migration: Migration;
+}
+
+export interface MigrationFileWithDefaultStatus extends MigrationFile {
+  /**
+   * Status of the migration.
+   */
   status: MigrationStatusCode.local | MigrationStatusCode.inSync;
 }
 
-export interface FileMissingMigrationStatus {
-  id: string;
-  migration: null;
+export interface MigrationFileWithMissingStatus {
+  /**
+   * Version of the migration. When generated, this is typically the timestamp
+   * when the migration file has been created.
+   */
+  version: string;
+
+  /**
+   * Status of the migration.
+   */
   status: MigrationStatusCode.database;
 }
 
-export type MigrationStatus = DefaultMigrationStatus | FileMissingMigrationStatus;
+export type MigrationFileWithStatus = MigrationFileWithDefaultStatus | MigrationFileWithMissingStatus;
