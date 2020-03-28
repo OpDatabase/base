@@ -22,16 +22,19 @@
   "devDependencies": {
     "@opdb/base": "../../dist/opdb-base",
     "@opdb/postgres": "../../dist/opdb-postgres",
+    "@types/cli-table": "^0.3.0",
     "@types/command-line-args": "^5.0.0",
     "@types/mkdirp": "^1.0.0",
     "@types/pluralize": "^0.0.29"
   },
   "dependencies": {
     "chalk": "^3.0.0",
+    "cli-table": "^0.3.1",
     "command-line-args": "^5.1.1",
     "mkdirp": "^1.0.3",
     "pluralize": "^8.0.0",
-    "string-dasherize": "^1.0.0"
+    "string-dasherize": "^1.0.0",
+    "ts-node": "^8.8.1"
   },
   "bin": {
     "opdb": "./cli/run-cli.js"
