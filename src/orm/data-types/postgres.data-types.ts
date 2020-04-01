@@ -92,16 +92,7 @@ export function postgresDataTypeSelector(
       }
 
     case DataType.integer:
-      const integerLimit = options.limit || 4;
-      if (integerLimit <= 2) {
-        return { subQuery: 'data_type = $dataType', placeholders: { dataType: 'smallint' } };
-      } else if (integerLimit <= 4) {
-        return { subQuery: 'data_type = $dataType', placeholders: { dataType: 'integer' } };
-      } else if (integerLimit >= 5 && integerLimit <= 8) {
-        return { subQuery: 'data_type = $dataType', placeholders: { dataType: 'bigint' } };
-      } else {
-        throw new MigrationException(`No integer type has byte size ${integerLimit}`);
-      }
+      return { subQuery: 'data_type = $dataType', placeholders: { dataType: postgresDataTypeToSql(type, options).toLocaleLowerCase() } };
 
     case DataType.primaryKey:
       return { subQuery: 'data_type = $dataType', placeholders: { dataType: 'integer' } };

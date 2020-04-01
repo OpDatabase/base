@@ -1,5 +1,3 @@
-// tslint:disable
-/*
 import { MigrationException } from '../exceptions/migration.exception';
 import { DataType } from '../interfaces/data-type.enum';
 import { AddColumnNumericOptions, AddColumnOptions } from '../interfaces/migration-operations.interface';
@@ -49,6 +47,51 @@ export function mysqlDataTypeToSql(type: DataType, options: AddColumnNumericOpti
   }
 }
 
+export function mysqlDataTypeSelector(
+  type: DataType,
+  options: AddColumnNumericOptions | AddColumnOptions,
+): { subQuery: string, placeholders: { dataType: string, [key: string]: unknown } } {
+  switch (type) {
+    case DataType.decimal:
+      const numericOptions = options as AddColumnNumericOptions;
+      if (numericOptions.precision === undefined && numericOptions.scale === undefined) {
+        return { subQuery: 'DATA_TYPE = $dataType', placeholders: { dataType: 'decimal' } };
+      }
+      if (numericOptions.precision === undefined) {
+        throw new MigrationException(`Error adding decimal column: precision cannot be empty if scale is specified`);
+      }
+
+      return numericOptions.scale === undefined ?
+        {
+          subQuery: 'DATA_TYPE = $dataType AND NUMERIC_PRECISION = $precision',
+          placeholders: { dataType: 'decimal', precision: numericOptions.precision },
+        } :
+        {
+          subQuery: 'DATA_TYPE = $dataType AND NUMERIC_PRECISION = $precision AND NUMERIC_SCALE = $scale',
+          placeholders: { dataType: 'decimal', precision: numericOptions.precision, scale: numericOptions.scale },
+        };
+
+    case DataType.primaryKey:
+      return { subQuery: 'DATA_TYPE = $dataType AND COLUMN_KEY = $columnKey', placeholders: { dataType: 'bigint', columnKey: 'PRI' } };
+
+    case DataType.string:
+      return {
+        subQuery: 'DATA_TYPE = $dataType AND CHARACTER_MAXIMUM_LENGTH = $limit',
+        placeholders: { dataType: 'varchar', limit: options.limit || 255 },
+      };
+
+    case DataType.boolean:
+    case DataType.date:
+    case DataType.datetime:
+    case DataType.timestamp:
+    case DataType.float:
+    case DataType.integer:
+    case DataType.text:
+    case DataType.time:
+      return { subQuery: 'DATA_TYPE = $dataType', placeholders: { dataType: mysqlDataTypeToSql(type, options).toLocaleLowerCase() } };
+  }
+}
+
 function integerToSql(limit: number): string {
   if (limit === 1) {
     return 'TINYINT';
@@ -68,16 +111,15 @@ function integerToSql(limit: number): string {
 function textToSql(limit: number | null): string {
   if (limit === null) {
     return 'TEXT';
-  } else if (limit >= 0 && limit < 0xFF) {
+  } else if (limit >= 0 && limit <= 0xFF) {
     return 'TINYTEXT';
-  } else if (limit >= 0x100 && limit < 0xFFFF) {
+  } else if (limit >= 0x100 && limit <= 0xFFFF) {
     return 'TEXT';
-  } else if (limit >= 0x10000 && limit < 0xFFFFFF) {
+  } else if (limit >= 0x10000 && limit <= 0xFFFFFF) {
     return 'MEDIUMTEXT';
-  } else if (limit >= 0x1000000 && limit < 0xFFFFFFFF) {
+  } else if (limit >= 0x1000000 && limit <= 0xFFFFFFFF) {
     return 'LONGTEXT';
   } else {
     throw new MigrationException(`No text type has byte length ${limit}`);
   }
 }
-*/

@@ -21,10 +21,12 @@
   },
   "devDependencies": {
     "@opdb/base": "../../dist/opdb-base",
+    "@opdb/mysql": "../../dist/opdb-mysql",
     "@opdb/postgres": "../../dist/opdb-postgres",
     "@types/cli-table": "^0.3.0",
     "@types/command-line-args": "^5.0.0",
     "@types/mkdirp": "^1.0.0",
+    "@types/mysql": "^2.15.9",
     "@types/pluralize": "^0.0.29"
   },
   "dependencies": {

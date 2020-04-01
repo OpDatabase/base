@@ -1,5 +1,6 @@
 import { MigrationException } from '../exceptions/migration.exception';
 import { NativeMigrationOperations } from '../interfaces/migration-operations.interface';
+import { MysqlMigration } from './mysql-migration.class';
 import { PostgresMigration } from './postgres-migration.class';
 
 export const thirdPartyMigrationHandlers: { [identifier: string]: () => NativeMigrationOperations } = {};
@@ -12,6 +13,9 @@ export function getNativeMigrationHandler(identifier: string | undefined): Nativ
   switch (identifier) {
     case 'postgres':
       return new PostgresMigration();
+
+    case 'mysql':
+      return new MysqlMigration();
   }
 
   if (thirdPartyMigrationHandlers[identifier] != null) {
