@@ -61,6 +61,20 @@ describe('Logger', () => {
       Logger.debug('DEBUG');
     });
   });
+
+  describe('info', () => {
+    it('should output the correct debug statement', async () => {
+      mockConsole('info', chalk.blue('INFO'));
+      Logger.info('INFO');
+    });
+  });
+
+  describe('warn', () => {
+    it('should output the correct debug statement', async () => {
+      mockConsole('warn', chalk.bgYellow.black('WARN'));
+      Logger.warn('WARN');
+    });
+  });
 });
 
 function mockConsole(expectedMethod: keyof ConsoleHandler, ...expectedResponse: unknown[]) {
@@ -91,6 +105,14 @@ function mockConsole(expectedMethod: keyof ConsoleHandler, ...expectedResponse: 
      */
     public log(...args: unknown[]): void {
       validateCallback('log', ...args);
+    }
+
+    public info(...args: unknown[]): void {
+      validateCallback('info', ...args);
+    }
+
+    public warn(...args: unknown[]): void {
+      validateCallback('warn', ...args);
     }
   }
 

@@ -85,6 +85,13 @@ export class Logger {
   public static info(...params: unknown[]) {
     this.defaultLogger.info(chalk.blue(...params));
   }
+
+  /**
+   * Logs a warning statement.
+   */
+  public static warn(...params: unknown[]) {
+    this.defaultLogger.warn(chalk.bgYellow.black(...params));
+  }
 }
 
 export interface LogQueryPlaceholderPayload {
@@ -119,4 +126,9 @@ export interface ConsoleHandler {
    * Info console output
    */
   info(...args: unknown[]): unknown;
+
+  /**
+   * Warning console output
+   */
+  warn(...args: unknown[]): unknown;
 }

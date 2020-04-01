@@ -95,7 +95,6 @@ export abstract class ExecutionContext {
   private static executionContextInfo() {
     return {
       clientId: Zone.current.get(ZoneNames.DatabaseClientId),
-      client: Zone.current.get(ZoneNames.DatabaseClient),
       transactionId: Zone.current.get(ZoneNames.TransactionId),
     };
   }
