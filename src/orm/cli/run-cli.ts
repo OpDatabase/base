@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* istanbul ignore file */
+
 import { Logger } from '@opdb/base';
 import * as tsNode from 'ts-node';
 import { cli } from './cli-handler.func';

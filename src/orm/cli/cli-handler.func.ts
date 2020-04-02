@@ -1,5 +1,5 @@
-import { Logger } from '@opdb/base';
 import commandLineArgs from 'command-line-args';
+import { CliException } from '../exceptions/cli.exception';
 import { CliModule } from './interfaces/cli-module.interface';
 
 export async function cli(): Promise<void> {
@@ -13,10 +13,7 @@ export async function cli(): Promise<void> {
   try {
     importedModule = require(`./modules/${mainCmd.module}.cli`);
   } catch (e) {
-    Logger.error(`Cannot import CLI module "${mainCmd.module}": Module does not exist.`);
-    process.exit(1);
-
-    return;
+    throw new CliException(`Cannot import CLI module "${mainCmd.module}": Module does not exist.`);
   }
 
   // Use module to handle CLI command
