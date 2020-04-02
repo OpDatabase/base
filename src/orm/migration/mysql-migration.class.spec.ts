@@ -616,12 +616,12 @@ describe('MysqlMigration', () => {
           table.index('additional_column');
         });
 
-        // Check indices (id + index + PRIMARY)
-        expect((await getIndices('new_table')).length).toBe(3);
+        // Check indices (index + PRIMARY)
+        expect((await getIndices('new_table')).length).toBe(2);
 
         // Drop index
         await migrator.removeIndex('new_table', ['additional_column'], {});
-        expect((await getIndices('new_table')).length).toBe(2);
+        expect((await getIndices('new_table')).length).toBe(1);
       });
 
       it('should remove an index with a user-specific name', async () => {
@@ -631,12 +631,12 @@ describe('MysqlMigration', () => {
           table.index('additional_column', { name: 'my_index' });
         });
 
-        // Check indices (id + index + PRIMARY)
-        expect((await getIndices('new_table')).length).toBe(3);
+        // Check indices (index + PRIMARY)
+        expect((await getIndices('new_table')).length).toBe(2);
 
         // Drop index
         await migrator.removeIndex('new_table', ['additional_column'], { name: 'my_index' });
-        expect((await getIndices('new_table')).length).toBe(2);
+        expect((await getIndices('new_table')).length).toBe(1);
       });
     });
 
@@ -803,7 +803,7 @@ describe('MysqlMigration', () => {
 
         // Check for indexes
         const indices = await migrator.indexes('new_table');
-        expect(indices.length).toBe(3); // user-specific index + id + PRIMARY
+        expect(indices.length).toBe(2); // user-specific index + PRIMARY
         expect(indices).toContainEqual('new_table_my_column_index');
       });
     });

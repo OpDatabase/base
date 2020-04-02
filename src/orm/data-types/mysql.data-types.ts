@@ -3,7 +3,6 @@ import { DataType } from '../interfaces/data-type.enum';
 import { AddColumnNumericOptions, AddColumnOptions } from '../interfaces/migration-operations.interface';
 
 // tslint:disable:no-magic-numbers
-// todo: needs refactoring
 export function mysqlDataTypeToSql(type: DataType, options: AddColumnNumericOptions | AddColumnOptions): string {
   switch (type) {
     case DataType.boolean:
@@ -34,7 +33,7 @@ export function mysqlDataTypeToSql(type: DataType, options: AddColumnNumericOpti
       return integerToSql(options.limit || 4);
 
     case DataType.primaryKey:
-      return 'SERIAL PRIMARY KEY';
+      return 'BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY';
 
     case DataType.string:
       return `VARCHAR(${options.limit || 255})`;
@@ -108,10 +107,8 @@ function integerToSql(limit: number): string {
   }
 }
 
-function textToSql(limit: number | null): string {
-  if (limit === null) {
-    return 'TEXT';
-  } else if (limit >= 0 && limit <= 0xFF) {
+function textToSql(limit: number): string {
+  if (limit >= 0 && limit <= 0xFF) {
     return 'TINYTEXT';
   } else if (limit >= 0x100 && limit <= 0xFFFF) {
     return 'TEXT';
