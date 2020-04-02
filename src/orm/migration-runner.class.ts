@@ -1,6 +1,6 @@
 import { Base, Logger } from '@opdb/base';
 import { MigrationException } from './exceptions/migration.exception';
-import { MigrationFile, MigrationFileWithStatus, MigrationStatusCode } from './interfaces/migration-status.interface';
+import { MigrationFile, MigrationFileWithDefaultStatus, MigrationFileWithStatus, MigrationStatusCode } from './interfaces/migration-status.interface';
 import { Migration } from './migration.class';
 import { getNativeMigrationHandler } from './migration/native-migration-handler';
 
@@ -34,14 +34,13 @@ export class MigrationRunner extends Base {
    * @param migrationFiles
    */
   public async applyAll(migrationFiles: MigrationFile[]): Promise<void> {
-    const notAppliedMigrations = (await this.migrationStatus(migrationFiles)).filter(m => m.status === MigrationStatusCode.local);
+    const notAppliedMigrations = (
+      await this.migrationStatus(migrationFiles)).filter(m => m.status === MigrationStatusCode.local,
+    ) as MigrationFileWithDefaultStatus[];
 
     // Apply all not applied migrations
     await this.transaction(async () => {
       for (const migration of notAppliedMigrations) {
-        if (migration.status === MigrationStatusCode.database) {
-          continue;
-        }
         Logger.debug(`Applying migration ${migration.version} ("${migration.migration.constructor.name}")...`);
         await this.apply(migration.migration);
         await this.addToAppliedMigrations(migration.version);
@@ -58,12 +57,11 @@ export class MigrationRunner extends Base {
    */
   public async revertUntil(migrationFiles: MigrationFile[], untilVersion?: string) {
     const migrationsWithStatus = (await this.migrationStatus(migrationFiles)).reverse();
-    let targetedMigrations: MigrationFileWithStatus[] = [];
+    let targetedMigrations: MigrationFileWithStatus[];
+    // tslint:disable-next-line:prefer-conditional-expression
     if (untilVersion === undefined) {
       // Use only the latest migration
-      if (migrationsWithStatus.length >= 1) {
-        targetedMigrations = [migrationsWithStatus[0]];
-      }
+      targetedMigrations = migrationsWithStatus.length >= 1 ? [migrationsWithStatus[0]] : [];
     } else {
       // Find all migrations greater or equal to unitlId
       targetedMigrations = migrationsWithStatus.filter(m => m.version >= untilVersion);
@@ -79,10 +77,7 @@ export class MigrationRunner extends Base {
 
     // Revert all database migrations
     await this.transaction(async () => {
-      for (const migration of targetedMigrations.filter(m => m.status === MigrationStatusCode.inSync)) {
-        if (migration.status === MigrationStatusCode.database) {
-          continue;
-        }
+      for (const migration of targetedMigrations.filter(m => m.status === MigrationStatusCode.inSync) as MigrationFileWithDefaultStatus[]) {
         Logger.debug(`Reverting migration ${migration.version} ("${migration.migration.constructor.name}")...`);
         await this.revert(migration.migration);
         await this.removeFromAppliedMigrations(migration.version);
