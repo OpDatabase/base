@@ -1,6 +1,7 @@
 import { Base } from '@opdb/base';
 import { MockMigrationHandler } from '../../../tests/mock-migration-handler';
 import { MigrationException } from '../exceptions/migration.exception';
+import { MysqlMigration } from './mysql-migration.class';
 import { getNativeMigrationHandler, thirdPartyMigrationHandlers } from './native-migration-handler';
 import { PostgresMigration } from './postgres-migration.class';
 
@@ -15,6 +16,7 @@ describe('getNativeMigrationHandler', () => {
 
   it('should return the correct adapter for a built-in native migration handler', async () => {
     expect(getNativeMigrationHandler('postgres')).toBeInstanceOf(PostgresMigration);
+    expect(getNativeMigrationHandler('mysql')).toBeInstanceOf(MysqlMigration);
   });
 
   it('should return the correct third-party native migration handler', async () => {
