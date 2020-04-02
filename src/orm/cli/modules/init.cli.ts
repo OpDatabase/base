@@ -4,7 +4,7 @@ import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import { CliException } from '../../exceptions/cli.exception';
-import { getPath, logFileCreated } from '../helper/paths.func';
+import { getPath, logFileCreated } from '../helper/cli-helper.func';
 
 async function handler(argv: string[]) {
   const options = commandLineArgs([

@@ -7,7 +7,7 @@ import { CliException } from '../../exceptions/cli.exception';
 import { MigrationFile, MigrationStatusCode } from '../../interfaces/migration-status.interface';
 import { MigrationRunner } from '../../migration-runner.class';
 import { Migration } from '../../migration.class';
-import { getPath, logFileCreated } from '../helper/paths.func';
+import { getPath, logFileCreated } from '../helper/cli-helper.func';
 
 /**
  * Handle calls for migration functions
