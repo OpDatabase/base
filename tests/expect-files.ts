@@ -1,7 +1,15 @@
 import { existsSync, readFileSync } from 'fs';
 
+export function fileExists(path: string): boolean {
+  return existsSync(path);
+}
+
 export function expectFileToExist(path: string): void {
-  expect(existsSync(path)).toBeTruthy();
+  const status = fileExists(path);
+  if (!status) {
+    console.log(`expectFileToExist: "${path}" does not exist!`);
+  }
+  expect(status).toBeTruthy();
 }
 
 export function expectFileContents(path: string, expectedContents: string): void {

@@ -158,8 +158,7 @@ function loadMigrationFiles(srcDirectoryPath: string) {
     try {
       imported = require(`${srcDirectoryPath}/db/migrate/${file}`);
     } catch (e) {
-      Logger.error(`Cannot import "${srcDirectoryPath}/db/migrate/${file}"`);
-      throw e;
+      throw new CliException(`Cannot import "${srcDirectoryPath}/db/migrate/${file}"`);
     }
 
     // Iterate over imported object, check for functions and if instanceof Migration
@@ -167,11 +166,11 @@ function loadMigrationFiles(srcDirectoryPath: string) {
       if (typeof imported[key] === 'function') {
         const migration = new (imported[key] as new () => unknown)();
         if (migration instanceof Migration) {
-          const id = file.split('-')[0];
-          if (id == null) {
+          const version = file.split('-')[0];
+          if (isNaN(parseInt(version))) {
             continue;
           }
-          migrations.push({ version: id, migration });
+          migrations.push({ version, migration });
           break;
         }
       }

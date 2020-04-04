@@ -18,6 +18,8 @@ export async function cli(): Promise<void> {
 
   // Use module to handle CLI command
   const moduleResponse = importedModule.handler(argv);
+
+  /* istanbul ignore else */
   if (moduleResponse instanceof Promise) {
     await moduleResponse;
   }
