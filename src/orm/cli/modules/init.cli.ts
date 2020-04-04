@@ -1,8 +1,9 @@
 import { Logger } from '@opdb/base';
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
-import fs from 'fs';
+import { closeSync, openSync, readFileSync, writeFileSync } from 'fs';
 import mkdirp from 'mkdirp';
+import { resolve } from 'path';
 import { CliException } from '../../exceptions/cli.exception';
 import { getPath, logFileCreated } from '../helper/cli-helper.func';
 
@@ -14,12 +15,11 @@ async function handler(argv: string[]) {
 
   // Create database folder
   const srcDirectoryPath = getPath(options.srcDirectory);
-  const templateDirectoryPath = getPath('./node_modules/@opdb/orm/cli/modules/init');
   await mkdirp(`${srcDirectoryPath}/db`);
   logFileCreated(`${srcDirectoryPath}/db`);
   await mkdirp(`${srcDirectoryPath}/db/migrate`);
   logFileCreated(`${srcDirectoryPath}/db/migrate`);
-  fs.closeSync(fs.openSync(`${srcDirectoryPath}/db/migrate/.keep`, 'w'));
+  closeSync(openSync(`${srcDirectoryPath}/db/migrate/.keep`, 'w'));
   logFileCreated(`${srcDirectoryPath}/db/migrate/.keep`);
 
   const requiredPackages: string[] = [];
@@ -27,7 +27,10 @@ async function handler(argv: string[]) {
   // Create config file for adapter
   switch (options.adapter) {
     case 'postgres':
-      fs.copyFileSync(`${templateDirectoryPath}/postgres.template._ts`, `${srcDirectoryPath}/db/init.ts`);
+      writeFileSync(
+        `${srcDirectoryPath}/db/init.ts`,
+        readFileSync(resolve(__dirname, './init/postgres.template._ts'), { encoding: 'utf-8' }),
+      );
       logFileCreated(`${srcDirectoryPath}/db/init.ts`);
       requiredPackages.push('@opdb/postgres');
       break;
@@ -37,6 +40,7 @@ async function handler(argv: string[]) {
   }
 
   // Final statements
+  /* istanbul ignore else */
   if (requiredPackages.length > 0) {
     Logger.info(
       `IMPORTANT: Install the following packages before continuing:`,

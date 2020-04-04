@@ -1,7 +1,8 @@
 import { Logger } from '@opdb/base';
 import CliTable from 'cli-table';
 import commandLineArgs from 'command-line-args';
-import * as fs from 'fs';
+import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
 import dasherize from 'string-dasherize';
 import { CliException } from '../../exceptions/cli.exception';
 import { MigrationFile, MigrationStatusCode } from '../../interfaces/migration-status.interface';
@@ -57,14 +58,13 @@ async function generateMigration(argv: string[]) {
 
   // Read migration template, replace '__MIGRRATION_NAME__' with option.migrationName
   const srcDirectoryPath = getPath(options.srcDirectory);
-  const templateDirectoryPath = getPath('./node_modules/@opdb/orm/cli/modules/migration');
-  const templateContents = fs.readFileSync(`${templateDirectoryPath}/migration.template._ts`).toString();
+  const templateContents = readFileSync(resolve(__dirname, './init/postgres.template._ts'), { encoding: 'utf-8' });
 
   // Create migration file
   // tslint:disable-next-line:no-magic-numbers
   const timestampPrefix = Math.floor(Date.now() / 1000);
   const fileName = `${srcDirectoryPath}/db/migrate/${timestampPrefix}-${dasherize(options.migrationName)}.ts`.replace('--', '-');
-  fs.writeFileSync(
+  writeFileSync(
     fileName,
     templateContents.replace('__MIGRATION_NAME__', options.migrationName),
   );
@@ -150,7 +150,7 @@ function initializeMigrationRunner(srcDirectoryPath: string): MigrationRunner {
  * @param srcDirectoryPath
  */
 function loadMigrationFiles(srcDirectoryPath: string) {
-  const files = fs.readdirSync(`${srcDirectoryPath}/db/migrate`);
+  const files = readdirSync(`${srcDirectoryPath}/db/migrate`);
   const migrations: MigrationFile[] = [];
   Logger.debug(`Loading migrations from "${srcDirectoryPath}/db/migrate"...`);
   for (const file of files.filter(f => f.endsWith('.ts'))) {

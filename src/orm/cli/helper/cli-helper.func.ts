@@ -1,8 +1,8 @@
 import { Logger } from '@opdb/base';
-import path from 'path';
+import { resolve } from 'path';
 
 export function getPath(target: string): string {
-  return path.resolve(path.relative(process.cwd(), target));
+  return resolve(process.cwd(), target);
 }
 
 export function logFileCreated(filePath: string) {

@@ -27,7 +27,8 @@
     "@types/command-line-args": "^5.0.0",
     "@types/mkdirp": "^1.0.0",
     "@types/mysql": "^2.15.9",
-    "@types/pluralize": "^0.0.29"
+    "@types/pluralize": "^0.0.29",
+    "mock-cwd": "^1.0.0"
   },
   "dependencies": {
     "chalk": "^3.0.0",
