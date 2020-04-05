@@ -1,7 +1,7 @@
 {
   "name": "opdb-base-repository",
   "version": "0.0.2",
-  "description": "OpBD Base Repository",
+  "description": "OpDB Base Repository",
   "main": "index.js",
   "scripts": {
     "test": "sh ./run-tests.sh",

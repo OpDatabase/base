@@ -1,6 +1,6 @@
 {
   "name": "@opdb/postgres",
-  "version": "0.0.0-VERSION-STRING",
+  "version": "0.0.2",
   "description": "OpDB PostrgeSQL Adapter",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/OpDatabase/base#readme",
   "peerDependencies": {
-    "@opdb/base": "0.0.0-VERSION-STRING"
+    "@opdb/base": "0.0.2"
   },
   "devDependencies": {
     "@opdb/base": "../../../dist/opdb-base",

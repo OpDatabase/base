@@ -12,20 +12,20 @@ const path = require('path');
   jsonPayload.version = mainPackageJson.version;
 
   // Update dependencies
-  for (const dependency of ['@opdb/base']) {
-    if (jsonPayload.dependencies && jsonPayload.dependencies[dependency] != null) {
-      jsonPayload.dependencies[dependency] = `^${mainPackageJson.version}`;
-    }
-    if (jsonPayload.peerDependencies && jsonPayload.peerDependencies[dependency] != null) {
-      jsonPayload.peerDependencies[dependency] = `^${mainPackageJson.version}`;
-    }
-    if (jsonPayload.devDependencies && jsonPayload.devDependencies[dependency] != null) {
-      jsonPayload.devDependencies[dependency] = `^${mainPackageJson.version}`;
-    }
-  }
+  // for (const dependency of ['@opdb/base']) {
+  //   if (jsonPayload.dependencies && jsonPayload.dependencies[dependency] != null) {
+  //     jsonPayload.dependencies[dependency] = `^${mainPackageJson.version}`;
+  //   }
+  //   if (jsonPayload.peerDependencies && jsonPayload.peerDependencies[dependency] != null) {
+  //     jsonPayload.peerDependencies[dependency] = `^${mainPackageJson.version}`;
+  //   }
+  //   if (jsonPayload.devDependencies && jsonPayload.devDependencies[dependency] != null) {
+  //     jsonPayload.devDependencies[dependency] = `^${mainPackageJson.version}`;
+  //   }
+  // }
 
   // Write file
-  fs.writeFileSync(targetFilePath, JSON.stringify(jsonPayload));
+  // fs.writeFileSync(targetFilePath, JSON.stringify(jsonPayload));
 })().catch(err => {
   console.error(err);
   process.exit(1);
