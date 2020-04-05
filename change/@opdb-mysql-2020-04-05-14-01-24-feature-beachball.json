@@ -1,8 +1,0 @@
-{
-  "type": "patch",
-  "comment": "Updated version management",
-  "packageName": "@opdb/mysql",
-  "email": "marvin.scharle@conclurer.com",
-  "dependentChangeType": "patch",
-  "date": "2020-04-05T12:00:59.974Z"
-}

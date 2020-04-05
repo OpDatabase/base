@@ -1,6 +1,6 @@
 {
   "name": "@opdb/postgres",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "OpDB PostrgeSQL Adapter",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "@types/pg": "^7.14.1"
   },
   "dependencies": {
-    "@opdb/base": "0.0.2",
+    "@opdb/base": "0.0.3",
     "pg": "^7.18.1"
   }
 }
