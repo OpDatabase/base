@@ -1,6 +1,6 @@
 {
   "name": "@opdb/orm",
-  "version": "0.0.0-VERSION-STRING",
+  "version": "1.0.0-alpha.1",
   "description": "OpDB Object Relational Mapping",
   "main": "index.js",
   "scripts": {
@@ -16,13 +16,9 @@
     "url": "https://github.com/OpDatabase/base/issues"
   },
   "homepage": "https://github.com/OpDatabase/base#readme",
-  "peerDependencies": {
-    "@opdb/base": "0.0.0-VERSION-STRING"
-  },
   "devDependencies": {
-    "@opdb/base": "../../dist/opdb-base",
-    "@opdb/mysql": "../../dist/opdb-mysql",
-    "@opdb/postgres": "../../dist/opdb-postgres",
+    "@opdb/mysql": "0.0.3",
+    "@opdb/postgres": "0.0.3",
     "@types/cli-table": "^0.3.0",
     "@types/command-line-args": "^5.0.0",
     "@types/mkdirp": "^1.0.0",
@@ -31,6 +27,7 @@
     "mock-cwd": "^1.0.0"
   },
   "dependencies": {
+    "@opdb/base": "0.0.3",
     "chalk": "^3.0.0",
     "cli-table": "^0.3.1",
     "command-line-args": "^5.1.1",
