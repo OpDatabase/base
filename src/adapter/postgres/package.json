@@ -16,14 +16,11 @@
     "url": "https://github.com/OpDatabase/base/issues"
   },
   "homepage": "https://github.com/OpDatabase/base#readme",
-  "peerDependencies": {
-    "@opdb/base": "0.0.2"
-  },
   "devDependencies": {
-    "@opdb/base": "../../../dist/opdb-base",
     "@types/pg": "^7.14.1"
   },
   "dependencies": {
+    "@opdb/base": "0.0.2",
     "pg": "^7.18.1"
   }
 }
