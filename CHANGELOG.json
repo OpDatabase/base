@@ -2,6 +2,21 @@
   "name": "opdb-base-repository",
   "entries": [
     {
+      "date": "Sun, 05 Apr 2020 16:50:26 GMT",
+      "tag": "opdb-base-repository_v0.1.0",
+      "version": "0.1.0",
+      "comments": {
+        "none": [
+          {
+            "comment": "Switched to NPM",
+            "author": "marvin.scharle@conclurer.com",
+            "commit": "00c0e44ae39228920516a82a3d46dbfcdb35dc79",
+            "package": "opdb-base-repository"
+          }
+        ]
+      }
+    },
+    {
       "date": "Sun, 05 Apr 2020 15:35:54 GMT",
       "tag": "opdb-base-repository_v0.1.0",
       "version": "0.1.0",
