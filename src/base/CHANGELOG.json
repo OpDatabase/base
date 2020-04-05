@@ -2,6 +2,21 @@
   "name": "@opdb/base",
   "entries": [
     {
+      "date": "Sun, 05 Apr 2020 17:07:40 GMT",
+      "tag": "@opdb/base_v0.0.3",
+      "version": "0.0.3",
+      "comments": {
+        "none": [
+          {
+            "comment": "Updated build script",
+            "author": "marvin.scharle@conclurer.com",
+            "commit": "1bc91f23b22d2b044ae2fed0d5855d51f7598c05",
+            "package": "@opdb/base"
+          }
+        ]
+      }
+    },
+    {
       "date": "Sun, 05 Apr 2020 16:50:26 GMT",
       "tag": "@opdb/base_v0.0.3",
       "version": "0.0.3",
