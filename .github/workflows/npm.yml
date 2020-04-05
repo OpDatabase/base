@@ -1,6 +1,6 @@
 name: Publish to NPM
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -10,6 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Publish to NPM
+        if: github.event.pull_request.merged == true
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
