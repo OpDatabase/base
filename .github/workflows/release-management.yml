@@ -5,7 +5,7 @@ on:
       - master
 
 jobs:
-  Check Version Bump:
+  check-version-bump:
     runs-on: ubuntu-latest
 
     steps:
