@@ -1,0 +1,20 @@
+{
+  "name": "opdb-base-repository",
+  "entries": [
+    {
+      "date": "Sun, 05 Apr 2020 13:24:31 GMT",
+      "tag": "opdb-base-repository_v0.1.0",
+      "version": "0.1.0",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added version tracking using beachball",
+            "author": "marvin.scharle@conclurer.com",
+            "commit": "00c0e44ae39228920516a82a3d46dbfcdb35dc79",
+            "package": "opdb-base-repository"
+          }
+        ]
+      }
+    }
+  ]
+}

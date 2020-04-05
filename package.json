@@ -1,6 +1,6 @@
 {
   "name": "opdb-base-repository",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "OpDB Base Repository",
   "main": "index.js",
   "scripts": {
