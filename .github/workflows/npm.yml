@@ -1,6 +1,6 @@
 name: Publish to NPM
 on:
-  pull_request:
+  push:
     branches:
       - master
 
@@ -10,12 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Publish to NPM
-        if: github.event.pull_request.merged == true
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
       - run: yarn
-      - run: yarn beachball publish
+      - run: sh ./prepare-publish.sh
+      - run: yarn beachball publish -y
       - run: yarn build
       - run: sh ./publish.sh
         env:
