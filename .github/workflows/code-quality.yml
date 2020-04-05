@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 13.x
       - run: npm i
-      - run: beachball check
+      - run: npx beachball check
         env:
           CI: true
 
