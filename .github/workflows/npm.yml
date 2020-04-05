@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 13.x
       - run: npm i
-      - run: npx beachball publish
+      - run: npx beachball publish -y
       - run: npm run build
       - run: sh ./publish.sh
         env:
