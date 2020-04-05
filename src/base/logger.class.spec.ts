@@ -39,12 +39,12 @@ describe('Logger', () => {
     });
     it('should output the correct complex query statement', async () => {
       const placeholderSuffixes: string[] = [];
-      const data = [{ name: '$1', value: 1 }, { name: '$2', value: 'abc' }];
+      const data = [{ name: '$1', value: 1 }, { name: '$2', value: 'abc' }, { name: '$3', value: null }];
       for (const placeholder of data) {
-        placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value.toString())}`);
+        placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value == null ? 'NULL' : placeholder.value.toString())}`);
       }
-      mockConsole('log', chalk.grey('[MOCK]'), chalk.blue('SELECT * FROM test WHERE a = $1 AND b = $2'), chalk.grey(`[${placeholderSuffixes.join(', ')}]`));
-      Logger.logQuery('[MOCK]', 'SELECT * FROM test WHERE a = $1 AND b = $2', data);
+      mockConsole('log', chalk.grey('[MOCK]'), chalk.blue('SELECT * FROM test WHERE a = $1 AND b = $2 AND c = $3'), chalk.grey(`[${placeholderSuffixes.join(', ')}]`));
+      Logger.logQuery('[MOCK]', 'SELECT * FROM test WHERE a = $1 AND b = $2 AND c = $3', data);
     });
   });
 
@@ -59,6 +59,20 @@ describe('Logger', () => {
     it('should output the correct debug statement', async () => {
       mockConsole('debug', chalk.grey('DEBUG'));
       Logger.debug('DEBUG');
+    });
+  });
+
+  describe('info', () => {
+    it('should output the correct debug statement', async () => {
+      mockConsole('info', chalk.blue('INFO'));
+      Logger.info('INFO');
+    });
+  });
+
+  describe('warn', () => {
+    it('should output the correct debug statement', async () => {
+      mockConsole('warn', chalk.bgYellow.black('WARN'));
+      Logger.warn('WARN');
     });
   });
 });
@@ -91,6 +105,14 @@ function mockConsole(expectedMethod: keyof ConsoleHandler, ...expectedResponse: 
      */
     public log(...args: unknown[]): void {
       validateCallback('log', ...args);
+    }
+
+    public info(...args: unknown[]): void {
+      validateCallback('info', ...args);
+    }
+
+    public warn(...args: unknown[]): void {
+      validateCallback('warn', ...args);
     }
   }
 

@@ -16,9 +16,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn
-      - run: yarn build
-      - run: yarn test
+      - run: npm i
+      - run: npm run build
+      - run: npm run test
         env:
           CI: true
 
@@ -26,13 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Codecov
+      - name: Tslint
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
-      - run: yarn
-      - run: yarn build
-      - run: yarn run tslint -p ./tsconfig.json -c ./tslint.json
+      - run: npm i
+      - run: npm run build
+      - run: npm run lint
         env:
           CI: true
 
@@ -44,9 +44,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
-      - run: yarn
-      - run: yarn build
-      - run: yarn test || true
+      - run: npm i
+      - run: npm run build
+      - run: npm run test || true
       - run: curl -s https://codecov.io/bash | bash
         env:
           CI: true

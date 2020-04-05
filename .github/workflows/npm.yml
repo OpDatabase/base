@@ -9,12 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Codecov
+      - name: Publish to NPM
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
-      - run: yarn
-      - run: yarn build
+      - run: npm i
+      - run: sh ./prepare-publish.sh
+      - run: npx beachball publish -y
+      - run: npm run build
       - run: sh ./publish.sh
         env:
           CI: true

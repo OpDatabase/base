@@ -18,7 +18,7 @@ export class Logger {
     const placeholderSuffixes: string[] = [];
 
     for (const placeholder of placeholdersWithName) {
-      placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value.toString())}`);
+      placeholderSuffixes.push(`(${placeholder.name}) ${chalk.black.bold(placeholder.value == null ? 'NULL' : placeholder.value.toString())}`);
     }
 
     const log = (value: string) => {
@@ -78,6 +78,20 @@ export class Logger {
   public static debug(...params: unknown[]) {
     this.defaultLogger.debug(chalk.grey(...params));
   }
+
+  /**
+   * Logs an info statement.
+   */
+  public static info(...params: unknown[]) {
+    this.defaultLogger.info(chalk.blue(...params));
+  }
+
+  /**
+   * Logs a warning statement.
+   */
+  public static warn(...params: unknown[]) {
+    this.defaultLogger.warn(chalk.bgYellow.black(...params));
+  }
 }
 
 export interface LogQueryPlaceholderPayload {
@@ -89,7 +103,7 @@ export interface LogQueryPlaceholderPayload {
   /**
    * The value the placeholder will be exchanged for.
    */
-  value: { toString(): string };
+  value: { toString(): string } | null;
 }
 
 export interface ConsoleHandler {
@@ -107,4 +121,14 @@ export interface ConsoleHandler {
    * Debug console output.
    */
   debug(...args: unknown[]): unknown;
+
+  /**
+   * Info console output
+   */
+  info(...args: unknown[]): unknown;
+
+  /**
+   * Warning console output
+   */
+  warn(...args: unknown[]): unknown;
 }

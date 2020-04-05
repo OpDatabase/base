@@ -45,7 +45,6 @@ export abstract class ExecutionContext {
 
         } catch (e) {
           reject(e);
-          throw e;
         }
 
         if (this.showDebugInfo) {
@@ -96,7 +95,6 @@ export abstract class ExecutionContext {
   private static executionContextInfo() {
     return {
       clientId: Zone.current.get(ZoneNames.DatabaseClientId),
-      client: Zone.current.get(ZoneNames.DatabaseClient),
       transactionId: Zone.current.get(ZoneNames.TransactionId),
     };
   }

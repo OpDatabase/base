@@ -43,7 +43,7 @@ docker run \
 sleep 10
 
 # shellcheck disable=SC2068
-yarn jest --config jest.config.js --runInBand $@
+npx jest --config jest.config.js --runInBand $@
 
 # Kill docker container
 docker kill $TEST_PG_DOCKER_NAME > /dev/null

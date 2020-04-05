@@ -22,6 +22,18 @@ describe('ConnectionPool', () => {
     });
   });
 
+  describe('adapterIdentifier', () => {
+    it('should return the correct adapter identifier', async () => {
+      const blankPool = new ConnectionPool();
+      expect(blankPool.adapterIdentifier).toBeUndefined();
+
+      ConnectionPool.registerAdapter(MockAdapter);
+      const pool = new ConnectionPool();
+      pool.connect({ adapter: 'mock', simulate: 'success' });
+      expect(pool.adapterIdentifier).toBe('mock');
+    });
+  });
+
   describe('connect', () => {
     it('should throw if the requested adapter has not been found', () => {
       expect(() => {

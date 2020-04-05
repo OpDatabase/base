@@ -1,7 +1,7 @@
 {
   "name": "opdb-base-repository",
-  "version": "0.0.2",
-  "description": "OpBD Base Repository",
+  "version": "0.1.0",
+  "description": "OpDB Base Repository",
   "main": "index.js",
   "scripts": {
     "test": "sh ./run-tests.sh",
@@ -21,8 +21,11 @@
   "devDependencies": {
     "@types/jest": "^25.1.2",
     "@types/node": "^8",
+    "beachball": "^1.27.0",
     "cpx": "^1.5.0",
+    "danger": "^10.1.0",
     "jest": "^25.1.0",
+    "mock-argv": "^1.1.6",
     "prettier": "^1.19.1",
     "ts-jest": "^25.2.0",
     "tslint": "^5.20.0",
