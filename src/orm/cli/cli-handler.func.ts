@@ -11,7 +11,7 @@ export async function cli(): Promise<void> {
   // Use first argument as module name
   let importedModule: CliModule;
   try {
-    importedModule = require(`./modules/${mainCmd.module}.cli`);
+    importedModule = require(`./modules/${mainCmd.module}.cli`) as CliModule;
   } catch (e) {
     throw new CliException(`Cannot import CLI module "${mainCmd.module}": Module does not exist.`);
   }

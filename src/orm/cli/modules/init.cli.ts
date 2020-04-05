@@ -14,7 +14,7 @@ async function handler(argv: string[]) {
   ], { argv });
 
   // Create database folder
-  const srcDirectoryPath = getPath(options.srcDirectory);
+  const srcDirectoryPath = getPath(options.srcDirectory as string);
   await mkdirp(`${srcDirectoryPath}/db`);
   logFileCreated(`${srcDirectoryPath}/db`);
   await mkdirp(`${srcDirectoryPath}/db/migrate`);

@@ -1,3 +1,4 @@
+import { Logger } from '@opdb/base';
 import pluralize from 'pluralize';
 import { MigrationException } from '..';
 import { mysqlDataTypeSelector, mysqlDataTypeToSql } from '../data-types/mysql.data-types';
@@ -238,7 +239,10 @@ export class MysqlMigration extends MigrationHandler implements NativeMigrationO
         }
         if (options.default !== undefined && type === DataType.text) {
           options.default = undefined;
-          // todo Logger.warn('(MysqlMigration)', `MySQL does not support default value on data type text. Default selector will be ignored. Affected column = "${columnName}"`);
+          Logger.warn(
+            '(MysqlMigration)',
+            `MySQL does not support default value on data type text. Default selector will be ignored. Affected column = "${columnName}"`,
+          );
         }
         if (options.default !== undefined) {
           const columnDefault = typeof options.default === 'boolean' ?
@@ -325,7 +329,7 @@ export class MysqlMigration extends MigrationHandler implements NativeMigrationO
 
 function prepareValueNative(value: unknown): string {
   // tslint:disable-next-line:no-implicit-dependencies
-  const sqlString = require('sqlstring');
+  const sqlString = require('sqlstring') as { escape(value: unknown): string; };
 
   return `${sqlString.escape(value)}`;
 }
@@ -353,7 +357,10 @@ function columnDefinition(
   }
   if (options.default !== undefined && type === DataType.text) {
     options.default = undefined;
-    // todo Logger.warn('(MysqlMigration)', `Cannot add default value to columns of type text. Default value has been removed. Affected column = "${columnName}"`);
+    Logger.warn(
+      '(MysqlMigration)',
+      `Cannot add default value to columns of type text. Default value has been removed. Affected column = "${columnName}"`,
+    );
   }
   if (options.default !== undefined) {
     statement = `${statement} DEFAULT ${prepareValueNative(options.default)}`;

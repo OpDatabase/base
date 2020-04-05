@@ -57,16 +57,16 @@ async function generateMigration(argv: string[]) {
   }
 
   // Read migration template, replace '__MIGRRATION_NAME__' with option.migrationName
-  const srcDirectoryPath = getPath(options.srcDirectory);
+  const srcDirectoryPath = getPath(options.srcDirectory as string);
   const templateContents = readFileSync(resolve(__dirname, './init/postgres.template._ts'), { encoding: 'utf-8' });
 
   // Create migration file
   // tslint:disable-next-line:no-magic-numbers
   const timestampPrefix = Math.floor(Date.now() / 1000);
-  const fileName = `${srcDirectoryPath}/db/migrate/${timestampPrefix}-${dasherize(options.migrationName)}.ts`.replace('--', '-');
+  const fileName = `${srcDirectoryPath}/db/migrate/${timestampPrefix}-${dasherize(options.migrationName as string)}.ts`.replace('--', '-');
   writeFileSync(
     fileName,
-    templateContents.replace('__MIGRATION_NAME__', options.migrationName),
+    templateContents.replace('__MIGRATION_NAME__', options.migrationName as string),
   );
   logFileCreated(fileName);
 }
@@ -80,7 +80,7 @@ async function runMigrations(argv: string[]) {
     { name: 'srcDirectory', alias: 'd', type: String, defaultValue: './' },
   ], { argv });
 
-  const srcDirectoryPath = getPath(options.srcDirectory);
+  const srcDirectoryPath = getPath(options.srcDirectory as string);
   const runner = initializeMigrationRunner(srcDirectoryPath);
 
   // Find + apply all migrations
@@ -94,12 +94,12 @@ async function revertMigration(argv: string[]) {
     { name: 'until', alias: 'u', type: String },
   ], { argv });
 
-  const srcDirectoryPath = getPath(options.srcDirectory);
+  const srcDirectoryPath = getPath(options.srcDirectory as string);
   const runner = initializeMigrationRunner(srcDirectoryPath);
 
   // Find + apply all migrations
   const migrations = loadMigrationFiles(srcDirectoryPath);
-  await runner.revertUntil(migrations, options.until || undefined);
+  await runner.revertUntil(migrations, options.until as (string | undefined) || undefined);
 }
 
 /**
@@ -111,7 +111,7 @@ async function getMigrationStatus(argv: string[]) {
     { name: 'srcDirectory', alias: 'd', type: String, defaultValue: './' },
   ], { argv });
 
-  const srcDirectoryPath = getPath(options.srcDirectory);
+  const srcDirectoryPath = getPath(options.srcDirectory as string);
   const runner = initializeMigrationRunner(srcDirectoryPath);
 
   // Find all migrations
@@ -156,7 +156,7 @@ function loadMigrationFiles(srcDirectoryPath: string) {
   for (const file of files.filter(f => f.endsWith('.ts'))) {
     let imported: { [name: string]: unknown };
     try {
-      imported = require(`${srcDirectoryPath}/db/migrate/${file}`);
+      imported = require(`${srcDirectoryPath}/db/migrate/${file}`) as { [key: string]: undefined };
     } catch (e) {
       throw new CliException(`Cannot import "${srcDirectoryPath}/db/migrate/${file}"`);
     }

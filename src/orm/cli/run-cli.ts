@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// tslint:disable
 
 /* istanbul ignore file */
 
