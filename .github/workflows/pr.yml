@@ -1,0 +1,27 @@
+name: Pull Request Status Checks
+on:
+  - pull_request
+
+jobs:
+  danger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Danger
+        uses: danger/danger-js@9.2.10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  beachball:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Beachball
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
+      - run: npm i
+      - run: npx beachball check
+        env:
+          CI: true
