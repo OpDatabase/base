@@ -1,0 +1,8 @@
+{
+  "type": "patch",
+  "comment": "Fix: Added correct export statements in index.js",
+  "packageName": "@opdb/mysql",
+  "email": "marvin.scharle@conclurer.com",
+  "dependentChangeType": "patch",
+  "date": "2020-04-05T20:09:02.797Z"
+}
