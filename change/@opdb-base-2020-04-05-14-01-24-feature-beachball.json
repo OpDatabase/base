@@ -1,0 +1,8 @@
+{
+  "type": "patch",
+  "comment": "Updated version management",
+  "packageName": "@opdb/base",
+  "email": "marvin.scharle@conclurer.com",
+  "dependentChangeType": "patch",
+  "date": "2020-04-05T12:01:24.510Z"
+}
