@@ -1,0 +1,8 @@
+{
+  "type": "minor",
+  "comment": "Added version tracking using beachball",
+  "packageName": "opdb-base-repository",
+  "email": "marvin.scharle@conclurer.com",
+  "dependentChangeType": "patch",
+  "date": "2020-04-05T11:42:28.339Z"
+}
