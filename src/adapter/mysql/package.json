@@ -1,6 +1,6 @@
 {
   "name": "@opdb/mysql",
-  "version": "0.0.0-VERSION-STRING",
+  "version": "0.0.3",
   "description": "OpDB MySQL Adapter",
   "main": "index.js",
   "scripts": {
@@ -16,14 +16,11 @@
     "url": "https://github.com/OpDatabase/base/issues"
   },
   "homepage": "https://github.com/OpDatabase/base#readme",
-  "peerDependencies": {
-    "@opdb/base": "0.0.0-VERSION-STRING"
-  },
   "devDependencies": {
-    "@opdb/base": "../../../dist/opdb-base",
     "@types/mysql": "^2.15.8"
   },
   "dependencies": {
+    "@opdb/base": "0.0.3",
     "mysql": "^2.18.1"
   }
 }
