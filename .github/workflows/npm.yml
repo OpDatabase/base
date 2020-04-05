@@ -14,12 +14,8 @@ jobs:
         with:
           node-version: 13.x
       - run: yarn
-      - run: sh ./prepare-publish.sh
-      - run: yarn beachball publish -y
       - run: yarn build
       - run: sh ./publish.sh
         env:
           CI: true
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GIT_ACCESS_TOKEN: ${{ secrets.GIT_ACCESS_TOKEN }}
-          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}

@@ -1,0 +1,13 @@
+name: Release Management
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  Check Version Bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Danger JS Action
+        uses: danger/danger-js@9.1.8
