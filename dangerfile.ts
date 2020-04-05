@@ -1,3 +1,4 @@
+// tslint:disable-next-line:no-implicit-dependencies
 import { fail } from 'danger';
 import { existsSync, readdirSync } from 'fs';
 
