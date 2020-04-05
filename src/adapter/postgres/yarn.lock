@@ -2,8 +2,10 @@
 # yarn lockfile v1
 
 
-"@opdb/base@../../../dist/opdb-base":
-  version "0.0.1"
+"@opdb/base@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@opdb/base/-/base-0.0.2.tgz#1a2e9155038eb89870af98156283fe3f74fd5027"
+  integrity sha512-PV1oTjW47raNSDey0rbFhDVbMf9QcLkQLxcHHo8HW+Sxm8QIDOp48pGamq0BN0orL02rhBivwmuR2TMxiB/zsg==
   dependencies:
     chalk "^3.0.0"
     uuid "^3.4.0"
