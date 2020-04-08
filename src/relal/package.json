@@ -1,0 +1,23 @@
+{
+  "name": "@opdb/relal",
+  "version": "1.0.0-alpha.1",
+  "description": "OpDB Relational Algebra",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpDatabase/base.git"
+  },
+  "author": "OpDB / Marvin Scharle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpDatabase/base/issues"
+  },
+  "homepage": "https://github.com/OpDatabase/base#readme",
+  "dependencies": {
+    "@types/is-blank": "^2.1.0",
+    "is-blank": "^2.1.0"
+  }
+}

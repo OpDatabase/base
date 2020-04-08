@@ -1,0 +1,7 @@
+export abstract class Visitor {
+  // todo class dispatchCache
+
+  public accept(object: unknown, collector: unknown | null = null): unknown {
+    // todo
+  }
+}

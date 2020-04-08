@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # Local testing
 local-test
+**/local-test.ts
