@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 import { Node } from './node.class';
-import { rawSql } from './sql-literal-node';
+import { sql } from './sql-literal-node';
 import { UnaryNode } from './unary.node';
 
 export class WindowNode extends Node {
@@ -11,7 +11,7 @@ export class WindowNode extends Node {
   public order(...expressions: Array<string | Node>): WindowNode { // todo: type Node
     this.orders.push(...expressions.map(expression => {
       if (typeof expression === 'string') {
-        return rawSql`${expression}`;
+        return sql`${expression}`;
       } else {
         return expression;
       }
@@ -23,7 +23,7 @@ export class WindowNode extends Node {
   public partition(...expressions: Array<string | Node>): WindowNode { // todo: type Node
     this.partitions.push(...expressions.map(expression => {
       if (typeof expression === 'string') {
-        return rawSql`${expression}`;
+        return sql`${expression}`;
       } else {
         return expression;
       }

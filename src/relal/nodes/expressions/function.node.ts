@@ -1,18 +1,19 @@
 // tslint:disable:max-classes-per-file
+import { AnyNodeOrAttribute, ConvertibleToString } from '../../interfaces/node-types.interface';
 import { ExpressionsNode } from '../expressions.node';
 
-export class FunctionNode extends ExpressionsNode {
-  public distinct: boolean = false;
+export class FunctionNode<Type extends AnyNodeOrAttribute> extends ExpressionsNode {
+  public readonly distinct: boolean = false;
 
   // todo: WindowPredications
   constructor(
-    public readonly expression: unknown, // todo: SelectStatementNode
-    public alias?: unknown,
+    public readonly expression: Type, // todo: SelectStatementNode
+    public alias?: ConvertibleToString,
   ) {
     super();
   }
 
-  public as(alias: unknown): FunctionNode {
+  public as(alias: ConvertibleToString): this {
     this.alias = alias;
 
     return this;
@@ -20,17 +21,18 @@ export class FunctionNode extends ExpressionsNode {
 }
 
 // Function node types
-export class SumNode extends FunctionNode {
+export class SumNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
 }
 
-export class ExistsNode extends FunctionNode {
+// todo
+export class ExistsNode<Type extends AnyNodeOrAttribute> extends FunctionNode<unknown> {
 }
 
-export class MaxNode extends FunctionNode {
+export class MaxNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
 }
 
-export class MinNode extends FunctionNode {
+export class MinNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
 }
 
-export class AvgNode extends FunctionNode {
+export class AvgNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
 }

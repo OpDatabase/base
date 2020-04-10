@@ -1,21 +1,36 @@
-export interface MathMethods {
-  multiply(other: unknown): unknown;
+import {
+  AdditionNode,
+  BitwiseAndNode,
+  BitwiseOrNode,
+  BitwiseShiftLeftNode,
+  BitwiseShiftRightNode,
+  BitwiseXorNode,
+  DivisionNode,
+  MultiplicationNode,
+  SubtractionNode,
+} from '../nodes/binary/infix-operation.node';
+import { GroupingNode } from '../nodes/unary/grouping.node';
+import { BitwiseNotNode } from '../nodes/unary/unary-operation.node';
+import { AnyNodeOrAttribute } from './node-types.interface';
 
-  plus(other: unknown): unknown;
+export interface MathMethods<BaseType extends AnyNodeOrAttribute> {
+  multiply<OtherType extends AnyNodeOrAttribute>(other: OtherType): MultiplicationNode<BaseType, OtherType>;
 
-  minus(other: unknown): unknown;
+  plus<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<AdditionNode<BaseType, OtherType>>;
 
-  divide(other: unknown): unknown;
+  minus<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<SubtractionNode<BaseType, OtherType>>;
 
-  bitwiseAnd(other: unknown): unknown;
+  divide<OtherType extends AnyNodeOrAttribute>(other: OtherType): DivisionNode<BaseType, OtherType>;
 
-  bitwiseOr(other: unknown): unknown;
+  bitwiseAnd<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseAndNode<BaseType, OtherType>>;
 
-  bitwiseXor(other: unknown): unknown;
+  bitwiseOr<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseOrNode<BaseType, OtherType>>;
 
-  bitwiseShiftLeft(other: unknown): unknown;
+  bitwiseXor<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseXorNode<BaseType, OtherType>>;
 
-  bitwiseShiftRight(other: unknown): unknown;
+  bitwiseShiftLeft<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseShiftLeftNode<BaseType, OtherType>>;
 
-  bitwiseNot(other: unknown): unknown;
+  bitwiseShiftRight<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseShiftRightNode<BaseType, OtherType>>;
+
+  bitwiseNot(): BitwiseNotNode<BaseType>;
 }

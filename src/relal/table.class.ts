@@ -8,7 +8,7 @@ import { OuterJoinNode } from './nodes/binary/outer-join.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { Node } from './nodes/node.class';
 import { SelectCoreNode } from './nodes/select-core.node';
-import { rawSql, SqlLiteralNode } from './nodes/sql-literal-node';
+import { sql, SqlLiteralNode } from './nodes/sql-literal-node';
 import { SelectManager } from './select-manager.class';
 
 export class Table<Schema> {
@@ -19,7 +19,7 @@ export class Table<Schema> {
   }
 
   public alias(name: string = `${this.name}_2`): TableAliasNode<Table<Schema>> {
-    return new TableAliasNode(this, rawSql`${name}`);
+    return new TableAliasNode(this, sql`${name}`);
   }
 
   public from(): SelectManager {

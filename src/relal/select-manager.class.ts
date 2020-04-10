@@ -12,7 +12,7 @@ import { ExistsNode } from './nodes/expressions/function.node';
 import { SelectStatementNode } from './nodes/expressions/select-statement.node';
 import { Node } from './nodes/node.class';
 import { SelectCoreNode } from './nodes/select-core.node';
-import { rawSql, SqlLiteralNode } from './nodes/sql-literal-node';
+import { sql, SqlLiteralNode } from './nodes/sql-literal-node';
 import { DistinctOnNode, GroupNode, LateralNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
 import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';
 import { NamedWindowNode } from './nodes/window.node';
@@ -49,7 +49,7 @@ export class SelectManager extends TreeManager {
   public as(other: string): TableAliasNode<SelectStatementNode> {
     return createTableAlias(
       grouping(this.ast), // todo
-      rawSql`${other}`,
+      sql`${other}`,
     );
   }
 
@@ -72,7 +72,7 @@ export class SelectManager extends TreeManager {
   public group(...columns: Array<string | Node>): this {
     for (const column of columns) {
       if (typeof column === 'string') {
-        this.context.groups.push(new GroupNode(rawSql`${column}`));
+        this.context.groups.push(new GroupNode(sql`${column}`));
       } else {
         this.context.groups.push(new GroupNode(column));
       }
@@ -83,7 +83,7 @@ export class SelectManager extends TreeManager {
 
   public from(table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, unknown> | Table<unknown>): this {
     if (typeof table === 'string') {
-      table = rawSql`${table}`;
+      table = sql`${table}`;
     }
 
     if (table instanceof JoinNode) {
@@ -107,7 +107,7 @@ export class SelectManager extends TreeManager {
       if (isBlank(relation)) {
         throw new EmptyJoinException();
       }
-      leftHandSide = rawSql`${relation}` as LhsType;
+      leftHandSide = sql`${relation}` as LhsType;
     } else if (relation instanceof SqlLiteralNode) {
       if (isBlank(relation.rawSql)) {
         throw new EmptyJoinException();
@@ -143,7 +143,7 @@ export class SelectManager extends TreeManager {
   public project(...projections: Array<string | Node>): this { // todo likely not Node
     this.context.projections.push(...projections.map(projection => {
       if (typeof projection === 'string') {
-        return rawSql`${projection}`;
+        return sql`${projection}`;
       } else {
         return projection;
       }
@@ -175,7 +175,7 @@ export class SelectManager extends TreeManager {
   public order(...expressions: Array<string | Node>): this { // todo likely not Node
     this.context.projections.push(...expressions.map(expression => {
       if (typeof expression === 'string') {
-        return rawSql`${expression}`;
+        return sql`${expression}`;
       } else {
         return expression;
       }

@@ -1,5 +1,8 @@
-export interface OrderPredications {
-  asc(): unknown;
+import { AscendingNode, DescendingNode } from '../nodes/unary/ordering.node';
+import { AnyNodeOrAttribute } from './node-types.interface';
 
-  desc(): unknown;
+export interface OrderPredications<BaseType extends AnyNodeOrAttribute> {
+  asc(): AscendingNode<BaseType>;
+
+  desc(): DescendingNode<BaseType>;
 }

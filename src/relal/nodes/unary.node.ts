@@ -4,10 +4,11 @@ import { Node } from './node.class';
 import { SqlLiteralNode } from './sql-literal-node';
 import { QuotedNode } from './unary/quoted.node';
 
-export class UnaryNode<Type> {
+export class UnaryNode<Type> extends Node {
   constructor(
     public readonly value: Type,
   ) {
+    super();
   }
 
   public get expression(): Type {

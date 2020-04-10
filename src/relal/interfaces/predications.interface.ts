@@ -1,77 +1,121 @@
-export interface Predications {
-  notEqual(other: unknown): unknown;
+import {
+  BetweenNode,
+  GreaterThanNode,
+  GreaterThanOrEqualNode,
+  LessThanNode,
+  LessThanOrEqualNode,
+  NotEqualNode,
+  NotInNode,
+  OrNode,
+} from '../nodes/binary.node';
+import { EqualityNode, IsDistinctFromNode, IsNotDistinctFromNode } from '../nodes/binary/equality.node';
+import { InNode } from '../nodes/binary/equality/in.node';
+import { ConcatNode } from '../nodes/binary/infix-operation.node';
+import { DoesNotMatchNode, MatchesNode } from '../nodes/binary/matches.node';
+import { NotRegexNode, RegexNode } from '../nodes/binary/regex.node';
+import { AndNode } from '../nodes/expressions/and.node';
+import { CaseNode } from '../nodes/expressions/case.node';
+import { Node } from '../nodes/node.class';
+import { GroupingNode } from '../nodes/unary/grouping.node';
+import { QuotedNode } from '../nodes/unary/quoted.node';
+import { SelectManager } from '../select-manager.class';
+import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from './node-types.interface';
 
-  notEqualAny(others: unknown[]): unknown;
+export interface Predications<BaseType extends AnyNodeOrAttribute> {
+  notEqual(other: UnknownNativeType | AnyNodeOrAttribute): NotEqualNode<BaseType, AnyNodeOrAttribute>;
 
-  notEqualAll(others: unknown[]): unknown;
+  notEqualAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;
 
-  equal(other: unknown): unknown;
+  notEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
 
-  equalAny(others: unknown[]): unknown;
+  /*
+  notEqualAll<
+    Input extends UnknownNativeType[] | [],
+    Output extends {
+    [Key in keyof Input]: NotEqualNode<BaseType, CastedOrQuotedNode<Input[Key] extends UnknownNativeType ? Input[Key] : never>>
+  }>(others: Input): GroupingNode<AndNode<Output extends Node[] ? Output : Node[]>>;
+  notEqualAll<
+    Input extends AnyNodeOrAttribute[] | [],
+    Output extends {
+      [Key in keyof Input]: NotEqualNode<BaseType, Input[Key] extends AnyNodeOrAttribute ? Input[Key] : never>
+    }>(others: Input): GroupingNode<AndNode<Output extends Node[] ? Output : Node[]>>;
+   */
 
-  equalAll(others: unknown[]): unknown;
+  equal(other: UnknownNativeType | AnyNodeOrAttribute): EqualityNode<BaseType, AnyNodeOrAttribute>;
 
-  isNotDistinctFrom(other: unknown): unknown;
+  equalAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;
 
-  isDistinctFrom(other: unknown): unknown;
+  equalAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
 
-  between(other: unknown): unknown;
+  isNotDistinctFrom(other: UnknownNativeType | AnyNodeOrAttribute): IsNotDistinctFromNode<BaseType, AnyNodeOrAttribute>;
 
-  notBetween(other: unknown): unknown;
+  isDistinctFrom(other: UnknownNativeType | AnyNodeOrAttribute): IsDistinctFromNode<BaseType, AnyNodeOrAttribute>;
 
-  in(other: unknown): unknown;
+  between(
+    lowerBoundary: UnknownNativeType | AnyNodeOrAttribute,
+    upperBoundary: UnknownNativeType | AnyNodeOrAttribute,
+  ): BetweenNode<BaseType, AndNode<[AnyNodeOrAttribute, AnyNodeOrAttribute]>>;
 
-  inAny(other: unknown): unknown;
+  notBetween(
+    lowerBoundary: UnknownNativeType | AnyNodeOrAttribute,
+    upperBoundary: UnknownNativeType | AnyNodeOrAttribute,
+  ): OrNode<LessThanNode<BaseType, AnyNodeOrAttribute>, GreaterThanNode<BaseType, AnyNodeOrAttribute>>;
 
-  inAll(other: unknown): unknown;
+  in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): InNode<BaseType, AnyNodeOrAttribute>;
 
-  notIn(other: unknown): unknown;
+  inAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>>;
 
-  notInAny(other: unknown): unknown;
+  inAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>>;
 
-  notInAll(other: unknown): unknown;
+  notIn(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): NotInNode<BaseType, AnyNodeOrAttribute>;
 
-  matches(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  notInAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>>;
 
-  matchesRegex(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  notInAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>>;
 
-  matchesAny(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  matches(other: ConvertibleToString, escape?: ConvertibleToString, caseSensitive?: boolean): MatchesNode<BaseType, QuotedNode<string>>;
 
-  matchesAll(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  matchesRegex(other: RegExp, caseSensitive?: boolean): RegexNode<BaseType>;
 
-  doesNotMatch(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  matchesAny(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>>;
 
-  doesNotMatchRegex(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  matchesAll(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>>;
 
-  doesNotMatchAny(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  doesNotMatch(other: ConvertibleToString, escape?: ConvertibleToString, caseSensitive?: boolean): DoesNotMatchNode<BaseType, QuotedNode<string>>;
 
-  doesNotMatchAll(other: unknown, escape: unknown, caseSensitive?: boolean): unknown;
+  doesNotMatchRegex(other: RegExp, caseSensitive?: boolean): NotRegexNode<BaseType>;
 
-  greaterThanOrEqual(right: unknown): unknown;
+  doesNotMatchAny(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<OrNode<Node, Node>>;
 
-  greaterThanOrEqualAny(right: unknown): unknown;
+  doesNotMatchAll(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>>;
 
-  greaterThanOrEqualAll(right: unknown): unknown;
+  greaterThanOrEqual(other: UnknownNativeType | AnyNodeOrAttribute): GreaterThanOrEqualNode<BaseType, AnyNodeOrAttribute>;
 
-  greaterThan(right: unknown): unknown;
+  greaterThanOrEqualAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;
 
-  greaterThanAny(right: unknown): unknown;
+  greaterThanOrEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
 
-  greaterThanAll(right: unknown): unknown;
+  greaterThan(other: UnknownNativeType | AnyNodeOrAttribute): GreaterThanNode<BaseType, AnyNodeOrAttribute>;
 
-  lessThan(right: unknown): unknown;
+  greaterThanAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;
 
-  lessThanAny(right: unknown): unknown;
+  greaterThanAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
 
-  lessThanAll(right: unknown): unknown;
+  lessThan(other: UnknownNativeType | AnyNodeOrAttribute): LessThanNode<BaseType, AnyNodeOrAttribute>;
 
-  lessThanOrEqual(right: unknown): unknown;
+  lessThanAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;
 
-  lessThanOrEqualAny(right: unknown): unknown;
+  lessThanAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
 
-  lessThanOrEqualAll(right: unknown): unknown;
+  lessThanOrEqual(other: UnknownNativeType | AnyNodeOrAttribute): LessThanOrEqualNode<BaseType, AnyNodeOrAttribute>;
 
-  when(right: unknown): unknown;
+  lessThanOrEqualAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;
 
-  concat(other: unknown): unknown;
+  lessThanOrEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
+
+  when<ReturnType extends AnyNodeOrAttribute>(defaultValue: ReturnType): CaseNode<BaseType, ReturnType>;
+
+  when<ReturnType extends UnknownNativeType>(defaultValue: ReturnType): CaseNode<BaseType, QuotedNode<ReturnType>>;
+
+  concat(other: AnyNodeOrAttribute | UnknownNativeType): ConcatNode<BaseType, AnyNodeOrAttribute>;
 }

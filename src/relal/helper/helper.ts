@@ -1,15 +1,14 @@
 import { Attribute } from '../attributes/attribute.class';
+import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
+import { OrNode } from '../nodes/binary.node';
 import { TableAliasNode } from '../nodes/binary/table-alias.node';
-import { BindParamNode } from '../nodes/bind-param.node';
 import { AndNode } from '../nodes/expressions/and.node';
 import { CastedNode } from '../nodes/expressions/casted.node';
 import { SelectStatementNode } from '../nodes/expressions/select-statement.node';
 import { Node } from '../nodes/node.class';
-import { rawSql, SqlLiteralNode } from '../nodes/sql-literal-node';
+import { sql, SqlLiteralNode } from '../nodes/sql-literal-node';
 import { GroupingNode } from '../nodes/unary/grouping.node';
 import { QuotedNode } from '../nodes/unary/quoted.node';
-import { SelectManager } from '../select-manager.class';
-import { Table } from '../table.class';
 
 export function createTableAlias(relation: SelectStatementNode, name: SqlLiteralNode): TableAliasNode<SelectStatementNode> {
   return new TableAliasNode(relation, name);
@@ -20,12 +19,22 @@ export function grouping<Type extends Node>(expression: Type): GroupingNode {
   return new GroupingNode(expression);
 }
 
+export function groupingAny(expressions: unknown[]) {
+  return new GroupingNode(expressions.reduce((previousValue, currentValue) => {
+    return new OrNode(previousValue, currentValue);
+  }));
+}
+
+export function groupingAll(expressions: unknown[]) {
+  return new GroupingNode(new AndNode(expressions));
+}
+
 // todo: typing of Node
 export function collapse(...expressions: Array<Node | string>): AndNode<unknown, unknown> | Node {
   const results: Node[] = [];
   for (const expression of expressions) {
     if (typeof expression === 'string') {
-      results.push(rawSql`${expression}`);
+      results.push(sql`${expression}`);
     } else {
       results.push(expression);
     }
@@ -38,6 +47,7 @@ export function collapse(...expressions: Array<Node | string>): AndNode<unknown,
   }
 }
 
+/*
 export function buildQuoted(other: Node): Node;
 export function buildQuoted(other: Attribute): Attribute;
 export function buildQuoted<Schema>(other: Table<Schema>): Table<Schema>;
@@ -65,5 +75,26 @@ export function buildQuoted<SchemaOrType>(
     } else {
       return new QuotedNode(other);
     }
+  }
+}*/
+
+export function toString(input: ConvertibleToString): string {
+  return typeof input === 'string' ? input : input.toString();
+}
+
+export function isNodeOrAttribute(value: unknown): value is AnyNodeOrAttribute {
+  return (value instanceof Node || value instanceof Attribute);
+}
+
+export function buildQuoted<InputType extends UnknownNativeType>(other: InputType): QuotedNode<InputType>;
+export function buildQuoted<InputType extends UnknownNativeType>(other: InputType, attribute: Attribute): CastedNode<InputType>;
+export function buildQuoted<InputType extends UnknownNativeType>(
+  other: InputType,
+  attribute?: Attribute,
+): QuotedNode<InputType> | CastedNode<InputType> {
+  if (attribute == null) {
+    return new QuotedNode(other);
+  } else {
+    return new CastedNode(other, attribute);
   }
 }

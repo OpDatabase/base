@@ -1,13 +1,18 @@
-export interface Expressions {
-  count(distinct?: boolean): unknown;
+import { AvgNode, MaxNode, MinNode, SumNode } from '../nodes/expressions/function.node';
+import { CountNode } from '../nodes/expressions/function/count.node';
+import { ExtractNode } from '../nodes/unary/extract.node';
+import { AnyNodeOrAttribute, ConvertibleToString } from './node-types.interface';
 
-  sum(): unknown;
+export interface Expressions<BaseType extends AnyNodeOrAttribute> {
+  count(distinct?: boolean): CountNode<BaseType>;
 
-  maximum(): unknown;
+  sum(): SumNode<BaseType>;
 
-  minimum(): unknown;
+  maximum(): MaxNode<BaseType>;
 
-  average(): unknown;
+  minimum(): MinNode<BaseType>;
 
-  extract(field: unknown): unknown;
+  average(): AvgNode<BaseType>;
+
+  extract(field: ConvertibleToString): ExtractNode<BaseType>;
 }
