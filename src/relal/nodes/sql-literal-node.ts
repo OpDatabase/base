@@ -6,12 +6,14 @@ import { MathMethods } from '../mixins/math-methods.mixin';
 import { OrderPredications } from '../mixins/order-predications.mixin';
 import { Predications } from '../mixins/predications.mixin';
 import { Node } from './node.class';
+import { register } from './nodes.register';
 
 /**
  * This node is converted "as is" into an SQL string.
  * There is no escaping / quoting whatsoever.
  * Therefore: Use with caution.
  */
+@register('sql-literal')
 @include(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
 export class SqlLiteralNode extends Node {
   constructor(
@@ -27,6 +29,3 @@ export interface SqlLiteralNode
     OrderPredications<SqlLiteralNode>, Predications<SqlLiteralNode> {
 }
 
-export function sql(literals: TemplateStringsArray, ...args: unknown[]): SqlLiteralNode {
-  return new SqlLiteralNode(String.raw(literals, args));
-}

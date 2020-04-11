@@ -8,6 +8,7 @@ import { MathMethods } from '../../mixins/math-methods.mixin';
 import { OrderPredications } from '../../mixins/order-predications.mixin';
 import { Predications } from '../../mixins/predications.mixin';
 import { BinaryNode } from '../binary.node';
+import { register } from '../nodes.register';
 
 @include(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
 export abstract class InfixOperationNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
@@ -27,12 +28,14 @@ export interface InfixOperationNode<LhsType extends AnyNodeOrAttribute, RhsType 
     OrderPredications<InfixOperationNode<LhsType, RhsType>>, Predications<InfixOperationNode<LhsType, RhsType>> {
 }
 
+@register('multiplication')
 export class MultiplicationNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
     super('*', left, right);
   }
 }
 
+@register('division')
 export class DivisionNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -40,6 +43,7 @@ export class DivisionNode<LhsType extends AnyNodeOrAttribute, RhsType extends An
   }
 }
 
+@register('addition')
 export class AdditionNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -47,6 +51,7 @@ export class AdditionNode<LhsType extends AnyNodeOrAttribute, RhsType extends An
   }
 }
 
+@register('subtraction')
 export class SubtractionNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -54,6 +59,7 @@ export class SubtractionNode<LhsType extends AnyNodeOrAttribute, RhsType extends
   }
 }
 
+@register('concat')
 export class ConcatNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -61,6 +67,7 @@ export class ConcatNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyN
   }
 }
 
+@register('bitwise-and')
 export class BitwiseAndNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -68,6 +75,7 @@ export class BitwiseAndNode<LhsType extends AnyNodeOrAttribute, RhsType extends 
   }
 }
 
+@register('bitwise-or')
 export class BitwiseOrNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -75,6 +83,7 @@ export class BitwiseOrNode<LhsType extends AnyNodeOrAttribute, RhsType extends A
   }
 }
 
+@register('bitwise-xor')
 export class BitwiseXorNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -82,6 +91,7 @@ export class BitwiseXorNode<LhsType extends AnyNodeOrAttribute, RhsType extends 
   }
 }
 
+@register('bitwise-shift-left')
 export class BitwiseShiftLeftNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {
@@ -89,6 +99,7 @@ export class BitwiseShiftLeftNode<LhsType extends AnyNodeOrAttribute, RhsType ex
   }
 }
 
+@register('bitwise-shift-right')
 export class BitwiseShiftRightNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute>
   extends InfixOperationNode<LhsType, RhsType> {
   constructor(left: LhsType, right: RhsType) {

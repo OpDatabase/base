@@ -124,7 +124,7 @@ async function getMigrationStatus(argv: string[]) {
   });
   table.push(...data.map(d => [
     d.version,
-    d.status === MigrationStatusCode.database ? 'n/a' : d.migration.constructor.name,
+    d.status === MigrationStatusCode.database ? 'node/a' : d.migration.constructor.name,
     d.status,
   ]));
 

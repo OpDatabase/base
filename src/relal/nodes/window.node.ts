@@ -1,8 +1,10 @@
 // tslint:disable:max-classes-per-file
+import { sql } from '../helper/sql-template-handler.func';
 import { Node } from './node.class';
-import { sql } from './sql-literal-node';
+import { register } from './nodes.register';
 import { UnaryNode } from './unary.node';
 
+@register('window')
 export class WindowNode extends Node {
   public orders: Node[] = []; // todo likely not Node[]
   public framing: unknown | null = null;
@@ -53,6 +55,7 @@ export class WindowNode extends Node {
   }
 }
 
+@register('named-window')
 export class NamedWindowNode extends WindowNode {
   constructor(
     public readonly name: string,
@@ -61,17 +64,25 @@ export class NamedWindowNode extends WindowNode {
   }
 }
 
+@register('rows')
 export class RowsNode extends UnaryNode<unknown> {
 }
 
+@register('range')
 export class RangeNode extends UnaryNode<unknown> {
 }
 
+// todo: check purpose
+@register('current-row')
 export class CurrentRowNode extends Node {
 }
 
+// todo: check purpose
+@register('preceding')
 export class PrecedingNode extends UnaryNode<unknown> {
 }
 
+// todo: check purpose
+@register('following')
 export class FollowingNode extends UnaryNode<unknown> {
 }

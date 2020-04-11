@@ -1,23 +1,25 @@
 import { Attribute } from './attributes/attribute.class';
 import { UnknownAttribute } from './attributes/unknown-attribute.class';
+import { sql } from './helper/sql-template-handler.func';
 import { JoinNode } from './nodes/binary.node';
-import { InnerJoinNode } from './nodes/binary/inner-join.node';
-import { OuterJoinNode } from './nodes/binary/outer-join.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { Node } from './nodes/node.class';
+import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
-import { sql, SqlLiteralNode } from './nodes/sql-literal-node';
+import { SqlLiteralNode } from './nodes/sql-literal-node';
 import { SelectManager } from './select-manager.class';
 
 export class Table<Schema> {
   constructor(
     public readonly name: string,
-    // private readonly typeCaster: TypeCaster = new DefaultTypeCaster(),
+    // private readonly typeCaster: TypeCasterInterface = new DefaultTypeCaster(),
   ) {
   }
 
   public alias(name: string = `${this.name}_2`): TableAliasNode<Table<Schema>> {
-    return new TableAliasNode(this, sql`${name}`);
+    const tableAliasNode: typeof TableAliasNode = node('table-alias');
+
+    return new tableAliasNode(this, sql`${name}`);
   }
 
   public from(): SelectManager {
@@ -29,13 +31,13 @@ export class Table<Schema> {
     JoinTypeConstructor extends new(left: LhsType, right: null) => JoinType,
     >(
     relation: string | LhsType,
-    method: JoinTypeConstructor = InnerJoinNode as JoinTypeConstructor,
+    method: JoinTypeConstructor = node('inner-join') as JoinTypeConstructor,
   ): SelectManager {
     return this.from().join(relation, method);
   }
 
   public outerJoin(relation: string | SqlLiteralNode | SelectCoreNode): SelectManager {
-    return this.join(relation, OuterJoinNode);
+    return this.join(relation, node('outer-join'));
   }
 
   public group(...columns: Array<string | Node>): SelectManager {
@@ -69,6 +71,7 @@ export class Table<Schema> {
   // todo keyof Schema
   public attribute(name: string): Attribute {
     console.log(name);
+
     // todo
     return new UnknownAttribute();
   }

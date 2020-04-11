@@ -1,6 +1,8 @@
 import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
 import { ExpressionsNode } from '../expressions.node';
+import { register } from '../nodes.register';
 
+@register('and')
 export class AndNode<ChildTypes extends AnyNodeOrAttribute[]> extends ExpressionsNode {
   constructor(
     public readonly children: ChildTypes,

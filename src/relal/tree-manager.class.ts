@@ -1,11 +1,11 @@
 import { buildQuoted } from './helper/helper';
-import { StatementMethods } from './interfaces/statement-methods.interface';
+import { StatementMethodsInterface } from './interfaces/statement-methods.interface';
 import { SelectStatementNode } from './nodes/expressions/select-statement.node';
+import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
 import { LimitNode, OffsetNode } from './nodes/unary.node';
-import { QuotedNode } from './nodes/unary/quoted.node';
 
-export abstract class TreeManager implements StatementMethods {
+export abstract class TreeManager implements StatementMethodsInterface {
   public ast: SelectStatementNode | undefined; // todo: remove bang operators in class
 
   protected get context(): SelectCoreNode | undefined {
@@ -17,7 +17,8 @@ export abstract class TreeManager implements StatementMethods {
   }
 
   public offset(limit: number): this {
-    this.ast!.offset = new OffsetNode(buildQuoted(limit) as QuotedNode<number>); // todo explicit type casting
+    const offsetNode: typeof OffsetNode = node('offset');
+    this.ast!.offset = new offsetNode(buildQuoted(limit));
 
     return this;
   }
@@ -34,7 +35,8 @@ export abstract class TreeManager implements StatementMethods {
   }
 
   public take(limit: number): this {
-    this.ast!.offset = new LimitNode(buildQuoted(limit) as QuotedNode<number>); // todo explicit type casting
+    const limitNode: typeof LimitNode = node('limit');
+    this.ast!.offset = new limitNode(buildQuoted(limit));
 
     return this;
   }

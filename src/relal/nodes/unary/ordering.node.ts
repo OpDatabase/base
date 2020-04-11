@@ -1,9 +1,10 @@
 // tslint:disable:max-classes-per-file
 
 import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
+import { register } from '../nodes.register';
 import { UnaryNode } from '../unary.node';
 
-export class OrderingNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
+export abstract class OrderingNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
   public nullsFirst(): NullsFirstNode<Type, this> {
     return new NullsFirstNode(this);
   }
@@ -13,12 +14,15 @@ export class OrderingNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Typ
   }
 }
 
+@register('nulls-first')
 export class NullsFirstNode<InnerType extends AnyNodeOrAttribute, Type extends OrderingNode<InnerType>> extends UnaryNode<Type> {
 }
 
+@register('nulls-last')
 export class NullsLastNode<InnerType extends AnyNodeOrAttribute, Type extends OrderingNode<InnerType>> extends UnaryNode<Type> {
 }
 
+@register('ascending')
 export class AscendingNode<Type extends AnyNodeOrAttribute> extends OrderingNode<Type> {
   public readonly direction: string = 'asc';
   public readonly isAscending: boolean = true;
@@ -29,6 +33,7 @@ export class AscendingNode<Type extends AnyNodeOrAttribute> extends OrderingNode
   }
 }
 
+@register('descending')
 export class DescendingNode<Type extends AnyNodeOrAttribute> extends OrderingNode<Type> {
   public readonly direction: string = 'desc';
   public readonly isAscending: boolean = false;

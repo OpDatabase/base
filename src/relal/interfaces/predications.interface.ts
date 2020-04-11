@@ -21,7 +21,7 @@ import { QuotedNode } from '../nodes/unary/quoted.node';
 import { SelectManager } from '../select-manager.class';
 import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from './node-types.interface';
 
-export interface Predications<BaseType extends AnyNodeOrAttribute> {
+export interface PredicationsInterface<BaseType extends AnyNodeOrAttribute> {
   notEqual(other: UnknownNativeType | AnyNodeOrAttribute): NotEqualNode<BaseType, AnyNodeOrAttribute>;
 
   notEqualAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;

@@ -3,7 +3,7 @@ import { CountNode } from '../nodes/expressions/function/count.node';
 import { ExtractNode } from '../nodes/unary/extract.node';
 import { AnyNodeOrAttribute, ConvertibleToString } from './node-types.interface';
 
-export interface Expressions<BaseType extends AnyNodeOrAttribute> {
+export interface ExpressionsInterface<BaseType extends AnyNodeOrAttribute> {
   count(distinct?: boolean): CountNode<BaseType>;
 
   sum(): SumNode<BaseType>;

@@ -6,27 +6,38 @@ import { AndNode } from '../nodes/expressions/and.node';
 import { CastedNode } from '../nodes/expressions/casted.node';
 import { SelectStatementNode } from '../nodes/expressions/select-statement.node';
 import { Node } from '../nodes/node.class';
-import { sql, SqlLiteralNode } from '../nodes/sql-literal-node';
+import { node } from '../nodes/nodes.register';
+import { SqlLiteralNode } from '../nodes/sql-literal-node';
 import { GroupingNode } from '../nodes/unary/grouping.node';
 import { QuotedNode } from '../nodes/unary/quoted.node';
+import { sql } from './sql-template-handler.func';
 
 export function createTableAlias(relation: SelectStatementNode, name: SqlLiteralNode): TableAliasNode<SelectStatementNode> {
-  return new TableAliasNode(relation, name);
+  const tableAliasNode: typeof TableAliasNode = node('table-alias');
+
+  return new tableAliasNode(relation, name);
 }
 
 // todo: typing
 export function grouping<Type extends Node>(expression: Type): GroupingNode<Type> {
-  return new GroupingNode(expression);
+  const groupingNode: typeof GroupingNode = node('grouping');
+
+  return new groupingNode(expression);
 }
 
 export function groupingAny(expressions: Node[]): GroupingNode<OrNode<Node, Node>> {
-  const flattened = expressions.reduce((previousValue, currentValue) => new OrNode(previousValue, currentValue)) as OrNode<Node, Node>;
+  const groupingNode: typeof GroupingNode = node('grouping');
+  const orNode: typeof OrNode = node('or');
+  const flattened = expressions.reduce((previousValue, currentValue) => new orNode(previousValue, currentValue)) as OrNode<Node, Node>;
 
-  return new GroupingNode(flattened);
+  return new groupingNode(flattened);
 }
 
 export function groupingAll(expressions: Node[]): GroupingNode<AndNode<Node[]>> {
-  return new GroupingNode(new AndNode(expressions));
+  const groupingNode: typeof GroupingNode = node('grouping');
+  const andNode: typeof AndNode = node('and');
+
+  return new groupingNode(new andNode(expressions));
 }
 
 // todo: typing of Node
@@ -43,7 +54,9 @@ export function collapse(...expressions: Array<Node | string>): AndNode<Node[]> 
   if (results.length === 1) {
     return results[0];
   } else {
-    return new AndNode(results); // todo
+    const andNode: typeof AndNode = node('and');
+
+    return new andNode(results); // todo
   }
 }
 
@@ -93,8 +106,12 @@ export function buildQuoted<InputType extends UnknownNativeType>(
   attribute?: Attribute,
 ): QuotedNode<InputType> | CastedNode<InputType> {
   if (attribute == null) {
-    return new QuotedNode(other);
+    const quotedNode: typeof QuotedNode = node('quoted');
+
+    return new quotedNode(other);
   } else {
-    return new CastedNode(other, attribute);
+    const castedNode: typeof CastedNode = node('casted');
+
+    return new castedNode(other, attribute);
   }
 }

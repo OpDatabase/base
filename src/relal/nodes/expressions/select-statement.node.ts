@@ -1,7 +1,9 @@
 import { ExpressionsNode } from '../expressions.node';
+import { register } from '../nodes.register';
 import { SelectCoreNode } from '../select-core.node';
 import { OffsetNode } from '../unary.node';
 
+@register('select-statement')
 export class SelectStatementNode extends ExpressionsNode {
   public orders: unknown[] = [];
   public limit: unknown;

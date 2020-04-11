@@ -2,17 +2,17 @@ import isBlank from 'is-blank';
 import { EmptyJoinException } from './exceptions/empty-join.exception';
 import { RelalException } from './exceptions/relal.exception';
 import { buildQuoted, collapse, createTableAlias } from './helper/helper';
+import { sql } from './helper/sql-template-handler.func';
 import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './nodes/binary.node';
-import { InnerJoinNode } from './nodes/binary/inner-join.node';
-import { OuterJoinNode } from './nodes/binary/outer-join.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { CommentNode } from './nodes/comment.node';
 import { DistinctNode } from './nodes/expressions/distinct.node';
 import { ExistsNode } from './nodes/expressions/function.node';
 import { SelectStatementNode } from './nodes/expressions/select-statement.node';
 import { Node } from './nodes/node.class';
+import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
-import { sql, SqlLiteralNode } from './nodes/sql-literal-node';
+import { SqlLiteralNode } from './nodes/sql-literal-node';
 import { DistinctOnNode, GroupNode, LateralNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
 import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';
 import { NamedWindowNode } from './nodes/window.node';
@@ -27,7 +27,8 @@ export class SelectManager extends TreeManager {
   ) {
     super();
 
-    this.ast = new SelectStatementNode();
+    const selectStatementNode: typeof SelectStatementNode = node('select-statement');
+    this.ast = new selectStatementNode();
     this.from(table);
     // todo
   }
@@ -37,13 +38,16 @@ export class SelectManager extends TreeManager {
   }
 
   public skip(amount: number | null): this {
-    this.ast.offset = amount !== null ? new OffsetNode(buildQuoted(amount)) : null;
+    const offsetNode: typeof OffsetNode = node('offset');
+    this.ast.offset = amount !== null ? new offsetNode(buildQuoted(amount)) : null;
 
     return this;
   }
 
   public exists(): ExistsNode<SelectStatementNode> {
-    return new ExistsNode(this.ast);
+    const existsNode: typeof ExistsNode = node('exists');
+
+    return new existsNode(this.ast);
   }
 
   public as(other: string): TableAliasNode<SelectStatementNode> {
@@ -63,18 +67,20 @@ export class SelectManager extends TreeManager {
 
   public on(...expressions: Array<Node | string>): this { // todo: likely not Node
     const lastRightHandSide = this.context.source.right[this.context.source.right.length - 1];
-    lastRightHandSide.right = new OnNode(collapse(...expressions));
+    const onNode: typeof OnNode = node('on');
+    lastRightHandSide.right = new onNode(collapse(...expressions));
 
     return this;
   }
 
   // todo: this is likely not Node[]
   public group(...columns: Array<string | Node>): this {
+    const groupNode: typeof GroupNode = node('group');
     for (const column of columns) {
       if (typeof column === 'string') {
-        this.context.groups.push(new GroupNode(sql`${column}`));
+        this.context.groups.push(new groupNode(sql`${column}`));
       } else {
-        this.context.groups.push(new GroupNode(column));
+        this.context.groups.push(new groupNode(column));
       }
     }
 
@@ -102,7 +108,7 @@ export class SelectManager extends TreeManager {
     JoinTypeConstructor extends new(left: LhsType, right: null) => JoinType,
     >(
     relation: string | LhsType,
-    method: JoinTypeConstructor = InnerJoinNode as JoinTypeConstructor,
+    method: JoinTypeConstructor = node('inner-join') as JoinTypeConstructor,
   ): this {
     let leftHandSide: LhsType;
     if (typeof relation === 'string') {
@@ -127,7 +133,7 @@ export class SelectManager extends TreeManager {
   }
 
   public outerJoin(relation: string | SqlLiteralNode | SelectCoreNode): this {
-    return this.join(relation, OuterJoinNode);
+    return this.join(relation, node('outer-join'));
   }
 
   public having(expression: unknown): this {
@@ -137,7 +143,8 @@ export class SelectManager extends TreeManager {
   }
 
   public window(name: string): NamedWindowNode {
-    const window = new NamedWindowNode(name);
+    const namedWindowNode: typeof NamedWindowNode = node('named-window');
+    const window = new namedWindowNode(name);
     this.context.windows.push(window);
 
     return window;
@@ -156,21 +163,24 @@ export class SelectManager extends TreeManager {
   }
 
   public optimizerHints(...hints: unknown[]): this {
+    const optimizerHintsNode: typeof OptimizerHintsNode = node('optimizer-hints');
     if (hints.length > 0) {
-      this.context.optimizerHints = new OptimizerHintsNode(hints);
+      this.context.optimizerHints = new optimizerHintsNode(hints);
     }
 
     return this;
   }
 
   public distinct(shouldBeDistinct: boolean = true): this {
-    this.context.setQuantifier = shouldBeDistinct ? new DistinctNode() : null;
+    const distinctNode: typeof DistinctNode = node('distinct');
+    this.context.setQuantifier = shouldBeDistinct ? new distinctNode() : null;
 
     return this;
   }
 
   public distinctOn(value: unknown | null): this {
-    this.context.setQuantifier = value !== null ? new DistinctOnNode(value) : null;
+    const distinctOnNode: typeof DistinctOnNode = node('distinct-on');
+    this.context.setQuantifier = value !== null ? new distinctOnNode(value) : null;
 
     return this;
   }
@@ -198,37 +208,50 @@ export class SelectManager extends TreeManager {
       if (other == null) {
         throw new RelalException(`SelectManager.union all requires 2 statements, only 1 was given`);
       }
+      const unionAllNode: typeof UnionAllNode = node('union-all');
 
-      return new UnionAllNode(this.ast, other.ast);
+      return new unionAllNode(this.ast, other.ast);
     } else {
-      return new UnionNode(this.ast, operationOrOther.ast);
+      const unionNode: typeof UnionNode = node('union');
+
+      return new unionNode(this.ast, operationOrOther.ast);
     }
   }
 
   public intersect(other: SelectManager): IntersectNode {
-    return new IntersectNode(this.ast, other.ast);
+    const intersectNode: typeof IntersectNode = node('intersect');
+
+    return new intersectNode(this.ast, other.ast);
   }
 
   public except(other: SelectManager): ExceptNode {
-    return new ExceptNode(this.ast, other.ast);
+    const exceptNode: typeof ExceptNode = node('except');
+
+    return new exceptNode(this.ast, other.ast);
   }
 
   public lateral(tableName: string | null = null): LateralNode {
-    return new LateralNode(tableName == null ? this.ast : this.as(tableName));
+    const lateralNode: typeof LateralNode = node('lateral');
+
+    return new lateralNode(tableName == null ? this.ast : this.as(tableName));
   }
 
   public with(type: 'recursive', ...subQueries: unknown[]): this;
   public with(...subQueries: unknown[]): this;
   public with(typeOrFirstSubQuery: 'recursive' | unknown, ...subQueries: unknown[]): this {
+    const withNode: typeof WithNode = node('with');
+    const withRecursiveNode: typeof WithRecursiveNode = node('with-recursive');
+
     this.ast.with = typeOrFirstSubQuery === 'recursive' ?
-      new WithRecursiveNode(subQueries) :
-      new WithNode([typeOrFirstSubQuery, ...subQueries]);
+      new withRecursiveNode(subQueries) :
+      new withNode([typeOrFirstSubQuery, ...subQueries]);
 
     return this;
   }
 
   public comment(...values: string[]): this {
-    this.context.comment = new CommentNode(values);
+    const commentNode: typeof CommentNode = node('comment');
+    this.context.comment = new commentNode(values);
 
     return this;
   }
