@@ -151,7 +151,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     return groupingAny(others.map(other => this.notEqual(other)));
   }
 
-  public in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): InNode<Target, AnyNodeOrAttribute> {
+  public in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]): InNode<Target, AnyNodeOrAttribute> {
     const inNode: typeof InNode = node('in');
     const inValuesNode: typeof InValuesNode = node('in-values');
 
@@ -166,11 +166,11 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     }
   }
 
-  public inAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>> {
+  public inAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>> {
     return groupingAll(others.map(other => this.in(other)));
   }
 
-  public inAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>> {
+  public inAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>> {
     return groupingAny(others.map(other => this.in(other)));
   }
 
@@ -216,7 +216,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     return this.lessThan(lowerBoundaryNode).or(this.greaterThan(upperBoundaryNode));
   }
 
-  public notIn(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): NotInNode<Target, AnyNodeOrAttribute> {
+  public notIn(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]): NotInNode<Target, AnyNodeOrAttribute> {
     const notInNode: typeof NotInNode = node('not-in');
     const inValuesNode: typeof InValuesNode = node('in-values');
 
@@ -231,11 +231,11 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     }
   }
 
-  public notInAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>> {
+  public notInAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>> {
     return groupingAll(others.map(other => this.notIn(other)));
   }
 
-  public notInAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>> {
+  public notInAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>> {
     return groupingAny(others.map(other => this.notIn(other)));
   }
 

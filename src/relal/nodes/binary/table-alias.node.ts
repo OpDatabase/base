@@ -28,9 +28,7 @@ export class TableAliasNode<InternalType extends Table<unknown> | SelectStatemen
   }
 
   // keyof Schema
-  public attribute(name: unknown): Attribute {
-    console.log(name);
-    // todo
-    return new UnknownAttribute();
+  public attribute(name: string): Attribute {
+    return new UnknownAttribute(this, name);
   }
 }

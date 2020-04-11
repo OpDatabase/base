@@ -19,6 +19,7 @@ import './nodes/expressions/distinct.node';
 import './nodes/expressions/function.node';
 import './nodes/expressions/function/count.node';
 import './nodes/expressions/select-statement.node';
+import './nodes/join-source.node';
 import './nodes/node.class';
 import './nodes/select-core.node';
 import './nodes/sql-literal-node';

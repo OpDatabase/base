@@ -61,17 +61,17 @@ export interface PredicationsInterface<BaseType extends AnyNodeOrAttribute> {
     upperBoundary: UnknownNativeType | Node,
   ): OrNode<LessThanNode<BaseType, AnyNodeOrAttribute>, GreaterThanNode<BaseType, AnyNodeOrAttribute>>;
 
-  in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): InNode<BaseType, AnyNodeOrAttribute>;
+  in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]): InNode<BaseType, AnyNodeOrAttribute>;
 
-  inAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>>;
+  inAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>>;
 
-  inAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>>;
+  inAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>>;
 
-  notIn(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): NotInNode<BaseType, AnyNodeOrAttribute>;
+  notIn(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]): NotInNode<BaseType, AnyNodeOrAttribute>;
 
-  notInAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>>;
+  notInAny(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<OrNode<Node, Node>>;
 
-  notInAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>>;
+  notInAll(others: Array<UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]>): GroupingNode<AndNode<Node[]>>;
 
   matches(other: ConvertibleToString, escape?: ConvertibleToString, caseSensitive?: boolean): MatchesNode<BaseType, QuotedNode<string>>;
 

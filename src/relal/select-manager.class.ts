@@ -3,6 +3,7 @@ import { EmptyJoinException } from './exceptions/empty-join.exception';
 import { RelalException } from './exceptions/relal.exception';
 import { buildQuoted, collapse, createTableAlias } from './helper/helper';
 import { sql } from './helper/sql-template-handler.func';
+import { AnyNodeOrAttribute } from './interfaces/node-types.interface';
 import { InternalConstants } from './internal-constants';
 import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './nodes/binary.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
@@ -14,17 +15,17 @@ import { Node } from './nodes/node.class';
 import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
 import { SqlLiteralNode } from './nodes/sql-literal-node';
-import { DistinctOnNode, GroupNode, LateralNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
+import { DistinctOnNode, GroupNode, LateralNode, LimitNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
 import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';
 import { NamedWindowNode } from './nodes/window.node';
 import { Table } from './table.class';
 import { TreeManager } from './tree-manager.class';
 
-export class SelectManager extends TreeManager {
+export class SelectManager<Schema> extends TreeManager {
   public ast: SelectStatementNode;
 
   constructor(
-    table: Table<unknown>,
+    table: Table<Schema>,
   ) {
     super();
 
@@ -36,6 +37,13 @@ export class SelectManager extends TreeManager {
 
   protected get context(): SelectCoreNode {
     return this.ast.cores[this.ast.cores.length - 1];
+  }
+
+  public offset(limit: number): this {
+    const offsetNode: typeof OffsetNode = node('offset');
+    this.ast.offset = new offsetNode(buildQuoted(limit));
+
+    return this;
   }
 
   public skip(amount: number | null): this {
@@ -92,13 +100,12 @@ export class SelectManager extends TreeManager {
     table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, JoinRhsType> | Table<unknown>,
   ): this {
     const joinNode: typeof JoinNode = node('join');
-    if (typeof table === 'string') {
-      table = sql`${table}`;
-    }
-
     if (table instanceof joinNode) {
       this.context.source.right.push(table);
     } else {
+      if (typeof table === 'string') {
+        table = sql`${table}`;
+      }
       this.context.source.left = table;
     }
 
@@ -153,7 +160,7 @@ export class SelectManager extends TreeManager {
     return window;
   }
 
-  public project(...projections: Array<string | Node>): this { // todo likely not Node
+  public project(...projections: Array<string | AnyNodeOrAttribute>): this {
     this.context.projections.push(...projections.map(projection => {
       if (typeof projection === 'string') {
         return sql`${projection}`;
@@ -204,9 +211,9 @@ export class SelectManager extends TreeManager {
   // todo
   // }
 
-  public union(other: SelectManager): UnionNode;
-  public union(operation: 'all', other: SelectManager): UnionAllNode;
-  public union(operationOrOther: SelectManager | 'all', other?: SelectManager): UnionNode | UnionAllNode {
+  public union<OtherSchema>(other: SelectManager<OtherSchema>): UnionNode;
+  public union<OtherSchema>(operation: 'all', other: SelectManager<OtherSchema>): UnionAllNode;
+  public union<OtherSchema>(operationOrOther: SelectManager<OtherSchema> | 'all', other?: SelectManager<OtherSchema>): UnionNode | UnionAllNode {
     if (operationOrOther === 'all') {
       if (other == null) {
         throw new RelalException(`SelectManager.union all requires 2 statements, only 1 was given`);
@@ -221,13 +228,13 @@ export class SelectManager extends TreeManager {
     }
   }
 
-  public intersect(other: SelectManager): IntersectNode {
+  public intersect<OtherSchema>(other: SelectManager<OtherSchema>): IntersectNode {
     const intersectNode: typeof IntersectNode = node('intersect');
 
     return new intersectNode(this.ast, other.ast);
   }
 
-  public except(other: SelectManager): ExceptNode {
+  public except<OtherSchema>(other: SelectManager<OtherSchema>): ExceptNode {
     const exceptNode: typeof ExceptNode = node('except');
 
     return new exceptNode(this.ast, other.ast);
@@ -255,6 +262,29 @@ export class SelectManager extends TreeManager {
   public comment(...values: string[]): this {
     const commentNode: typeof CommentNode = node('comment');
     this.context.comment = new commentNode(values);
+
+    return this;
+  }
+
+  public take(limit: number): this {
+    const limitNode: typeof LimitNode = node('limit');
+    this.ast.offset = new limitNode(buildQuoted(limit));
+
+    return this;
+  }
+
+  public where<Condition extends SelectManager<unknown> | Node>(expression: Condition): this {
+    if (expression instanceof SelectManager) {
+      this.context.wheres.push(expression.ast);
+    } else {
+      this.context.wheres.push(expression as Node);
+    }
+
+    return this;
+  }
+
+  public wheres(...expressions: Node[]): this {
+    this.context.wheres = expressions;
 
     return this;
   }

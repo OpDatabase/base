@@ -23,7 +23,7 @@ export class Table<Schema> {
     return new tableAliasNode(this, sql`${name}`);
   }
 
-  public from(): SelectManager {
+  public from(): SelectManager<Schema> {
     return new SelectManager(this);
   }
 
@@ -33,27 +33,27 @@ export class Table<Schema> {
     >(
     relation: string | LhsType,
     method: JoinTypeConstructor = node('inner-join') as JoinTypeConstructor,
-  ): SelectManager {
+  ): SelectManager<Schema> {
     return this.from().join(relation, method);
   }
 
-  public outerJoin(relation: string | SqlLiteralNode | SelectCoreNode): SelectManager {
+  public outerJoin(relation: string | SqlLiteralNode | SelectCoreNode): SelectManager<Schema> {
     return this.join(relation, node('outer-join'));
   }
 
-  public group(...columns: Array<string | Node>): SelectManager {
+  public group(...columns: Array<string | Node>): SelectManager<Schema> {
     return this.from().group(...columns);
   }
 
-  public order(...expressions: Array<string | Node>): SelectManager {
+  public order(...expressions: Array<string | Node>): SelectManager<Schema> {
     return this.from().order(...expressions);
   }
 
-  public where(condition: unknown): unknown {
+  public where(condition: Node): SelectManager<Schema> {
     return this.from().where(condition);
   }
 
-  public project(...things: Array<string | Node>): SelectManager {
+  public project(...things: Array<string | Node>): SelectManager<Schema> {
     return this.from().project(...things);
   }
 
@@ -65,16 +65,13 @@ export class Table<Schema> {
     return this.from().skip(amount);
   }
 
-  public having(expression: unknown): SelectManager {
+  public having(expression: unknown): SelectManager<Schema> {
     return this.from().having(expression);
   }
 
-  // todo keyof Schema
   public attribute(name: string): Attribute {
-    console.log(name);
-
     // todo
-    return new UnknownAttribute();
+    return new UnknownAttribute(this, name);
   }
 }
 
