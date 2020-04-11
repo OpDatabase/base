@@ -1,9 +1,20 @@
+// tslint:disable:max-classes-per-file
 import { buildQuoted, isNodeOrAttribute } from '../../helper/helper';
 import { AnyNodeOrAttribute, UnknownNativeType } from '../../interfaces/node-types.interface';
 import { BinaryNode } from '../binary.node';
 import { ExpressionsNode } from '../expressions.node';
 import { register } from '../nodes.register';
 import { UnaryNode } from '../unary.node';
+
+// IMPORTANT: ElseNode must be loaded before CaseNode to have it initialized once the @register decorator of CaseNode is loaded
+
+@register('when')
+export class WhenNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
+}
+
+@register('else')
+export class ElseNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
+}
 
 @register('case')
 export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends ExpressionsNode {
@@ -39,14 +50,4 @@ export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNod
 
     return this;
   }
-}
-
-// tslint:disable-next-line:max-classes-per-file
-@register('when')
-export class WhenNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
-}
-
-// tslint:disable-next-line:max-classes-per-file
-@register('else')
-export class ElseNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
 }

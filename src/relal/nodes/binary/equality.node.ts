@@ -7,10 +7,11 @@ import { node, register } from '../nodes.register';
 @register('equality')
 export class EqualityNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
   public readonly operator: string = '==';
-  private readonly notEqualNode: typeof NotEqualNode = node('not-equal');
 
   public invert(): NotEqualNode<LhsType, RhsType> {
-    return new this.notEqualNode(this.left, this.right);
+    const notEqualNode: typeof NotEqualNode = node('not-equal');
+
+    return new notEqualNode(this.left, this.right);
   }
 
   public fetchAttribute(): void {
