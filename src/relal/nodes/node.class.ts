@@ -1,4 +1,5 @@
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
+import { InternalConstants } from '../internal-constants';
 import { OrNode } from './binary.node';
 import { AndNode } from './expressions/and.node';
 import { node } from './nodes.register';
@@ -27,3 +28,5 @@ export abstract class Node {
     return new andNode([this, ...others]);
   }
 }
+
+InternalConstants.nodeClass = Node;

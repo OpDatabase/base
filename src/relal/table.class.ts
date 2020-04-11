@@ -1,6 +1,7 @@
 import { Attribute } from './attributes/attribute.class';
 import { UnknownAttribute } from './attributes/unknown-attribute.class';
 import { sql } from './helper/sql-template-handler.func';
+import { InternalConstants } from './internal-constants';
 import { JoinNode } from './nodes/binary.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { Node } from './nodes/node.class';
@@ -75,5 +76,6 @@ export class Table<Schema> {
     // todo
     return new UnknownAttribute();
   }
-
 }
+
+InternalConstants.tableClass = Table;

@@ -1,7 +1,7 @@
-import { Attribute } from '../attributes/attribute.class';
-import { buildQuoted, groupingAll, groupingAny, isNodeOrAttribute, toString } from '../helper/helper';
+import { buildQuoted, castOrQuote, groupingAll, groupingAny, isNodeOrAttribute, toString } from '../helper/helper';
 import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
 import { PredicationsInterface as PredicationsInterface } from '../interfaces/predications.interface';
+import { InternalConstants } from '../internal-constants';
 import {
   BetweenNode,
   GreaterThanNode,
@@ -19,27 +19,19 @@ import { DoesNotMatchNode, MatchesNode } from '../nodes/binary/matches.node';
 import { NotRegexNode, RegexNode } from '../nodes/binary/regex.node';
 import { AndNode } from '../nodes/expressions/and.node';
 import { CaseNode, ElseNode } from '../nodes/expressions/case.node';
-import { CastedNode } from '../nodes/expressions/casted.node';
 import { Node } from '../nodes/node.class';
 import { node } from '../nodes/nodes.register';
 import { GroupingNode } from '../nodes/unary/grouping.node';
 import { QuotedNode } from '../nodes/unary/quoted.node';
 import { SelectManager } from '../select-manager.class';
 
-function quote<InputType extends UnknownNativeType>(
-  other: InputType,
-  maybeAttribute: AnyNodeOrAttribute,
-): QuotedNode<InputType> | CastedNode<InputType> {
-  return maybeAttribute instanceof Attribute ? buildQuoted(other, maybeAttribute) : buildQuoted(other);
-}
-
 export class Predications<Target extends AnyNodeOrAttribute> implements PredicationsInterface<Target> {
   public between(
     lowerBoundary: UnknownNativeType | Node,
     upperBoundary: UnknownNativeType | Node,
   ): BetweenNode<Target, AndNode<AnyNodeOrAttribute[]>> {
-    const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : quote(lowerBoundary, this as unknown as Target);
-    const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : quote(upperBoundary, this as unknown as Target);
+    const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : castOrQuote(lowerBoundary, this as unknown as Target);
+    const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : castOrQuote(upperBoundary, this as unknown as Target);
     const betweenNode: typeof BetweenNode = node('between');
 
     return new betweenNode(this as unknown as Target, lowerBoundaryNode.and(upperBoundaryNode));
@@ -48,7 +40,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public concat(other: AnyNodeOrAttribute | UnknownNativeType): ConcatNode<Target, AnyNodeOrAttribute> {
     const concatNode: typeof ConcatNode = node('concat');
 
-    return new concatNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new concatNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public doesNotMatch(
@@ -78,7 +70,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public equal(other: UnknownNativeType | AnyNodeOrAttribute): EqualityNode<Target, AnyNodeOrAttribute> {
     const equalityNode: typeof EqualityNode = node('equality');
 
-    return new equalityNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new equalityNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public equalAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>> {
@@ -92,7 +84,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public greaterThan(other: UnknownNativeType | AnyNodeOrAttribute): GreaterThanNode<Target, AnyNodeOrAttribute> {
     const greaterThanNode: typeof GreaterThanNode = node('greater-than');
 
-    return new greaterThanNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new greaterThanNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public greaterThanAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>> {
@@ -106,7 +98,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public greaterThanOrEqual(other: UnknownNativeType | AnyNodeOrAttribute): GreaterThanOrEqualNode<Target, AnyNodeOrAttribute> {
     const greaterThanOrEqualNode: typeof GreaterThanOrEqualNode = node('greater-than-or-equal');
 
-    return new greaterThanOrEqualNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new greaterThanOrEqualNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public greaterThanOrEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>> {
@@ -120,7 +112,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public lessThan(other: UnknownNativeType | AnyNodeOrAttribute): LessThanNode<Target, AnyNodeOrAttribute> {
     const lessThanNode: typeof LessThanNode = node('less-than');
 
-    return new lessThanNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new lessThanNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public lessThanAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>> {
@@ -134,7 +126,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public lessThanOrEqual(other: UnknownNativeType | AnyNodeOrAttribute): LessThanOrEqualNode<Target, AnyNodeOrAttribute> {
     const lessThanOrEqualNode: typeof LessThanOrEqualNode = node('less-than-or-equal');
 
-    return new lessThanOrEqualNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new lessThanOrEqualNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public lessThanOrEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>> {
@@ -148,7 +140,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public notEqual(other: UnknownNativeType | AnyNodeOrAttribute): NotEqualNode<Target, AnyNodeOrAttribute> {
     const notEqualNode: typeof NotEqualNode = node('not-equal');
 
-    return new notEqualNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new notEqualNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public notEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>> {
@@ -161,10 +153,12 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
 
   public in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): InNode<Target, AnyNodeOrAttribute> {
     const inNode: typeof InNode = node('in');
-    if (other instanceof SelectManager) {
+    const inValuesNode: typeof InValuesNode = node('in-values');
+
+    if (other instanceof InternalConstants.selectManagerClass) {
       return new inNode(this as unknown as Target, other.ast);
     } else if (other instanceof Array) {
-      return new inNode(this as unknown as Target, new InValuesNode(other.map(o => quote(o, this as unknown as Target))));
+      return new inNode(this as unknown as Target, new inValuesNode(other.map(o => castOrQuote(o, this as unknown as Target))));
     } else if (isNodeOrAttribute(other)) {
       return new inNode(this as unknown as Target, other);
     } else {
@@ -183,13 +177,13 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public isDistinctFrom(other: UnknownNativeType | AnyNodeOrAttribute): IsDistinctFromNode<Target, AnyNodeOrAttribute> {
     const isDistinctFromNode: typeof IsDistinctFromNode = node('is-distinct-from');
 
-    return new isDistinctFromNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new isDistinctFromNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public isNotDistinctFrom(other: UnknownNativeType | AnyNodeOrAttribute): IsNotDistinctFromNode<Target, AnyNodeOrAttribute> {
     const isNotDistinctFromNode: typeof IsNotDistinctFromNode = node('is-not-distinct-from');
 
-    return new isNotDistinctFromNode(this as unknown as Target, isNodeOrAttribute(other) ? other : quote(other, this as unknown as Target));
+    return new isNotDistinctFromNode(this as unknown as Target, isNodeOrAttribute(other) ? other : castOrQuote(other, this as unknown as Target));
   }
 
   public matches(other: ConvertibleToString, escape?: ConvertibleToString, caseSensitive?: boolean): MatchesNode<Target, QuotedNode<string>> {
@@ -216,18 +210,20 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     lowerBoundary: UnknownNativeType | Node,
     upperBoundary: UnknownNativeType | Node,
   ): OrNode<LessThanNode<Target, AnyNodeOrAttribute>, GreaterThanNode<Target, AnyNodeOrAttribute>> {
-    const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : quote(lowerBoundary, this as unknown as Target);
-    const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : quote(upperBoundary, this as unknown as Target);
+    const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : castOrQuote(lowerBoundary, this as unknown as Target);
+    const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : castOrQuote(upperBoundary, this as unknown as Target);
 
     return this.lessThan(lowerBoundaryNode).or(this.greaterThan(upperBoundaryNode));
   }
 
   public notIn(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): NotInNode<Target, AnyNodeOrAttribute> {
     const notInNode: typeof NotInNode = node('not-in');
-    if (other instanceof SelectManager) {
+    const inValuesNode: typeof InValuesNode = node('in-values');
+
+    if (other instanceof InternalConstants.selectManagerClass) {
       return new notInNode(this as unknown as Target, other.ast);
     } else if (other instanceof Array) {
-      return new notInNode(this as unknown as Target, new InValuesNode(other.map(o => quote(o, this as unknown as Target))));
+      return new notInNode(this as unknown as Target, new inValuesNode(other.map(o => castOrQuote(o, this as unknown as Target))));
     } else if (isNodeOrAttribute(other)) {
       return new notInNode(this as unknown as Target, other);
     } else {
@@ -247,12 +243,14 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public switchCase<ReturnType extends UnknownNativeType>(defaultValue: ReturnType): CaseNode<Target, QuotedNode<ReturnType>>;
   public switchCase(defaultValue?: AnyNodeOrAttribute | UnknownNativeType): CaseNode<Target, AnyNodeOrAttribute> {
     const caseNode: typeof CaseNode = node('case');
+    const elseNode: typeof ElseNode = node('else');
+
     if (defaultValue === undefined) {
       return new caseNode(this as unknown as Target);
     } else if (isNodeOrAttribute(defaultValue)) {
-      return new caseNode(this as unknown as Target, new ElseNode(defaultValue));
+      return new caseNode(this as unknown as Target, new elseNode(defaultValue));
     } else {
-      return new caseNode(this as unknown as Target, new ElseNode(buildQuoted(defaultValue)));
+      return new caseNode(this as unknown as Target, new elseNode(buildQuoted(defaultValue)));
     }
   }
 }

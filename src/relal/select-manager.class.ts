@@ -3,6 +3,7 @@ import { EmptyJoinException } from './exceptions/empty-join.exception';
 import { RelalException } from './exceptions/relal.exception';
 import { buildQuoted, collapse, createTableAlias } from './helper/helper';
 import { sql } from './helper/sql-template-handler.func';
+import { InternalConstants } from './internal-constants';
 import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './nodes/binary.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { CommentNode } from './nodes/comment.node';
@@ -90,11 +91,12 @@ export class SelectManager extends TreeManager {
   public from<JoinRhsType extends OnNode<Node> | null>(
     table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, JoinRhsType> | Table<unknown>,
   ): this {
+    const joinNode: typeof JoinNode = node('join');
     if (typeof table === 'string') {
       table = sql`${table}`;
     }
 
-    if (table instanceof JoinNode) {
+    if (table instanceof joinNode) {
       this.context.source.right.push(table);
     } else {
       this.context.source.left = table;
@@ -110,13 +112,14 @@ export class SelectManager extends TreeManager {
     relation: string | LhsType,
     method: JoinTypeConstructor = node('inner-join') as JoinTypeConstructor,
   ): this {
+    const sqlLiteralNode: typeof SqlLiteralNode = node('sql-literal');
     let leftHandSide: LhsType;
     if (typeof relation === 'string') {
       if (isBlank(relation)) {
         throw new EmptyJoinException();
       }
       leftHandSide = sql`${relation}` as LhsType;
-    } else if (relation instanceof SqlLiteralNode) {
+    } else if (relation instanceof sqlLiteralNode) {
       // todo
       // if (isBlank(relation.rawSql)) {
       //   throw new EmptyJoinException();
@@ -256,3 +259,5 @@ export class SelectManager extends TreeManager {
     return this;
   }
 }
+
+InternalConstants.selectManagerClass = SelectManager;

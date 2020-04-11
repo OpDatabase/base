@@ -1,5 +1,6 @@
 import { Attribute } from '../attributes/attribute.class';
 import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
+import { InternalConstants } from '../internal-constants';
 import { OrNode } from '../nodes/binary.node';
 import { TableAliasNode } from '../nodes/binary/table-alias.node';
 import { AndNode } from '../nodes/expressions/and.node';
@@ -96,7 +97,7 @@ export function toString(input: ConvertibleToString): string {
 }
 
 export function isNodeOrAttribute(value: unknown): value is AnyNodeOrAttribute {
-  return (value instanceof Node || value instanceof Attribute);
+  return (value instanceof InternalConstants.nodeClass || value instanceof InternalConstants.attributeClass);
 }
 
 export function buildQuoted<InputType extends UnknownNativeType>(other: InputType): QuotedNode<InputType>;
@@ -114,4 +115,11 @@ export function buildQuoted<InputType extends UnknownNativeType>(
 
     return new castedNode(other, attribute);
   }
+}
+
+export function castOrQuote<InputType extends UnknownNativeType>(
+  other: InputType,
+  maybeAttribute: AnyNodeOrAttribute,
+): QuotedNode<InputType> | CastedNode<InputType> {
+  return maybeAttribute instanceof InternalConstants.attributeClass ? buildQuoted(other, maybeAttribute) : buildQuoted(other);
 }

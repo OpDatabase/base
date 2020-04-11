@@ -18,8 +18,9 @@ import { BitwiseNotNode } from '../nodes/unary/unary-operation.node';
 export class MathMethods<Target extends AnyNodeOrAttribute> implements MathMethodsInterface<Target> {
   public bitwiseAnd<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseAndNode<Target, OtherType>> {
     const groupingNode: typeof GroupingNode = node('grouping');
+    const bitwiseAndNode: typeof BitwiseAndNode = node('bitwise-and');
 
-    return new groupingNode(new BitwiseAndNode(this as unknown as Target, other));
+    return new groupingNode(new bitwiseAndNode(this as unknown as Target, other));
   }
 
   public bitwiseNot(): BitwiseNotNode<Target> {

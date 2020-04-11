@@ -42,9 +42,11 @@ export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNod
 }
 
 // tslint:disable-next-line:max-classes-per-file
+@register('when')
 export class WhenNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
 }
 
 // tslint:disable-next-line:max-classes-per-file
+@register('else')
 export class ElseNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
 }

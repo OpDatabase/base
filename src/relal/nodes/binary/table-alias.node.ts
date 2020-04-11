@@ -1,6 +1,7 @@
 import { Attribute } from '../../attributes/attribute.class';
 import { UnknownAttribute } from '../../attributes/unknown-attribute.class';
 import { sql } from '../../helper/sql-template-handler.func';
+import { InternalConstants } from '../../internal-constants';
 import { Table } from '../../table.class';
 import { BinaryNode } from '../binary.node';
 import { SelectStatementNode } from '../expressions/select-statement.node';
@@ -19,7 +20,7 @@ export class TableAliasNode<InternalType extends Table<unknown> | SelectStatemen
   }
 
   public get tableName(): SqlLiteralNode {
-    if (this.relation instanceof Table) {
+    if (this.relation instanceof InternalConstants.tableClass) {
       return sql`${this.relation.name}`;
     }
 
