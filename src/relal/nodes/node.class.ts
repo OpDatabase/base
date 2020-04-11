@@ -1,11 +1,12 @@
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
+import { VisitInterface } from '../interfaces/visit.interface';
 import { InternalConstants } from '../internal-constants';
 import { OrNode } from './binary.node';
 import { AndNode } from './expressions/and.node';
 import { node } from './nodes.register';
 import { NotNode } from './unary.node';
 
-export abstract class Node {
+export abstract class Node implements VisitInterface {
   public fetchAttribute(): void {
     // Intentionally blank
   }
@@ -27,6 +28,8 @@ export abstract class Node {
 
     return new andNode([this, ...others]);
   }
+
+  public abstract visit(collector: unknown, visitChild: (element: AnyNodeOrAttribute) => void): void;
 }
 
 InternalConstants.nodeClass = Node;
