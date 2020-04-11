@@ -13,7 +13,8 @@ export class FunctionNode<Type extends AnyNodeOrAttribute> extends ExpressionsNo
     super();
   }
 
-  public as(alias: ConvertibleToString): this {
+  // todo: as (type mismatch)
+  public as2(alias: ConvertibleToString): this {
     this.alias = alias;
 
     return this;
@@ -25,7 +26,7 @@ export class SumNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type>
 }
 
 // todo
-export class ExistsNode<Type extends AnyNodeOrAttribute> extends FunctionNode<unknown> {
+export class ExistsNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
 }
 
 export class MaxNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {

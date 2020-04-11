@@ -52,13 +52,13 @@ export interface Predications<BaseType extends AnyNodeOrAttribute> {
   isDistinctFrom(other: UnknownNativeType | AnyNodeOrAttribute): IsDistinctFromNode<BaseType, AnyNodeOrAttribute>;
 
   between(
-    lowerBoundary: UnknownNativeType | AnyNodeOrAttribute,
-    upperBoundary: UnknownNativeType | AnyNodeOrAttribute,
-  ): BetweenNode<BaseType, AndNode<[AnyNodeOrAttribute, AnyNodeOrAttribute]>>;
+    lowerBoundary: UnknownNativeType | Node,
+    upperBoundary: UnknownNativeType | Node,
+  ): BetweenNode<BaseType, AndNode<AnyNodeOrAttribute[]>>;
 
   notBetween(
-    lowerBoundary: UnknownNativeType | AnyNodeOrAttribute,
-    upperBoundary: UnknownNativeType | AnyNodeOrAttribute,
+    lowerBoundary: UnknownNativeType | Node,
+    upperBoundary: UnknownNativeType | Node,
   ): OrNode<LessThanNode<BaseType, AnyNodeOrAttribute>, GreaterThanNode<BaseType, AnyNodeOrAttribute>>;
 
   in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager | UnknownNativeType[]): InNode<BaseType, AnyNodeOrAttribute>;
@@ -77,7 +77,7 @@ export interface Predications<BaseType extends AnyNodeOrAttribute> {
 
   matchesRegex(other: RegExp, caseSensitive?: boolean): RegexNode<BaseType>;
 
-  matchesAny(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>>;
+  matchesAny(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<OrNode<Node, Node>>;
 
   matchesAll(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>>;
 
@@ -113,9 +113,9 @@ export interface Predications<BaseType extends AnyNodeOrAttribute> {
 
   lessThanOrEqualAll(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<AndNode<Node[]>>;
 
-  when<ReturnType extends AnyNodeOrAttribute>(defaultValue: ReturnType): CaseNode<BaseType, ReturnType>;
+  switchCase<ReturnType extends AnyNodeOrAttribute>(defaultValue: ReturnType): CaseNode<BaseType, ReturnType>;
 
-  when<ReturnType extends UnknownNativeType>(defaultValue: ReturnType): CaseNode<BaseType, QuotedNode<ReturnType>>;
+  switchCase<ReturnType extends UnknownNativeType>(defaultValue: ReturnType): CaseNode<BaseType, QuotedNode<ReturnType>>;
 
   concat(other: AnyNodeOrAttribute | UnknownNativeType): ConcatNode<BaseType, AnyNodeOrAttribute>;
 }

@@ -125,9 +125,9 @@ export abstract class Attribute
   }
 
   public between(
-    lowerBoundary: UnknownNativeType | AnyNodeOrAttribute,
-    upperBoundary: UnknownNativeType | AnyNodeOrAttribute,
-  ): BetweenNode<this, AndNode<[AnyNodeOrAttribute, AnyNodeOrAttribute]>> {
+    lowerBoundary: UnknownNativeType | Node,
+    upperBoundary: UnknownNativeType | Node,
+  ): BetweenNode<this, AndNode<AnyNodeOrAttribute[]>> {
     const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : buildQuoted(lowerBoundary, this);
     const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : buildQuoted(upperBoundary, this);
 
@@ -262,7 +262,7 @@ export abstract class Attribute
     return groupingAll(others.map(other => this.matches(other, escape, caseSensitive)));
   }
 
-  public matchesAny(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>> {
+  public matchesAny(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<OrNode<Node, Node>> {
     return groupingAny(others.map(other => this.matches(other, escape, caseSensitive)));
   }
 
@@ -271,8 +271,8 @@ export abstract class Attribute
   }
 
   public notBetween(
-    lowerBoundary: UnknownNativeType | AnyNodeOrAttribute,
-    upperBoundary: UnknownNativeType | AnyNodeOrAttribute,
+    lowerBoundary: UnknownNativeType | Node,
+    upperBoundary: UnknownNativeType | Node,
   ): OrNode<LessThanNode<this, AnyNodeOrAttribute>, GreaterThanNode<this, AnyNodeOrAttribute>> {
     const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : buildQuoted(lowerBoundary, this);
     const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : buildQuoted(upperBoundary, this);
@@ -300,9 +300,9 @@ export abstract class Attribute
     return groupingAny(others.map(other => this.notIn(other)));
   }
 
-  public when<ReturnType extends AnyNodeOrAttribute>(defaultValue: ReturnType): CaseNode<this, ReturnType>;
-  public when<ReturnType extends UnknownNativeType>(defaultValue: ReturnType): CaseNode<this, QuotedNode<ReturnType>>;
-  public when(defaultValue?: AnyNodeOrAttribute | UnknownNativeType): CaseNode<this, AnyNodeOrAttribute> {
+  public switchCase<ReturnType extends AnyNodeOrAttribute>(defaultValue: ReturnType): CaseNode<this, ReturnType>;
+  public switchCase<ReturnType extends UnknownNativeType>(defaultValue: ReturnType): CaseNode<this, QuotedNode<ReturnType>>;
+  public switchCase(defaultValue?: AnyNodeOrAttribute | UnknownNativeType): CaseNode<this, AnyNodeOrAttribute> {
     if (defaultValue === undefined) {
       return new CaseNode(this);
     } else if (isNodeOrAttribute(defaultValue)) {
@@ -311,5 +311,4 @@ export abstract class Attribute
       return new CaseNode(this, new ElseNode(buildQuoted(defaultValue)));
     }
   }
-
 }

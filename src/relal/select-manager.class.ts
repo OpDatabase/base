@@ -1,7 +1,7 @@
 import isBlank from 'is-blank';
 import { EmptyJoinException } from './exceptions/empty-join.exception';
 import { RelalException } from './exceptions/relal.exception';
-import { collapse, createTableAlias, grouping } from './helper/helper';
+import { buildQuoted, collapse, createTableAlias } from './helper/helper';
 import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './nodes/binary.node';
 import { InnerJoinNode } from './nodes/binary/inner-join.node';
 import { OuterJoinNode } from './nodes/binary/outer-join.node';
@@ -37,29 +37,29 @@ export class SelectManager extends TreeManager {
   }
 
   public skip(amount: number | null): this {
-    this.ast.offset = amount !== null ? new OffsetNode(amount) : null;
+    this.ast.offset = amount !== null ? new OffsetNode(buildQuoted(amount)) : null;
 
     return this;
   }
 
-  public exists(): ExistsNode {
+  public exists(): ExistsNode<SelectStatementNode> {
     return new ExistsNode(this.ast);
   }
 
   public as(other: string): TableAliasNode<SelectStatementNode> {
     return createTableAlias(
-      grouping(this.ast), // todo
+      this.ast, // todo
       sql`${other}`,
     );
   }
 
-  public lock(locking: unknown): unknown {
-    // todo
-  }
+  // public lock(locking: unknown): unknown {
+  // todo
+  // }
 
-  public locked(): unknown {
-    // todo
-  }
+  // public locked(): unknown {
+  // todo
+  // }
 
   public on(...expressions: Array<Node | string>): this { // todo: likely not Node
     const lastRightHandSide = this.context.source.right[this.context.source.right.length - 1];
@@ -81,7 +81,9 @@ export class SelectManager extends TreeManager {
     return this;
   }
 
-  public from(table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, unknown> | Table<unknown>): this {
+  public from<JoinRhsType extends OnNode<Node> | null>(
+    table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, JoinRhsType> | Table<unknown>,
+  ): this {
     if (typeof table === 'string') {
       table = sql`${table}`;
     }
@@ -109,9 +111,10 @@ export class SelectManager extends TreeManager {
       }
       leftHandSide = sql`${relation}` as LhsType;
     } else if (relation instanceof SqlLiteralNode) {
-      if (isBlank(relation.rawSql)) {
-        throw new EmptyJoinException();
-      }
+      // todo
+      // if (isBlank(relation.rawSql)) {
+      //   throw new EmptyJoinException();
+      // }
       leftHandSide = relation;
     } else {
       leftHandSide = relation;

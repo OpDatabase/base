@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 
+import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import { Node } from './node.class';
 import { SqlLiteralNode } from './sql-literal-node';
 import { QuotedNode } from './unary/quoted.node';
@@ -46,7 +47,7 @@ export class LimitNode extends UnaryNode<QuotedNode<number>> {
 export class LockNode extends UnaryNode<unknown> {
 }
 
-export class NotNode extends UnaryNode<unknown> {
+export class NotNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
 }
 
 export class OffsetNode extends UnaryNode<QuotedNode<number>> {

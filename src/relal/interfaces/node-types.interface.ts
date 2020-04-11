@@ -10,5 +10,3 @@ export type ConvertibleToString = string | { toString(): string };
 export type UnknownNativeType = string | number | boolean | null;
 
 export type CastedOrQuotedNode<T extends UnknownNativeType> = CastedNode<T> | QuotedNode<T>;
-
-export type NonTerminalNode<Type>; // todo

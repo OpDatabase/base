@@ -22,6 +22,18 @@ cpx "./src/base/CHANGELOG.md" "./dist/opdb-base"
 cpx "./src/base/CHANGELOG.json" "./dist/opdb-base"
 rm -rf ./src/base/dist
 
+# @opdb/relal
+cd ./src/relal
+npm i
+npm run build
+cd "$baseDir"
+cpx "./src/relal/dist/**/*.{ts,js}" "./dist/opdb-relal"
+cpx "./src/relal/package.json" "./dist/opdb-relal"
+cpx "./src/relal/README.md" "./dist/opdb-relal"
+cpx "./src/relal/CHANGELOG.md" "./dist/opdb-relal"
+cpx "./src/relal/CHANGELOG.json" "./dist/opdb-relal"
+rm -rf ./src/relal/dist
+
 # cpx "./dist/opdb-base/**/*" "./src/adapter/postgres/node_modules/@opdb/base"
 # cpx "./dist/opdb-base/**/*" "./src/adapter/mysql/node_modules/@opdb/base"
 

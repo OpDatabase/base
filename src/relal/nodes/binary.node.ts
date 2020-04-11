@@ -48,7 +48,8 @@ export class AsNode<LhsType extends AnyNodeOrAttribute, RhsType extends SqlLiter
 export class AssignmentNode<LhsType, RhsType> extends BinaryNode<LhsType, RhsType> {
 }
 
-export class JoinNode<LhsType extends SelectCoreNode | SqlLiteralNode, RhsType extends OnNode | null> extends BinaryNode<LhsType, RhsType> {
+// todo: OnNode<Node>
+export class JoinNode<LhsType extends SelectCoreNode | SqlLiteralNode, RhsType extends OnNode<Node> | null> extends BinaryNode<LhsType, RhsType> {
 }
 
 export class UnionNode extends BinaryNode<SelectStatementNode, SelectStatementNode> {

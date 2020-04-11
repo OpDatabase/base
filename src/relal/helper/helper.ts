@@ -15,22 +15,22 @@ export function createTableAlias(relation: SelectStatementNode, name: SqlLiteral
 }
 
 // todo: typing
-export function grouping<Type extends Node>(expression: Type): GroupingNode {
+export function grouping<Type extends Node>(expression: Type): GroupingNode<Type> {
   return new GroupingNode(expression);
 }
 
-export function groupingAny(expressions: unknown[]) {
-  return new GroupingNode(expressions.reduce((previousValue, currentValue) => {
-    return new OrNode(previousValue, currentValue);
-  }));
+export function groupingAny(expressions: Node[]): GroupingNode<OrNode<Node, Node>> {
+  const flattened = expressions.reduce((previousValue, currentValue) => new OrNode(previousValue, currentValue)) as OrNode<Node, Node>;
+
+  return new GroupingNode(flattened);
 }
 
-export function groupingAll(expressions: unknown[]) {
+export function groupingAll(expressions: Node[]): GroupingNode<AndNode<Node[]>> {
   return new GroupingNode(new AndNode(expressions));
 }
 
 // todo: typing of Node
-export function collapse(...expressions: Array<Node | string>): AndNode<unknown, unknown> | Node {
+export function collapse(...expressions: Array<Node | string>): AndNode<Node[]> | Node {
   const results: Node[] = [];
   for (const expression of expressions) {
     if (typeof expression === 'string') {
@@ -43,7 +43,7 @@ export function collapse(...expressions: Array<Node | string>): AndNode<unknown,
   if (results.length === 1) {
     return results[0];
   } else {
-    return new AndNode(results as any); // todo
+    return new AndNode(results); // todo
   }
 }
 

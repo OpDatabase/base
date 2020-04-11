@@ -1,4 +1,5 @@
 import { Attribute } from '../../attributes/attribute.class';
+import { UnknownAttribute } from '../../attributes/unknown-attribute.class';
 import { Table } from '../../table.class';
 import { BinaryNode } from '../binary.node';
 import { SelectStatementNode } from '../expressions/select-statement.node';
@@ -24,6 +25,8 @@ export class TableAliasNode<InternalType extends Table<unknown> | SelectStatemen
 
   // keyof Schema
   public attribute(name: unknown): Attribute {
+    console.log(name);
     // todo
+    return new UnknownAttribute();
   }
 }

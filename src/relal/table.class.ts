@@ -1,7 +1,5 @@
 import { Attribute } from './attributes/attribute.class';
-import { DefaultTypeCaster } from './attributes/default-type-caster.class';
 import { UnknownAttribute } from './attributes/unknown-attribute.class';
-import { TypeCaster } from './interfaces/type-caster.interface';
 import { JoinNode } from './nodes/binary.node';
 import { InnerJoinNode } from './nodes/binary/inner-join.node';
 import { OuterJoinNode } from './nodes/binary/outer-join.node';
@@ -14,7 +12,7 @@ import { SelectManager } from './select-manager.class';
 export class Table<Schema> {
   constructor(
     public readonly name: string,
-    private readonly typeCaster: TypeCaster = new DefaultTypeCaster(),
+    // private readonly typeCaster: TypeCaster = new DefaultTypeCaster(),
   ) {
   }
 
@@ -70,6 +68,7 @@ export class Table<Schema> {
 
   // todo keyof Schema
   public attribute(name: string): Attribute {
+    console.log(name);
     // todo
     return new UnknownAttribute();
   }
