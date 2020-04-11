@@ -1,5 +1,4 @@
-import { UnknownNativeType } from '../../interfaces/node-types.interface';
-import { UnaryNode } from '../unary.node';
+import { UnaryNode, UnknownNativeType } from '../..';
 
 export class QuotedNode<ValueType extends UnknownNativeType> extends UnaryNode<ValueType> {
   public isNull(): boolean {

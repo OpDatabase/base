@@ -1,29 +1,41 @@
-import { Attribute } from '../attributes/attribute.class';
-import { buildQuoted, groupingAll, groupingAny, isNodeOrAttribute, toString } from '../helper/helper';
-import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
-import { Predications as PredicationsInterface } from '../interfaces/predications.interface';
 import {
+  AndNode,
+  AnyNodeOrAttribute,
+  Attribute,
   BetweenNode,
+  buildQuoted,
+  CaseNode,
+  CastedNode,
+  ConcatNode,
+  ConvertibleToString,
+  DoesNotMatchNode,
+  ElseNode,
+  EqualityNode,
   GreaterThanNode,
   GreaterThanOrEqualNode,
+  groupingAll,
+  groupingAny,
+  GroupingNode,
+  InNode,
+  InValuesNode,
+  IsDistinctFromNode,
+  isNodeOrAttribute,
+  IsNotDistinctFromNode,
   LessThanNode,
   LessThanOrEqualNode,
+  MatchesNode,
+  Node,
   NotEqualNode,
   NotInNode,
+  NotRegexNode,
   OrNode,
-} from '../nodes/binary.node';
-import { EqualityNode, IsDistinctFromNode, IsNotDistinctFromNode } from '../nodes/binary/equality.node';
-import { InNode, InValuesNode } from '../nodes/binary/equality/in.node';
-import { ConcatNode } from '../nodes/binary/infix-operation.node';
-import { DoesNotMatchNode, MatchesNode } from '../nodes/binary/matches.node';
-import { NotRegexNode, RegexNode } from '../nodes/binary/regex.node';
-import { AndNode } from '../nodes/expressions/and.node';
-import { CaseNode, ElseNode } from '../nodes/expressions/case.node';
-import { CastedNode } from '../nodes/expressions/casted.node';
-import { Node } from '../nodes/node.class';
-import { GroupingNode } from '../nodes/unary/grouping.node';
-import { QuotedNode } from '../nodes/unary/quoted.node';
-import { SelectManager } from '../select-manager.class';
+  PredicationsInterface,
+  QuotedNode,
+  RegexNode,
+  SelectManager,
+  toString,
+  UnknownNativeType,
+} from '..';
 
 function quote<InputType extends UnknownNativeType>(
   other: InputType,

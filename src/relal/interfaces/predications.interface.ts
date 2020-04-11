@@ -1,27 +1,33 @@
 import {
+  AndNode,
+  AnyNodeOrAttribute,
   BetweenNode,
+  CaseNode,
+  ConcatNode,
+  ConvertibleToString,
+  DoesNotMatchNode,
+  EqualityNode,
   GreaterThanNode,
   GreaterThanOrEqualNode,
+  GroupingNode,
+  InNode,
+  IsDistinctFromNode,
+  IsNotDistinctFromNode,
   LessThanNode,
   LessThanOrEqualNode,
+  MatchesNode,
+  Node,
   NotEqualNode,
   NotInNode,
+  NotRegexNode,
   OrNode,
-} from '../nodes/binary.node';
-import { EqualityNode, IsDistinctFromNode, IsNotDistinctFromNode } from '../nodes/binary/equality.node';
-import { InNode } from '../nodes/binary/equality/in.node';
-import { ConcatNode } from '../nodes/binary/infix-operation.node';
-import { DoesNotMatchNode, MatchesNode } from '../nodes/binary/matches.node';
-import { NotRegexNode, RegexNode } from '../nodes/binary/regex.node';
-import { AndNode } from '../nodes/expressions/and.node';
-import { CaseNode } from '../nodes/expressions/case.node';
-import { Node } from '../nodes/node.class';
-import { GroupingNode } from '../nodes/unary/grouping.node';
-import { QuotedNode } from '../nodes/unary/quoted.node';
-import { SelectManager } from '../select-manager.class';
-import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from './node-types.interface';
+  QuotedNode,
+  RegexNode,
+  SelectManager,
+  UnknownNativeType,
+} from '..';
 
-export interface Predications<BaseType extends AnyNodeOrAttribute> {
+export interface PredicationsInterface<BaseType extends AnyNodeOrAttribute> {
   notEqual(other: UnknownNativeType | AnyNodeOrAttribute): NotEqualNode<BaseType, AnyNodeOrAttribute>;
 
   notEqualAny(others: Array<UnknownNativeType | AnyNodeOrAttribute>): GroupingNode<OrNode<Node, Node>>;

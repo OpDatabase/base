@@ -1,7 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
-import { UnaryNode } from '../unary.node';
+import { AnyNodeOrAttribute, UnaryNode } from '../..';
 
 export class OrderingNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
   public nullsFirst(): NullsFirstNode<Type, this> {

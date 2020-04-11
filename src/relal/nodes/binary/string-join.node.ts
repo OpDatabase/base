@@ -1,5 +1,4 @@
-import { JoinNode } from '../binary.node';
-import { SqlLiteralNode } from '../sql-literal-node';
+import { JoinNode, SqlLiteralNode } from '../..';
 
 /**
  * Performs a string using just a user-specified join statement.

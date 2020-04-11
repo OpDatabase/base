@@ -1,18 +1,21 @@
-import { Attribute } from './attributes/attribute.class';
-import { UnknownAttribute } from './attributes/unknown-attribute.class';
-import { JoinNode } from './nodes/binary.node';
-import { InnerJoinNode } from './nodes/binary/inner-join.node';
-import { OuterJoinNode } from './nodes/binary/outer-join.node';
-import { TableAliasNode } from './nodes/binary/table-alias.node';
-import { Node } from './nodes/node.class';
-import { SelectCoreNode } from './nodes/select-core.node';
-import { sql, SqlLiteralNode } from './nodes/sql-literal-node';
-import { SelectManager } from './select-manager.class';
+import {
+  Attribute,
+  InnerJoinNode,
+  JoinNode,
+  Node,
+  OuterJoinNode,
+  SelectCoreNode,
+  SelectManager,
+  sql,
+  SqlLiteralNode,
+  TableAliasNode,
+  UnknownAttribute,
+} from '.';
 
 export class Table<Schema> {
   constructor(
     public readonly name: string,
-    // private readonly typeCaster: TypeCaster = new DefaultTypeCaster(),
+    // private readonly typeCaster: TypeCasterInterface = new DefaultTypeCaster(),
   ) {
   }
 

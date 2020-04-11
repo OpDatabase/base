@@ -1,7 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
-import { UnaryNode } from '../unary.node';
+import { AnyNodeOrAttribute, UnaryNode } from '../..';
 
 export abstract class UnaryOperationNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
   protected constructor(

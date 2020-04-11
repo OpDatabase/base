@@ -1,4 +1,4 @@
-import { UnaryNode } from '../unary.node';
+import { UnaryNode } from '../..';
 
 // todo: typing
 export class GroupingNode<Type extends { fetchAttribute(...args: unknown[]): unknown }> extends UnaryNode<Type> {

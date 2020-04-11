@@ -1,10 +1,5 @@
 // tslint:disable:max-classes-per-file
-import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
-import { SelectStatementNode } from './expressions/select-statement.node';
-import { Node } from './node.class';
-import { SelectCoreNode } from './select-core.node';
-import { SqlLiteralNode } from './sql-literal-node';
-import { OnNode } from './unary.node';
+import { AnyNodeOrAttribute, Node, OnNode, SelectCoreNode, SelectStatementNode, SqlLiteralNode } from '..';
 
 export class BinaryNode<LhsType, RhsType> extends Node {
   constructor(

@@ -1,9 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
-import { Node } from './node.class';
-import { SqlLiteralNode } from './sql-literal-node';
-import { QuotedNode } from './unary/quoted.node';
+import { AnyNodeOrAttribute, Node, QuotedNode, SqlLiteralNode } from '..';
 
 export class UnaryNode<Type> extends Node {
   constructor(

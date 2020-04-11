@@ -1,7 +1,4 @@
-import { AnyNodeOrAttribute } from '../../../interfaces/node-types.interface';
-import { NotInNode } from '../../binary.node';
-import { UnaryNode } from '../../unary.node';
-import { EqualityNode } from '../equality.node';
+import { AnyNodeOrAttribute, EqualityNode, NotInNode, UnaryNode } from '../../..';
 
 export class InNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends EqualityNode<LhsType, RhsType> {
   public invert(): NotInNode<LhsType, RhsType> {

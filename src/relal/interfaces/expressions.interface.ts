@@ -1,9 +1,6 @@
-import { AvgNode, MaxNode, MinNode, SumNode } from '../nodes/expressions/function.node';
-import { CountNode } from '../nodes/expressions/function/count.node';
-import { ExtractNode } from '../nodes/unary/extract.node';
-import { AnyNodeOrAttribute, ConvertibleToString } from './node-types.interface';
+import { AnyNodeOrAttribute, AvgNode, ConvertibleToString, CountNode, ExtractNode, MaxNode, MinNode, SumNode } from '..';
 
-export interface Expressions<BaseType extends AnyNodeOrAttribute> {
+export interface ExpressionsInterface<BaseType extends AnyNodeOrAttribute> {
   count(distinct?: boolean): CountNode<BaseType>;
 
   sum(): SumNode<BaseType>;

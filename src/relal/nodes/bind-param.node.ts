@@ -1,4 +1,4 @@
-import { Node } from './node.class';
+import { Node } from '..';
 
 export class BindParamNode<ValueType> extends Node {
   constructor(

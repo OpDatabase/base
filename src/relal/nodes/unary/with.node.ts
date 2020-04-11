@@ -1,4 +1,4 @@
-import { UnaryNode } from '../unary.node';
+import { UnaryNode } from '../..';
 
 export class WithNode extends UnaryNode<unknown> { // todo
   public get children(): unknown {

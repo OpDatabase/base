@@ -1,7 +1,4 @@
-import { Attribute } from '../attributes/attribute.class';
-import { CastedNode } from '../nodes/expressions/casted.node';
-import { Node } from '../nodes/node.class';
-import { QuotedNode } from '../nodes/unary/quoted.node';
+import { Attribute, CastedNode, Node, QuotedNode } from '..';
 
 export type AnyNodeOrAttribute = Node | Attribute;
 

@@ -1,4 +1,4 @@
-import { ExpressionsNode } from '../expressions.node';
+import { ExpressionsNode } from '../..';
 
 export class DistinctNode extends ExpressionsNode {
 }

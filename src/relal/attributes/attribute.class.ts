@@ -1,52 +1,67 @@
-import { buildQuoted, groupingAll, groupingAny, isNodeOrAttribute, toString } from '../helper/helper';
-import { AliasPredications } from '../interfaces/alias-predications.interface';
-import { Expressions } from '../interfaces/expressions.interface';
-import { MathMethods } from '../interfaces/math-methods.interface';
-import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
-import { OrderPredications } from '../interfaces/order-predications.interface';
-import { Predications } from '../interfaces/predications.interface';
-import {
-  AsNode,
-  BetweenNode,
-  GreaterThanNode,
-  GreaterThanOrEqualNode,
-  LessThanNode,
-  LessThanOrEqualNode,
-  NotEqualNode,
-  NotInNode,
-  OrNode,
-} from '../nodes/binary.node';
-import { EqualityNode, IsDistinctFromNode, IsNotDistinctFromNode } from '../nodes/binary/equality.node';
-import { InNode, InValuesNode } from '../nodes/binary/equality/in.node';
 import {
   AdditionNode,
+  AliasPredicationsInterface,
+  AndNode,
+  AnyNodeOrAttribute,
+  AscendingNode,
+  AsNode,
+  AvgNode,
+  BetweenNode,
   BitwiseAndNode,
+  BitwiseNotNode,
   BitwiseOrNode,
   BitwiseShiftLeftNode,
   BitwiseShiftRightNode,
   BitwiseXorNode,
+  buildQuoted,
+  CaseNode,
   ConcatNode,
+  ConvertibleToString,
+  CountNode,
+  DescendingNode,
   DivisionNode,
+  DoesNotMatchNode,
+  ElseNode,
+  EqualityNode,
+  ExpressionsInterface,
+  ExtractNode,
+  GreaterThanNode,
+  GreaterThanOrEqualNode,
+  groupingAll,
+  groupingAny,
+  GroupingNode,
+  InNode,
+  InValuesNode,
+  IsDistinctFromNode,
+  isNodeOrAttribute,
+  IsNotDistinctFromNode,
+  LessThanNode,
+  LessThanOrEqualNode,
+  MatchesNode,
+  MathMethodsInterface,
+  MaxNode,
+  MinNode,
   MultiplicationNode,
+  Node,
+  NotEqualNode,
+  NotInNode,
+  NotRegexNode,
+  OrderPredicationsInterface,
+  OrNode,
+  PredicationsInterface,
+  QuotedNode,
+  RegexNode,
+  SelectManager,
+  SqlLiteralNode,
   SubtractionNode,
-} from '../nodes/binary/infix-operation.node';
-import { DoesNotMatchNode, MatchesNode } from '../nodes/binary/matches.node';
-import { NotRegexNode, RegexNode } from '../nodes/binary/regex.node';
-import { AndNode } from '../nodes/expressions/and.node';
-import { CaseNode, ElseNode } from '../nodes/expressions/case.node';
-import { AvgNode, MaxNode, MinNode, SumNode } from '../nodes/expressions/function.node';
-import { CountNode } from '../nodes/expressions/function/count.node';
-import { Node } from '../nodes/node.class';
-import { SqlLiteralNode } from '../nodes/sql-literal-node';
-import { ExtractNode } from '../nodes/unary/extract.node';
-import { GroupingNode } from '../nodes/unary/grouping.node';
-import { AscendingNode, DescendingNode } from '../nodes/unary/ordering.node';
-import { QuotedNode } from '../nodes/unary/quoted.node';
-import { BitwiseNotNode } from '../nodes/unary/unary-operation.node';
-import { SelectManager } from '../select-manager.class';
+  SumNode,
+  toString,
+  UnknownNativeType,
+} from '..';
 
 export abstract class Attribute
-  implements AliasPredications<Attribute>, Expressions<Attribute>, MathMethods<Attribute>, OrderPredications<Attribute>, Predications<Attribute> {
+  implements AliasPredicationsInterface<Attribute>, ExpressionsInterface<Attribute>,
+    MathMethodsInterface<Attribute>, OrderPredicationsInterface<Attribute>, PredicationsInterface<Attribute> {
 
   public as(other: ConvertibleToString): AsNode<this, SqlLiteralNode> {
     return new AsNode(this, new SqlLiteralNode(other));

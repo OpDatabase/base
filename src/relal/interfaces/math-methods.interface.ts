@@ -1,19 +1,19 @@
 import {
   AdditionNode,
+  AnyNodeOrAttribute,
   BitwiseAndNode,
+  BitwiseNotNode,
   BitwiseOrNode,
   BitwiseShiftLeftNode,
   BitwiseShiftRightNode,
   BitwiseXorNode,
   DivisionNode,
+  GroupingNode,
   MultiplicationNode,
   SubtractionNode,
-} from '../nodes/binary/infix-operation.node';
-import { GroupingNode } from '../nodes/unary/grouping.node';
-import { BitwiseNotNode } from '../nodes/unary/unary-operation.node';
-import { AnyNodeOrAttribute } from './node-types.interface';
+} from '..';
 
-export interface MathMethods<BaseType extends AnyNodeOrAttribute> {
+export interface MathMethodsInterface<BaseType extends AnyNodeOrAttribute> {
   multiply<OtherType extends AnyNodeOrAttribute>(other: OtherType): MultiplicationNode<BaseType, OtherType>;
 
   plus<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<AdditionNode<BaseType, OtherType>>;

@@ -1,6 +1,5 @@
 // tslint:disable:max-classes-per-file
-import { AnyNodeOrAttribute, ConvertibleToString } from '../../interfaces/node-types.interface';
-import { ExpressionsNode } from '../expressions.node';
+import { AnyNodeOrAttribute, ConvertibleToString, ExpressionsNode } from '../..';
 
 export class FunctionNode<Type extends AnyNodeOrAttribute> extends ExpressionsNode {
   public readonly distinct: boolean = false;

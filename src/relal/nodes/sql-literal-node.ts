@@ -1,11 +1,4 @@
-import { include } from '../helper/mixin';
-import { ConvertibleToString } from '../interfaces/node-types.interface';
-import { AliasPredications } from '../mixins/alias-predications.mixin';
-import { Expressions } from '../mixins/expressions.mixin';
-import { MathMethods } from '../mixins/math-methods.mixin';
-import { OrderPredications } from '../mixins/order-predications.mixin';
-import { Predications } from '../mixins/predications.mixin';
-import { Node } from './node.class';
+import { AliasPredications, ConvertibleToString, Expressions, include, MathMethods, Node, OrderPredications, Predications } from '..';
 
 /**
  * This node is converted "as is" into an SQL string.

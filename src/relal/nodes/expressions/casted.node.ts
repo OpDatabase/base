@@ -1,6 +1,4 @@
-import { Attribute } from '../../attributes/attribute.class';
-import { UnknownNativeType } from '../../interfaces/node-types.interface';
-import { ExpressionsNode } from '../expressions.node';
+import { Attribute, ExpressionsNode, UnknownNativeType } from '../..';
 
 export class CastedNode<ValueType extends UnknownNativeType> extends ExpressionsNode {
   constructor(

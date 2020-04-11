@@ -1,4 +1,4 @@
-export interface StatementMethods {
+export interface StatementMethodsInterface {
   take(limit: number): unknown;
 
   offset(limit: number): unknown;

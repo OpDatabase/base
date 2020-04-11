@@ -1,5 +1,4 @@
-import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
-import { ExpressionsNode } from '../expressions.node';
+import { AnyNodeOrAttribute, ExpressionsNode } from '../..';
 
 export class AndNode<ChildTypes extends AnyNodeOrAttribute[]> extends ExpressionsNode {
   constructor(

@@ -1,4 +1,4 @@
-import { Visitor } from '../visitor.class';
+import { Visitor } from '../..';
 
 export abstract class ToSqlVisitor extends Visitor {
   // todo: link to connection

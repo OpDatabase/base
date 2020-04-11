@@ -1,5 +1,5 @@
-import { Attribute } from '../attributes/attribute.class';
+import { Attribute } from '..';
 
-export interface TypeCaster {
+export interface TypeCasterInterface {
   typeCastForDatabase(attributeName: string, value: unknown): Attribute | Promise<Attribute>;
 }

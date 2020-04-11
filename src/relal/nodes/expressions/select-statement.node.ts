@@ -1,6 +1,4 @@
-import { ExpressionsNode } from '../expressions.node';
-import { SelectCoreNode } from '../select-core.node';
-import { OffsetNode } from '../unary.node';
+import { ExpressionsNode, OffsetNode, SelectCoreNode } from '../..';
 
 export class SelectStatementNode extends ExpressionsNode {
   public orders: unknown[] = [];

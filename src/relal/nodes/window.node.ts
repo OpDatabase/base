@@ -1,7 +1,5 @@
 // tslint:disable:max-classes-per-file
-import { Node } from './node.class';
-import { sql } from './sql-literal-node';
-import { UnaryNode } from './unary.node';
+import { Node, sql, UnaryNode } from '..';
 
 export class WindowNode extends Node {
   public orders: Node[] = []; // todo likely not Node[]

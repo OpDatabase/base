@@ -1,8 +1,6 @@
-import { TypeCaster } from '../interfaces/type-caster.interface';
-import { Attribute } from './attribute.class';
-import { UnknownAttribute } from './unknown-attribute.class';
+import { Attribute, TypeCasterInterface, UnknownAttribute } from '..';
 
-export class DefaultTypeCaster implements TypeCaster {
+export class DefaultTypeCaster implements TypeCasterInterface {
   public typeCastForDatabase(): Attribute {
     return new UnknownAttribute();
   }

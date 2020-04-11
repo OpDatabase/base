@@ -1,23 +1,38 @@
 import isBlank from 'is-blank';
-import { EmptyJoinException } from './exceptions/empty-join.exception';
-import { RelalException } from './exceptions/relal.exception';
-import { buildQuoted, collapse, createTableAlias } from './helper/helper';
-import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './nodes/binary.node';
-import { InnerJoinNode } from './nodes/binary/inner-join.node';
-import { OuterJoinNode } from './nodes/binary/outer-join.node';
-import { TableAliasNode } from './nodes/binary/table-alias.node';
-import { CommentNode } from './nodes/comment.node';
-import { DistinctNode } from './nodes/expressions/distinct.node';
-import { ExistsNode } from './nodes/expressions/function.node';
-import { SelectStatementNode } from './nodes/expressions/select-statement.node';
-import { Node } from './nodes/node.class';
-import { SelectCoreNode } from './nodes/select-core.node';
-import { sql, SqlLiteralNode } from './nodes/sql-literal-node';
-import { DistinctOnNode, GroupNode, LateralNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
-import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';
-import { NamedWindowNode } from './nodes/window.node';
-import { Table } from './table.class';
-import { TreeManager } from './tree-manager.class';
+import {
+  buildQuoted,
+  collapse,
+  CommentNode,
+  createTableAlias,
+  DistinctNode,
+  DistinctOnNode,
+  EmptyJoinException,
+  ExceptNode,
+  ExistsNode,
+  GroupNode,
+  InnerJoinNode,
+  IntersectNode,
+  JoinNode,
+  LateralNode,
+  NamedWindowNode,
+  Node,
+  OffsetNode,
+  OnNode,
+  OptimizerHintsNode,
+  OuterJoinNode,
+  RelalException,
+  SelectCoreNode,
+  SelectStatementNode,
+  sql,
+  SqlLiteralNode,
+  Table,
+  TableAliasNode,
+  TreeManager,
+  UnionAllNode,
+  UnionNode,
+  WithNode,
+  WithRecursiveNode,
+} from '.';
 
 export class SelectManager extends TreeManager {
   public ast: SelectStatementNode;

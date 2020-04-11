@@ -1,4 +1,4 @@
-import { RelalException } from './relal.exception';
+import { RelalException } from '..';
 
 export class EmptyJoinException extends RelalException {
 }

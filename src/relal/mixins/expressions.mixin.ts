@@ -1,8 +1,4 @@
-import { Expressions as ExpressionsInterface } from '../interfaces/expressions.interface';
-import { AnyNodeOrAttribute, ConvertibleToString } from '../interfaces/node-types.interface';
-import { AvgNode, MaxNode, MinNode, SumNode } from '../nodes/expressions/function.node';
-import { CountNode } from '../nodes/expressions/function/count.node';
-import { ExtractNode } from '../nodes/unary/extract.node';
+import { AnyNodeOrAttribute, AvgNode, ConvertibleToString, CountNode, ExpressionsInterface, ExtractNode, MaxNode, MinNode, SumNode } from '..';
 
 export class Expressions<Target extends AnyNodeOrAttribute> implements ExpressionsInterface<Target> {
   public average(): AvgNode<Target> {

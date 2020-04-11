@@ -1,11 +1,6 @@
-import { buildQuoted } from './helper/helper';
-import { StatementMethods } from './interfaces/statement-methods.interface';
-import { SelectStatementNode } from './nodes/expressions/select-statement.node';
-import { SelectCoreNode } from './nodes/select-core.node';
-import { LimitNode, OffsetNode } from './nodes/unary.node';
-import { QuotedNode } from './nodes/unary/quoted.node';
+import { buildQuoted, LimitNode, OffsetNode, QuotedNode, SelectCoreNode, SelectStatementNode, StatementMethodsInterface } from '.';
 
-export abstract class TreeManager implements StatementMethods {
+export abstract class TreeManager implements StatementMethodsInterface {
   public ast: SelectStatementNode | undefined; // todo: remove bang operators in class
 
   protected get context(): SelectCoreNode | undefined {

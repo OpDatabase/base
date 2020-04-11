@@ -1,7 +1,4 @@
-import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
-import { OrNode } from './binary.node';
-import { AndNode } from './expressions/and.node';
-import { NotNode } from './unary.node';
+import { AndNode, AnyNodeOrAttribute, NotNode, OrNode } from '..';
 
 export abstract class Node {
   public fetchAttribute(): void {

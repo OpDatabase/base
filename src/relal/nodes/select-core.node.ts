@@ -1,7 +1,4 @@
-import { DistinctNode } from './expressions/distinct.node';
-import { Node } from './node.class';
-import { DistinctOnNode, GroupNode, OptimizerHintsNode } from './unary.node';
-import { NamedWindowNode } from './window.node';
+import { DistinctNode, DistinctOnNode, GroupNode, NamedWindowNode, Node, OptimizerHintsNode } from '..';
 
 export class SelectCoreNode extends Node {
   public projections: unknown[] = [];

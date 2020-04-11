@@ -4,6 +4,7 @@
   "description": "OpDB Relational Algebra",
   "main": "index.js",
   "scripts": {
+    "prebuild": "cti entrypoint ./ && rm ./index.ts || true && mv ./entrypoint.ts ./index.ts",
     "build": "tsc -p tsconfig.build.json"
   },
   "repository": {
@@ -19,5 +20,8 @@
   "dependencies": {
     "@types/is-blank": "^2.1.0",
     "is-blank": "^2.1.0"
+  },
+  "devDependencies": {
+    "create-ts-index": "^1.12.1"
   }
 }

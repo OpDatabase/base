@@ -1,5 +1,4 @@
-import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
-import { BinaryNode } from '../binary.node';
+import { AnyNodeOrAttribute, BinaryNode } from '../..';
 
 export class RegexNode<LhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RegExp> {
   constructor(

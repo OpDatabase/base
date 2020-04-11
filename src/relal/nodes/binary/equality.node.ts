@@ -1,7 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
-import { BinaryNode, NotEqualNode } from '../binary.node';
+import { AnyNodeOrAttribute, BinaryNode, NotEqualNode } from '../..';
 
 export class EqualityNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
   public readonly operator: string = '==';

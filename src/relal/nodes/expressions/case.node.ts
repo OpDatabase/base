@@ -1,8 +1,4 @@
-import { buildQuoted, isNodeOrAttribute } from '../../helper/helper';
-import { AnyNodeOrAttribute, UnknownNativeType } from '../../interfaces/node-types.interface';
-import { BinaryNode } from '../binary.node';
-import { ExpressionsNode } from '../expressions.node';
-import { UnaryNode } from '../unary.node';
+import { AnyNodeOrAttribute, BinaryNode, buildQuoted, ExpressionsNode, isNodeOrAttribute, UnaryNode, UnknownNativeType } from '../..';
 
 export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends ExpressionsNode {
   public conditions: Array<WhenNode<AnyNodeOrAttribute, RhsType | AnyNodeOrAttribute>> = [];

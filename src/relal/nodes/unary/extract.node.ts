@@ -1,5 +1,4 @@
-import { AnyNodeOrAttribute, ConvertibleToString } from '../../interfaces/node-types.interface';
-import { UnaryNode } from '../unary.node';
+import { AnyNodeOrAttribute, ConvertibleToString, UnaryNode } from '../..';
 
 export class ExtractNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
   constructor(

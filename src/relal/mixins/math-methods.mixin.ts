@@ -1,18 +1,18 @@
-import { MathMethods as MathMethodsInterface } from '../interfaces/math-methods.interface';
-import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import {
   AdditionNode,
+  AnyNodeOrAttribute,
   BitwiseAndNode,
+  BitwiseNotNode,
   BitwiseOrNode,
   BitwiseShiftLeftNode,
   BitwiseShiftRightNode,
   BitwiseXorNode,
   DivisionNode,
+  GroupingNode,
+  MathMethodsInterface,
   MultiplicationNode,
   SubtractionNode,
-} from '../nodes/binary/infix-operation.node';
-import { GroupingNode } from '../nodes/unary/grouping.node';
-import { BitwiseNotNode } from '../nodes/unary/unary-operation.node';
+} from '..';
 
 export class MathMethods<Target extends AnyNodeOrAttribute> implements MathMethodsInterface<Target> {
   public bitwiseAnd<OtherType extends AnyNodeOrAttribute>(other: OtherType): GroupingNode<BitwiseAndNode<Target, OtherType>> {

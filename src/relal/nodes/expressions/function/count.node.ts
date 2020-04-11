@@ -1,5 +1,4 @@
-import { AnyNodeOrAttribute, ConvertibleToString } from '../../../interfaces/node-types.interface';
-import { FunctionNode } from '../function.node';
+import { AnyNodeOrAttribute, ConvertibleToString, FunctionNode } from '../../..';
 
 export class CountNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
   constructor(

@@ -1,4 +1,4 @@
-import { Attribute } from './attribute.class';
+import { Attribute } from '..';
 
 export class UnknownAttribute extends Attribute {
 }

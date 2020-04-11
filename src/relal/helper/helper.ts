@@ -1,14 +1,19 @@
-import { Attribute } from '../attributes/attribute.class';
-import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
-import { OrNode } from '../nodes/binary.node';
-import { TableAliasNode } from '../nodes/binary/table-alias.node';
-import { AndNode } from '../nodes/expressions/and.node';
-import { CastedNode } from '../nodes/expressions/casted.node';
-import { SelectStatementNode } from '../nodes/expressions/select-statement.node';
-import { Node } from '../nodes/node.class';
-import { sql, SqlLiteralNode } from '../nodes/sql-literal-node';
-import { GroupingNode } from '../nodes/unary/grouping.node';
-import { QuotedNode } from '../nodes/unary/quoted.node';
+import {
+  AndNode,
+  AnyNodeOrAttribute,
+  Attribute,
+  CastedNode,
+  ConvertibleToString,
+  GroupingNode,
+  Node,
+  OrNode,
+  QuotedNode,
+  SelectStatementNode,
+  sql,
+  SqlLiteralNode,
+  TableAliasNode,
+  UnknownNativeType,
+} from '..';
 
 export function createTableAlias(relation: SelectStatementNode, name: SqlLiteralNode): TableAliasNode<SelectStatementNode> {
   return new TableAliasNode(relation, name);

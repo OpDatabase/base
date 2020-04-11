@@ -1,4 +1,4 @@
-import { Node } from './node.class';
+import { Node } from '..';
 
 export class CommentNode extends Node {
   constructor(

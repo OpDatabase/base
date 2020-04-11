@@ -1,5 +1,4 @@
-import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
-import { BinaryNode } from '../binary.node';
+import { AnyNodeOrAttribute, BinaryNode } from '../..';
 
 export class MatchesNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
   constructor(
