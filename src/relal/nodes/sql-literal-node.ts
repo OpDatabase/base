@@ -1,3 +1,5 @@
+import { Collector } from '../collectors/collector.class';
+import { toString } from '../helper/helper';
 import { include } from '../helper/mixin';
 import { ConvertibleToString } from '../interfaces/node-types.interface';
 import { AliasPredications } from '../mixins/alias-predications.mixin';
@@ -20,6 +22,10 @@ export class SqlLiteralNode extends Node {
     public readonly value: ConvertibleToString,
   ) {
     super();
+  }
+
+  public visit(collector: Collector<unknown>): void {
+    collector.add(toString(this.value));
   }
 }
 

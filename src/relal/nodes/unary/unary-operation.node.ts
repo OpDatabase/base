@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 
+import { Collector } from '../../collectors/collector.class';
 import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
 import { register } from '../nodes.register';
 import { UnaryNode } from '../unary.node';
@@ -17,5 +18,10 @@ export abstract class UnaryOperationNode<Type extends AnyNodeOrAttribute> extend
 export class BitwiseNotNode<Type extends AnyNodeOrAttribute> extends UnaryOperationNode<Type> {
   constructor(operand: Type) {
     super('~', operand);
+  }
+
+  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    collector.add(`${this.operator} `);
+    visitChild(this.expression);
   }
 }

@@ -1,4 +1,5 @@
 // tslint:disable:max-classes-per-file
+import { Collector } from '../../collectors/collector.class';
 import { buildQuoted, isNodeOrAttribute } from '../../helper/helper';
 import { AnyNodeOrAttribute, UnknownNativeType } from '../../interfaces/node-types.interface';
 import { BinaryNode } from '../binary.node';
@@ -8,14 +9,33 @@ import { UnaryNode } from '../unary.node';
 
 // IMPORTANT: ElseNode must be loaded before CaseNode to have it initialized once the @register decorator of CaseNode is loaded
 
+/**
+ * Renders a `WHEN ... THEN ...` statement within a `CASE` statement.
+ */
 @register('when')
 export class WhenNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends BinaryNode<LhsType, RhsType> {
+  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    collector.add('WHEN ');
+    visitChild(this.left);
+    collector.add(' THEN ');
+    visitChild(this.right);
+  }
 }
 
+/**
+ * Renders an `ELSE` statement within a `CASE` statement.
+ */
 @register('else')
 export class ElseNode<Type extends AnyNodeOrAttribute> extends UnaryNode<Type> {
+  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    collector.add('ELSE ');
+    visitChild(this.value);
+  }
 }
 
+/**
+ * Renders a `CASE` statement containing multiple `WHEN ... THEN ...` conditions and an `ELSE` value.
+ */
 @register('case')
 export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNodeOrAttribute> extends ExpressionsNode {
   public conditions: Array<WhenNode<AnyNodeOrAttribute, RhsType | AnyNodeOrAttribute>> = [];
@@ -49,5 +69,29 @@ export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNod
     this.elseValue = new ElseNode(expression);
 
     return this;
+  }
+
+  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    collector.add('CASE ');
+
+    // Add case
+    if (this.caseValue != null) {
+      visitChild(this.caseValue);
+      collector.add(' ');
+    }
+
+    // Add all conditions
+    this.conditions.forEach(condition => {
+      visitChild(condition);
+      collector.add(' ');
+    });
+
+    // Add default value
+    if (this.elseValue != null) {
+      visitChild(this.elseValue);
+      collector.add(' ');
+    }
+
+    collector.add('END');
   }
 }

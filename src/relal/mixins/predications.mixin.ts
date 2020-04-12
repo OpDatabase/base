@@ -50,7 +50,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   ): DoesNotMatchNode<Target, QuotedNode<string>> {
     const doesNotMatchNode: typeof DoesNotMatchNode = node('does-not-match');
 
-    return new doesNotMatchNode(this as unknown as Target, buildQuoted(toString(other)), escape, caseSensitive);
+    return new doesNotMatchNode(this as unknown as Target, buildQuoted(toString(other)), escape == null ? null : toString(escape), caseSensitive);
   }
 
   public doesNotMatchAll(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>> {
@@ -160,9 +160,9 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     } else if (other instanceof Array) {
       return new inNode(this as unknown as Target, new inValuesNode(other.map(o => castOrQuote(o, this as unknown as Target))));
     } else if (isNodeOrAttribute(other)) {
-      return new inNode(this as unknown as Target, other);
+      return new inNode(this as unknown as Target, new inValuesNode([other]));
     } else {
-      return new inNode(this as unknown as Target, buildQuoted(other));
+      return new inNode(this as unknown as Target, new inValuesNode([buildQuoted(other)]));
     }
   }
 
@@ -189,7 +189,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public matches(other: ConvertibleToString, escape?: ConvertibleToString, caseSensitive?: boolean): MatchesNode<Target, QuotedNode<string>> {
     const matchesNode: typeof MatchesNode = node('matches');
 
-    return new matchesNode(this as unknown as Target, buildQuoted(toString(other)), escape, caseSensitive);
+    return new matchesNode(this as unknown as Target, buildQuoted(toString(other)), escape == null ? null : toString(escape), caseSensitive);
   }
 
   public matchesAll(others: ConvertibleToString[], escape?: ConvertibleToString, caseSensitive?: boolean): GroupingNode<AndNode<Node[]>> {
@@ -225,9 +225,9 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
     } else if (other instanceof Array) {
       return new notInNode(this as unknown as Target, new inValuesNode(other.map(o => castOrQuote(o, this as unknown as Target))));
     } else if (isNodeOrAttribute(other)) {
-      return new notInNode(this as unknown as Target, other);
+      return new notInNode(this as unknown as Target, new inValuesNode([other]));
     } else {
-      return new notInNode(this as unknown as Target, buildQuoted(other));
+      return new notInNode(this as unknown as Target, new inValuesNode([buildQuoted(other)]));
     }
   }
 

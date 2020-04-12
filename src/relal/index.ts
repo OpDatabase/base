@@ -2,11 +2,13 @@
 import './nodes/binary.node';
 import './nodes/binary/equality.node';
 import './nodes/binary/equality/in.node';
+import './nodes/binary/full-outer-join.node';
 import './nodes/binary/infix-operation.node';
 import './nodes/binary/inner-join.node';
 import './nodes/binary/matches.node';
 import './nodes/binary/outer-join.node';
 import './nodes/binary/regex.node';
+import './nodes/binary/right-outer-join.node';
 import './nodes/binary/string-join.node';
 import './nodes/binary/table-alias.node';
 import './nodes/bind-param.node';

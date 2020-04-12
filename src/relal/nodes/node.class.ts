@@ -1,3 +1,4 @@
+import { Collector } from '../collectors/collector.class';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import { VisitInterface } from '../interfaces/visit.interface';
 import { InternalConstants } from '../internal-constants';
@@ -29,7 +30,31 @@ export abstract class Node implements VisitInterface {
     return new andNode([this, ...others]);
   }
 
-  public abstract visit(collector: unknown, visitChild: (element: AnyNodeOrAttribute) => void): void;
+  public abstract visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void;
+
+  /**
+   * Visits each element given, collecting a string joined by joinString.
+   * @param elements
+   * @param joinString
+   * @param collector
+   * @param visitChild
+   */
+  protected visitEach(
+    elements: AnyNodeOrAttribute[],
+    joinString: string,
+    collector: Collector<unknown>,
+    visitChild: (element: AnyNodeOrAttribute) => void,
+  ): void {
+    elements.forEach((value, index) => {
+      visitChild(value);
+
+      // Omit the last element to add ","
+      // tslint:disable-next-line:no-magic-numbers
+      if (index < elements.length - 2) {
+        collector.add(joinString);
+      }
+    });
+  }
 }
 
 InternalConstants.nodeClass = Node;

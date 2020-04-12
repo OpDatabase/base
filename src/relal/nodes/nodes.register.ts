@@ -1,6 +1,7 @@
 import { RelalException } from '../exceptions/relal.exception';
 
-export type NodeClass = new (...args: any[]) => any;
+// tslint:disable-next-line:no-any
+export type NodeClass = any;
 
 export abstract class NodesRegister {
   private static registeredNodeClasses: { [key: string]: NodeClass } = {};

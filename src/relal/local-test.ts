@@ -1,5 +1,5 @@
 // tslint:disable
-import { QuotedNode, Table } from '.';
+import { DummySqlVisitor, QuotedNode, Table } from '.';
 
 const table = new Table('users');
 console.log(table.alias('alias_1'));
@@ -21,4 +21,7 @@ const x = table.where(
   table.attribute('age').plus(new QuotedNode(5)),
 );
 
-console.log(x);
+const visitor = new DummySqlVisitor();
+const result = visitor.accept(x.ast);
+
+console.log(result.export());

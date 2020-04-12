@@ -1,4 +1,10 @@
 export abstract class Collector<ExportType> {
+
+  constructor(
+    public readonly adapter: CollectorAdapter,
+  ) {
+  }
+
   /**
    * Adds a partial SQL snippet from a visitor
    * @param partial
@@ -15,4 +21,15 @@ export abstract class Collector<ExportType> {
    * Exports the current value of the collector.
    */
   public abstract export(): ExportType;
+}
+
+export interface CollectorAdapter {
+  // todo add @connection methods
+  quote(inputValue: unknown): string;
+
+  sanitizeSqlComment(inputValue: string): string;
+
+  tableName(inputValue: string): string;
+
+  columnName(inputValue: string): string;
 }

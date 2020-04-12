@@ -1,34 +1,39 @@
 import { Attribute } from '../../attributes/attribute.class';
 import { UnknownAttribute } from '../../attributes/unknown-attribute.class';
-import { sql } from '../../helper/sql-template-handler.func';
-import { InternalConstants } from '../../internal-constants';
+import { FeatureNotAvailableException } from '../../exceptions/feature-not-available.exception';
 import { Table } from '../../table.class';
 import { BinaryNode } from '../binary.node';
-import { SelectStatementNode } from '../expressions/select-statement.node';
 import { register } from '../nodes.register';
 import { SqlLiteralNode } from '../sql-literal-node';
 
-// left: relation, right: name
+/**
+ * Renders an aliased table name like `originalTableName aliasName`.
+ */
 @register('table-alias')
-export class TableAliasNode<InternalType extends Table<unknown> | SelectStatementNode> extends BinaryNode<InternalType, SqlLiteralNode> {
+export class TableAliasNode<InternalType extends Table<unknown> | SqlLiteralNode> extends BinaryNode<InternalType, string> {
   public get relation(): InternalType {
     return this.left;
   }
 
-  public get name(): SqlLiteralNode {
+  public get name(): string {
     return this.right;
   }
 
-  public get tableName(): SqlLiteralNode {
-    if (this.relation instanceof InternalConstants.tableClass) {
-      return sql`${this.relation.name}`;
-    }
-
-    return this.name;
+  // todo: remove (?)
+  public get tableName(): string {
+    // todo
+    // @ts-ignore
+    return this.name || this.relation?.name;
   }
 
   // keyof Schema
   public attribute(name: string): Attribute {
+    // todo
+    // @ts-ignore
     return new UnknownAttribute(this, name);
+  }
+
+  public visit(): void {
+    throw new FeatureNotAvailableException('Cannot collect table name using TableAliasNode. This requires database-specific implementation using a custom Visitor.');
   }
 }

@@ -1,11 +1,14 @@
 import isBlank from 'is-blank';
 import { EmptyJoinException } from './exceptions/empty-join.exception';
 import { RelalException } from './exceptions/relal.exception';
-import { buildQuoted, collapse, createTableAlias } from './helper/helper';
+import { buildQuoted, collapse } from './helper/helper';
 import { sql } from './helper/sql-template-handler.func';
 import { AnyNodeOrAttribute } from './interfaces/node-types.interface';
 import { InternalConstants } from './internal-constants';
 import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './nodes/binary.node';
+import { FullOuterJoinNode } from './nodes/binary/full-outer-join.node';
+import { InnerJoinNode } from './nodes/binary/inner-join.node';
+import { OuterJoinNode } from './nodes/binary/outer-join.node';
 import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { CommentNode } from './nodes/comment.node';
 import { DistinctNode } from './nodes/expressions/distinct.node';
@@ -16,6 +19,7 @@ import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
 import { SqlLiteralNode } from './nodes/sql-literal-node';
 import { DistinctOnNode, GroupNode, LateralNode, LimitNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
+import { OrderingNode } from './nodes/unary/ordering.node';
 import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';
 import { NamedWindowNode } from './nodes/window.node';
 import { Table } from './table.class';
@@ -59,11 +63,13 @@ export class SelectManager<Schema> extends TreeManager {
     return new existsNode(this.ast);
   }
 
+  // todo
+  // @ts-ignore
   public as(other: string): TableAliasNode<SelectStatementNode> {
-    return createTableAlias(
-      this.ast, // todo
-      sql`${other}`,
-    );
+    // return createTableAlias(
+    //   this.ast, // todo
+    //   sql`${other}`,
+    // );
   }
 
   // public lock(locking: unknown): unknown {
@@ -96,12 +102,13 @@ export class SelectManager<Schema> extends TreeManager {
     return this;
   }
 
-  public from<JoinRhsType extends OnNode<Node> | null>(
-    table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, JoinRhsType> | Table<unknown>,
+  public from(
+    table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, OnNode<Node> | null> | Table<unknown>,
   ): this {
     const joinNode: typeof JoinNode = node('join');
     if (table instanceof joinNode) {
-      this.context.source.right.push(table);
+      // todo
+      // this.context.source.right.push(table);
     } else {
       if (typeof table === 'string') {
         table = sql`${table}`;
@@ -112,12 +119,9 @@ export class SelectManager<Schema> extends TreeManager {
     return this;
   }
 
-  public join<LhsType extends SelectCoreNode | SqlLiteralNode,
-    JoinType extends JoinNode<LhsType, null>,
-    JoinTypeConstructor extends new(left: LhsType, right: null) => JoinType,
-    >(
+  public join<LhsType extends SelectCoreNode | SqlLiteralNode>(
     relation: string | LhsType,
-    method: JoinTypeConstructor = node('inner-join') as JoinTypeConstructor,
+    method: typeof InnerJoinNode | typeof OuterJoinNode | typeof FullOuterJoinNode = node('inner-join') as typeof InnerJoinNode,
   ): this {
     const sqlLiteralNode: typeof SqlLiteralNode = node('sql-literal');
     let leftHandSide: LhsType;
@@ -146,7 +150,7 @@ export class SelectManager<Schema> extends TreeManager {
     return this.join(relation, node('outer-join'));
   }
 
-  public having(expression: unknown): this {
+  public having(expression: Node): this {
     this.context.havings.push(expression);
 
     return this;
@@ -172,7 +176,7 @@ export class SelectManager<Schema> extends TreeManager {
     return this;
   }
 
-  public optimizerHints(...hints: unknown[]): this {
+  public optimizerHints(...hints: string[]): this {
     const optimizerHintsNode: typeof OptimizerHintsNode = node('optimizer-hints');
     if (hints.length > 0) {
       this.context.optimizerHints = new optimizerHintsNode(hints);
@@ -195,8 +199,8 @@ export class SelectManager<Schema> extends TreeManager {
     return this;
   }
 
-  public order(...expressions: Array<string | Node>): this { // todo likely not Node
-    this.context.projections.push(...expressions.map(expression => {
+  public order(...expressions: Array<string | OrderingNode<AnyNodeOrAttribute>>): this {
+    this.ast.orders.push(...expressions.map(expression => {
       if (typeof expression === 'string') {
         return sql`${expression}`;
       } else {
@@ -246,9 +250,9 @@ export class SelectManager<Schema> extends TreeManager {
     return new lateralNode(tableName == null ? this.ast : this.as(tableName));
   }
 
-  public with(type: 'recursive', ...subQueries: unknown[]): this;
-  public with(...subQueries: unknown[]): this;
-  public with(typeOrFirstSubQuery: 'recursive' | unknown, ...subQueries: unknown[]): this {
+  public with(type: 'recursive', ...subQueries: Node[]): this;
+  public with(...subQueries: Node[]): this;
+  public with(typeOrFirstSubQuery: 'recursive' | Node, ...subQueries: Node[]): this {
     const withNode: typeof WithNode = node('with');
     const withRecursiveNode: typeof WithRecursiveNode = node('with-recursive');
 

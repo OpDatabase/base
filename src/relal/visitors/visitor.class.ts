@@ -3,18 +3,33 @@ import { SqlStringCollector } from '../collectors/sql-string.collector';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import { CustomAttributeVisitFunction, CustomVisitFunction } from '../interfaces/visit.interface';
 import { InternalConstants } from '../internal-constants';
-import { Node } from '../nodes/node.class';
 
 // tslint:disable-next-line:no-any
 type CustomVisitorsMap = Map<any, CustomVisitFunction>;
 
 export abstract class Visitor {
   protected customAttributeVisitor: CustomAttributeVisitFunction | undefined;
-  private customVisitors: CustomVisitorsMap = new Map();
+  private customVisitors: CustomVisitorsMap;
 
-  public accept<C extends Collector<unknown>>(object: AnyNodeOrAttribute, collector?: C): void {
+  constructor() {
+    // Check if already set by decorators before initializing new value
+    // tslint:disable-next-line
+    this.customVisitors = this['customVisitors'] == null ? new Map() : this.customVisitors;
+  }
+
+  public accept<C extends Collector<unknown>>(object: AnyNodeOrAttribute, collector?: C): C | Collector<unknown> {
+    // Initialize or use collector
+    const ctor: Collector<unknown> = collector || new SqlStringCollector({
+      quote: inputValue => `'${inputValue}'`,
+      sanitizeSqlComment: inputValue => inputValue,
+      tableName: inputValue => `"${inputValue}"`,
+      columnName: inputValue => `"${inputValue}"`,
+    });
+
     // Start visiting nodes
-    this.visit(object, collector || new SqlStringCollector());
+    this.visit(object, ctor);
+
+    return ctor;
   }
 
   private visit<C extends Collector<unknown>>(object: AnyNodeOrAttribute, collector: C): void {
@@ -51,12 +66,16 @@ export abstract class Visitor {
   }
 }
 
-export function visitorFor<T extends Visitor>(...nodeTypes: Node[]): (target: T, propertyKey: keyof T) => void {
+// tslint:disable-next-line:no-any
+export function visitorFor<T extends Visitor = any>(...nodeTypes: any[]): (target: T, propertyKey: keyof T) => void {
   return (target: T, propertyKey: keyof T) => {
     const visitFunction = target[propertyKey] as unknown as CustomVisitFunction;
-    const visitorsMap = (target as unknown as { customVisitors: CustomVisitorsMap }).customVisitors;
+    const self = (target as unknown as { customVisitors: CustomVisitorsMap });
+    if (self.customVisitors == null) {
+      self.customVisitors = new Map();
+    }
 
     // Register visitFunction for each given node type
-    nodeTypes.forEach(type => visitorsMap.set(type, visitFunction));
+    nodeTypes.forEach(type => self.customVisitors.set(type, visitFunction));
   };
 }
