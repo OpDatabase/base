@@ -209,7 +209,7 @@ export class Predications<Target extends AnyNodeOrAttribute> implements Predicat
   public notBetween(
     lowerBoundary: UnknownNativeType | Node,
     upperBoundary: UnknownNativeType | Node,
-  ): OrNode<LessThanNode<Target, AnyNodeOrAttribute>, GreaterThanNode<Target, AnyNodeOrAttribute>> {
+  ): GroupingNode<OrNode<LessThanNode<Target, AnyNodeOrAttribute>, GreaterThanNode<Target, AnyNodeOrAttribute>>> {
     const lowerBoundaryNode = isNodeOrAttribute(lowerBoundary) ? lowerBoundary : castOrQuote(lowerBoundary, this as unknown as Target);
     const upperBoundaryNode = isNodeOrAttribute(upperBoundary) ? upperBoundary : castOrQuote(upperBoundary, this as unknown as Target);
 

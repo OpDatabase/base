@@ -2,25 +2,13 @@ import { Attribute } from '../attributes/attribute.class';
 import { AnyNodeOrAttribute, ConvertibleToString, UnknownNativeType } from '../interfaces/node-types.interface';
 import { InternalConstants } from '../internal-constants';
 import { OrNode } from '../nodes/binary.node';
-import { TableAliasNode } from '../nodes/binary/table-alias.node';
 import { AndNode } from '../nodes/expressions/and.node';
 import { CastedNode } from '../nodes/expressions/casted.node';
-import { SelectStatementNode } from '../nodes/expressions/select-statement.node';
 import { Node } from '../nodes/node.class';
 import { node } from '../nodes/nodes.register';
-import { SqlLiteralNode } from '../nodes/sql-literal-node';
 import { GroupingNode } from '../nodes/unary/grouping.node';
 import { QuotedNode } from '../nodes/unary/quoted.node';
-import { Table } from '../table.class';
 import { sql } from './sql-template-handler.func';
-
-export function createTableAlias(relation: SelectStatementNode, name: SqlLiteralNode): TableAliasNode<SqlLiteralNode | Table<unknown>> {
-  const tableAliasNode: typeof TableAliasNode = node('table-alias');
-
-  // todo
-  // @ts-ignore
-  return new tableAliasNode(relation, name);
-}
 
 // todo: typing
 export function grouping<Type extends Node>(expression: Type): GroupingNode<Type> {

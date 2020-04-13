@@ -1,17 +1,18 @@
 import { Collector } from '../collectors/collector.class';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
+import { TableWithAlias } from '../table-with-alias.class';
 import { Table } from '../table.class';
 import { JoinNode } from './binary.node';
 import { CommentNode } from './comment.node';
 import { DistinctNode } from './expressions/distinct.node';
-import { JoinSource } from './join-source.node';
+import { JoinSourceNode } from './join-source.node';
 import { Node } from './node.class';
 import { node, register } from './nodes.register';
 import { SqlLiteralNode } from './sql-literal-node';
 import { DistinctOnNode, GroupNode, OnNode, OptimizerHintsNode } from './unary.node';
 import { NamedWindowNode } from './window.node';
 
-export type SourceType = JoinSource<Table<unknown> | SqlLiteralNode, JoinNode<SelectCoreNode | SqlLiteralNode, OnNode<Node>>>;
+export type SourceType = JoinSourceNode<Table<unknown> | TableWithAlias<unknown>, JoinNode<SelectCoreNode | SqlLiteralNode, OnNode<Node>>>;
 
 /**
  * Renders the SELECT statement
@@ -29,7 +30,7 @@ export class SelectCoreNode extends Node {
   public optimizerHints: OptimizerHintsNode | null = null;
 
   public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
-    collector.add('SELECT');
+    collector.add('SELECT ');
 
     // Add optimizer hints
     if (this.optimizerHints != null) {
@@ -42,7 +43,7 @@ export class SelectCoreNode extends Node {
     }
 
     // Projections
-    this.visitEach(this.projections, ' ', collector, visitChild);
+    this.visitEach(this.projections, ', ', collector, visitChild);
 
     // Source
     if (!this.source.isEmpty()) {

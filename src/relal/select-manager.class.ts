@@ -9,7 +9,6 @@ import { ExceptNode, IntersectNode, JoinNode, UnionAllNode, UnionNode } from './
 import { FullOuterJoinNode } from './nodes/binary/full-outer-join.node';
 import { InnerJoinNode } from './nodes/binary/inner-join.node';
 import { OuterJoinNode } from './nodes/binary/outer-join.node';
-import { TableAliasNode } from './nodes/binary/table-alias.node';
 import { CommentNode } from './nodes/comment.node';
 import { DistinctNode } from './nodes/expressions/distinct.node';
 import { ExistsNode } from './nodes/expressions/function.node';
@@ -22,6 +21,7 @@ import { DistinctOnNode, GroupNode, LateralNode, LimitNode, OffsetNode, OnNode, 
 import { OrderingNode } from './nodes/unary/ordering.node';
 import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';
 import { NamedWindowNode } from './nodes/window.node';
+import { TableWithAlias } from './table-with-alias.class';
 import { Table } from './table.class';
 import { TreeManager } from './tree-manager.class';
 
@@ -29,7 +29,7 @@ export class SelectManager<Schema> extends TreeManager {
   public ast: SelectStatementNode;
 
   constructor(
-    table: Table<Schema>,
+    table: Table<Schema> | TableWithAlias<Schema>,
   ) {
     super();
 
@@ -63,13 +63,12 @@ export class SelectManager<Schema> extends TreeManager {
     return new existsNode(this.ast);
   }
 
-  // todo
-  // @ts-ignore
-  public as(other: string): TableAliasNode<SelectStatementNode> {
-    // return createTableAlias(
-    //   this.ast, // todo
-    //   sql`${other}`,
-    // );
+  public as(other: string): SelectManager<Schema> {
+    if (this.context.source.left == null) {
+      throw new RelalException(`Cannot set alias for non-existing source table.`);
+    }
+
+    return new SelectManager(new InternalConstants.tableWithAliasClass(other, this.context.source.left));
   }
 
   // public lock(locking: unknown): unknown {
@@ -103,15 +102,14 @@ export class SelectManager<Schema> extends TreeManager {
   }
 
   public from(
-    table: string | SqlLiteralNode | JoinNode<SelectCoreNode | SqlLiteralNode, OnNode<Node> | null> | Table<unknown>,
+    table: string | JoinNode<SelectCoreNode | SqlLiteralNode, OnNode<Node>> | Table<unknown> | TableWithAlias<unknown>,
   ): this {
     const joinNode: typeof JoinNode = node('join');
     if (table instanceof joinNode) {
-      // todo
-      // this.context.source.right.push(table);
+      this.context.source.right.push(table);
     } else {
       if (typeof table === 'string') {
-        table = sql`${table}`;
+        table = new InternalConstants.tableClass(table);
       }
       this.context.source.left = table;
     }

@@ -1,13 +1,7 @@
 // tslint:disable
 import { DummySqlVisitor, QuotedNode, Table } from '.';
 
-const table = new Table('users');
-console.log(table.alias('alias_1'));
-
-console.log(table.attribute('title').equal('Relal is cool').and(
-  table.attribute('first_name').equal('Max Muster'),
-  table.attribute('birthdate').greaterThan('2001-01-01 00:00:00'),
-));
+const table = new Table('users').as('usertable');
 
 const x = table.where(
   table.attribute('title').equal('Example Query'),
@@ -18,7 +12,7 @@ const x = table.where(
 ).project(
   table.attribute('title'),
   table.attribute('first_name'),
-  table.attribute('age').plus(new QuotedNode(5)),
+  table.attribute('age').plus(new QuotedNode(5)).as('age_plus_five'),
 );
 
 const visitor = new DummySqlVisitor();

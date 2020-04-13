@@ -1,7 +1,6 @@
 import { Attribute } from './attributes/attribute.class';
 import { UnknownAttribute } from './attributes/unknown-attribute.class';
 import { Collector } from './collectors/collector.class';
-import { VisitInterface } from './interfaces/visit.interface';
 import { InternalConstants } from './internal-constants';
 import { FullOuterJoinNode } from './nodes/binary/full-outer-join.node';
 import { InnerJoinNode } from './nodes/binary/inner-join.node';
@@ -12,17 +11,18 @@ import { SelectCoreNode } from './nodes/select-core.node';
 import { SqlLiteralNode } from './nodes/sql-literal-node';
 import { OrderingNode } from './nodes/unary/ordering.node';
 import { SelectManager } from './select-manager.class';
-import { TableWithAlias } from './table-with-alias.class';
+import { Table } from './table.class';
 
-export class Table<Schema> implements VisitInterface {
+export class TableWithAlias<Schema> implements Table<Schema> {
   constructor(
     public readonly name: string,
+    public readonly original: Table<Schema>,
     // private readonly typeCaster: TypeCasterInterface = new DefaultTypeCaster(),
   ) {
   }
 
   public as(name: string): TableWithAlias<Schema> {
-    return new TableWithAlias(name, this);
+    return new TableWithAlias(name, this.original);
   }
 
   public from(): SelectManager<Schema> {
@@ -74,8 +74,10 @@ export class Table<Schema> implements VisitInterface {
   }
 
   public visit(collector: Collector<unknown>): void {
+    collector.add(collector.adapter.tableName(this.original.name));
+    collector.add(' AS ');
     collector.add(collector.adapter.tableName(this.name));
   }
 }
 
-InternalConstants.tableClass = Table;
+InternalConstants.tableWithAliasClass = TableWithAlias;

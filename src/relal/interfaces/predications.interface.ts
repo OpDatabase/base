@@ -59,7 +59,7 @@ export interface PredicationsInterface<BaseType extends AnyNodeOrAttribute> {
   notBetween(
     lowerBoundary: UnknownNativeType | Node,
     upperBoundary: UnknownNativeType | Node,
-  ): OrNode<LessThanNode<BaseType, AnyNodeOrAttribute>, GreaterThanNode<BaseType, AnyNodeOrAttribute>>;
+  ): GroupingNode<OrNode<LessThanNode<BaseType, AnyNodeOrAttribute>, GreaterThanNode<BaseType, AnyNodeOrAttribute>>>;
 
   in(other: UnknownNativeType | AnyNodeOrAttribute | SelectManager<unknown> | UnknownNativeType[]): InNode<BaseType, AnyNodeOrAttribute>;
 

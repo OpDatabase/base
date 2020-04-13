@@ -1,7 +1,7 @@
 import { Collector } from '../collectors/collector.class';
 import { SqlStringCollector } from '../collectors/sql-string.collector';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
-import { CustomAttributeVisitFunction, CustomVisitFunction } from '../interfaces/visit.interface';
+import { CustomAttributeVisitFunction, CustomVisitFunction, VisitInterface } from '../interfaces/visit.interface';
 import { InternalConstants } from '../internal-constants';
 
 // tslint:disable-next-line:no-any
@@ -32,7 +32,7 @@ export abstract class Visitor {
     return ctor;
   }
 
-  private visit<C extends Collector<unknown>>(object: AnyNodeOrAttribute, collector: C): void {
+  private visit<C extends Collector<unknown>>(object: VisitInterface | AnyNodeOrAttribute, collector: C): void {
     if (object instanceof InternalConstants.nodeClass) {
       // Check if there has been a custom visit function defined for the given object type
       const customVisitor = this.customVisitors.get(object.constructor);
@@ -50,7 +50,7 @@ export abstract class Visitor {
     } else {
       // Check if there has been a custom visit function defined for attributes
       const customVisitor = this.customAttributeVisitor;
-      if (customVisitor == null) {
+      if (customVisitor == null || !(object instanceof InternalConstants.attributeClass)) {
         // Use Attributes's default visit function
         object.visit(collector, element => {
           this.visit(element, collector);
