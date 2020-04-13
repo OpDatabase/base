@@ -1,4 +1,5 @@
-/*import { Node } from './node.class';
+import { Collector } from '../collectors/collector.class';
+import { Node } from './node.class';
 import { register } from './nodes.register';
 
 // todo: check purpose
@@ -10,10 +11,7 @@ export class BindParamNode<ValueType> extends Node {
     super();
   }
 
-  public isNull(): boolean {
-    return this.value === null;
+  public visit(collector: Collector<unknown>): void {
+    collector.add(collector.bind(this.value));
   }
-
-  // todo is infinite, is unboundable
 }
-*/

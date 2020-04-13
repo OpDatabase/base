@@ -12,7 +12,6 @@ export class SqlStringCollector extends Collector<string> {
     // Add bindings
     const index = this.bindIndex;
     this.bindIndex++;
-    this.add(`$placeholder${index}`);
 
     return `$placeholder${index}`;
   }

@@ -1,5 +1,5 @@
 // tslint:disable
-import { DummySqlVisitor, QuotedNode, Table } from '.';
+import { DummySqlVisitor, Table } from '.';
 
 const table = new Table('users').as('usertable');
 
@@ -12,7 +12,7 @@ const x = table.where(
 ).project(
   table.attribute('title'),
   table.attribute('first_name'),
-  table.attribute('age').plus(new QuotedNode(5)).as('age_plus_five'),
+  table.attribute('age').plus(5).as('age_plus_five'),
 );
 
 const visitor = new DummySqlVisitor();
