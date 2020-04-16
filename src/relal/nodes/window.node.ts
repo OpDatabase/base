@@ -4,7 +4,7 @@ import { sql } from '../helper/sql-template-handler.func';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import { Node } from './node.class';
 import { register } from './nodes.register';
-import { SqlLiteralNode } from './sql-literal-node';
+import { SqlLiteralNode } from './sql-literal.node';
 import { UnaryNode } from './unary.node';
 import { OrderingNode } from './unary/ordering.node';
 

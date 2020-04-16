@@ -2,7 +2,7 @@ import { AliasPredicationsInterface as AliasPredicationsInterface } from '../int
 import { AnyNodeOrAttribute, ConvertibleToString } from '../interfaces/node-types.interface';
 import { AsNode } from '../nodes/binary.node';
 import { node } from '../nodes/nodes.register';
-import { SqlLiteralNode } from '../nodes/sql-literal-node';
+import { SqlLiteralNode } from '../nodes/sql-literal.node';
 
 export class AliasPredications<Target extends AnyNodeOrAttribute> implements AliasPredicationsInterface<Target> {
   public as(other: ConvertibleToString): AsNode<Target, SqlLiteralNode> {

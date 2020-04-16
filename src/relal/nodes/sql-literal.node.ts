@@ -10,7 +10,6 @@ import { register } from './nodes.register';
  * Therefore: Use with caution.
  */
 @register('sql-literal')
-// @include(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
 export class SqlLiteralNode extends Node {
   constructor(
     public readonly value: ConvertibleToString,
@@ -22,9 +21,3 @@ export class SqlLiteralNode extends Node {
     collector.add(toString(this.value));
   }
 }
-
-// export interface SqlLiteralNode
-//   extends Node, AliasPredications<SqlLiteralNode>,
-//     Expressions<SqlLiteralNode>, MathMethods<SqlLiteralNode>,
-//     OrderPredications<SqlLiteralNode>, Predications<SqlLiteralNode> {
-// }

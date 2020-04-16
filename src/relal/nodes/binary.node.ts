@@ -6,7 +6,7 @@ import { SelectStatementNode } from './expressions/select-statement.node';
 import { Node } from './node.class';
 import { node, register } from './nodes.register';
 import { SelectCoreNode } from './select-core.node';
-import { SqlLiteralNode } from './sql-literal-node';
+import { SqlLiteralNode } from './sql-literal.node';
 import { OnNode } from './unary.node';
 
 export abstract class BinaryNode<LhsType, RhsType> extends Node {

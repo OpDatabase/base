@@ -48,7 +48,7 @@ export * from './nodes/join-source.node';
 export * from './nodes/node.class';
 export * from './nodes/nodes.register';
 export * from './nodes/select-core.node';
-export * from './nodes/sql-literal-node';
+export * from './nodes/sql-literal.node';
 export * from './nodes/unary.node';
 export * from './nodes/unary/extract.node';
 export * from './nodes/unary/grouping.node';

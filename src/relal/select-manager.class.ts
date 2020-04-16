@@ -16,7 +16,7 @@ import { SelectStatementNode } from './nodes/expressions/select-statement.node';
 import { Node } from './nodes/node.class';
 import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
-import { SqlLiteralNode } from './nodes/sql-literal-node';
+import { SqlLiteralNode } from './nodes/sql-literal.node';
 import { DistinctOnNode, GroupNode, LateralNode, LimitNode, OffsetNode, OnNode, OptimizerHintsNode } from './nodes/unary.node';
 import { OrderingNode } from './nodes/unary/ordering.node';
 import { WithNode, WithRecursiveNode } from './nodes/unary/with.node';

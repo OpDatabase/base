@@ -8,7 +8,7 @@ import { OuterJoinNode } from './nodes/binary/outer-join.node';
 import { Node } from './nodes/node.class';
 import { node } from './nodes/nodes.register';
 import { SelectCoreNode } from './nodes/select-core.node';
-import { SqlLiteralNode } from './nodes/sql-literal-node';
+import { SqlLiteralNode } from './nodes/sql-literal.node';
 import { OrderingNode } from './nodes/unary/ordering.node';
 import { SelectManager } from './select-manager.class';
 import { Table } from './table.class';

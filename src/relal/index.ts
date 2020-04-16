@@ -23,7 +23,7 @@ import './nodes/expressions/select-statement.node';
 import './nodes/join-source.node';
 import './nodes/node.class';
 import './nodes/select-core.node';
-import './nodes/sql-literal-node';
+import './nodes/sql-literal.node';
 import './nodes/unary.node';
 import './nodes/unary/extract.node';
 import './nodes/unary/grouping.node';

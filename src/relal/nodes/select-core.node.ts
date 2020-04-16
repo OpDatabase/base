@@ -8,7 +8,7 @@ import { DistinctNode } from './expressions/distinct.node';
 import { JoinSourceNode } from './join-source.node';
 import { Node } from './node.class';
 import { node, register } from './nodes.register';
-import { SqlLiteralNode } from './sql-literal-node';
+import { SqlLiteralNode } from './sql-literal.node';
 import { DistinctOnNode, GroupNode, OnNode, OptimizerHintsNode } from './unary.node';
 import { NamedWindowNode } from './window.node';
 

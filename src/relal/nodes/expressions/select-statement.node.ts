@@ -3,7 +3,7 @@ import { AnyNodeOrAttribute } from '../../interfaces/node-types.interface';
 import { ExpressionsNode } from '../expressions.node';
 import { register } from '../nodes.register';
 import { SelectCoreNode } from '../select-core.node';
-import { SqlLiteralNode } from '../sql-literal-node';
+import { SqlLiteralNode } from '../sql-literal.node';
 import { OffsetNode } from '../unary.node';
 import { OrderingNode } from '../unary/ordering.node';
 
