@@ -19,11 +19,6 @@ export class EqualityNode<LhsType extends AnyNodeOrAttribute, RhsType extends An
     return new notEqualNode(this.left, this.right);
   }
 
-  public fetchAttribute(): void {
-    super.fetchAttribute();
-    // todo
-  }
-
   public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
     visitChild(this.left);
     if (this.right === null) {
