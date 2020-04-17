@@ -17,10 +17,6 @@ export class CastedNode<ValueType extends UnknownNativeType> extends Expressions
     super();
   }
 
-  public isNull(): boolean {
-    return this.value === null;
-  }
-
   public visit(collector: Collector<unknown>): void {
     collector.add(
       collector.adapter.quote(this.attribute.typeCastForDatabase(this.value)),

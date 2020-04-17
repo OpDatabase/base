@@ -5,6 +5,7 @@ import { FeatureNotAvailableException } from '../exceptions/feature-not-availabl
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import { Node } from './node.class';
 import { register } from './nodes.register';
+import { SqlLiteralNode } from './sql-literal.node';
 import { QuotedNode } from './unary/quoted.node';
 
 export abstract class UnaryNode<Type> extends Node {
@@ -86,10 +87,14 @@ export class LimitNode extends UnaryNode<QuotedNode<number>> {
   }
 }
 
-// @register('lock')
-// todo: check purpose
-//export class LockNode extends UnaryNode<unknown> {
-//}
+@register('lock')
+export class LockNode extends UnaryNode<SqlLiteralNode> {
+  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    // tslint:disable-next-line:no-unused-expression
+    collector;
+    visitChild(this.expression);
+  }
+}
 
 /**
  * Renders a `NOT (...)` statement

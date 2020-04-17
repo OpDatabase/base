@@ -42,7 +42,7 @@ export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNod
 
   constructor(
     public readonly caseValue: LhsType,
-    public elseValue: ElseNode<RhsType | AnyNodeOrAttribute> = new ElseNode(buildQuoted(null)),
+    public elseValue: ElseNode<RhsType | AnyNodeOrAttribute> | null = null,
   ) {
     super();
   }
@@ -72,13 +72,18 @@ export class CaseNode<LhsType extends AnyNodeOrAttribute, RhsType extends AnyNod
   }
 
   public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    // Check if this has at least 1 condition -> cancel otherwise
+    if (this.conditions.length === 0) {
+      console.warn('Cannot create CASE statement without conditions, block is ignored.');
+
+      return;
+    }
+
     collector.add('CASE ');
 
     // Add case
-    if (this.caseValue != null) {
-      visitChild(this.caseValue);
-      collector.add(' ');
-    }
+    visitChild(this.caseValue);
+    collector.add(' ');
 
     // Add all conditions
     this.conditions.forEach(condition => {

@@ -40,7 +40,7 @@ export class SelectManager<Schema> extends TreeManager {
   }
 
   protected get context(): SelectCoreNode {
-    return this.ast.cores[this.ast.cores.length - 1];
+    return this.ast.core;
   }
 
   public offset(limit: number): this {

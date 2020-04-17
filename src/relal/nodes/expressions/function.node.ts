@@ -6,21 +6,13 @@ import { ExpressionsNode } from '../expressions.node';
 import { register } from '../nodes.register';
 
 export abstract class FunctionNode<Type extends AnyNodeOrAttribute> extends ExpressionsNode {
-  public readonly distinct: boolean = false;
-
   // todo: WindowPredications
   constructor(
-    public readonly expression: Type, // todo: SelectStatementNode
+    public readonly expression: Type,
     public alias?: ConvertibleToString,
+    public readonly distinct: boolean = false,
   ) {
     super();
-  }
-
-  // todo: as (type mismatch)
-  public as2(alias: ConvertibleToString): this {
-    this.alias = alias;
-
-    return this;
   }
 
   protected visitAggregate(method: string, collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
@@ -31,15 +23,13 @@ export abstract class FunctionNode<Type extends AnyNodeOrAttribute> extends Expr
       collector.add('DISTINCT ');
     }
 
-    // todo: check if handling multiple values is possible
     visitChild(this.expression);
     collector.add(')');
 
     // Eventually add "AS"
     if (this.alias != null) {
       collector.add(' AS ');
-      // todo: quote column name
-      collector.add(toString(this.alias));
+      collector.add(collector.adapter.columnName(toString(this.alias)));
     }
   }
 }
@@ -59,17 +49,12 @@ export class SumNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type>
  */
 @register('exists')
 export class ExistsNode<Type extends AnyNodeOrAttribute> extends FunctionNode<Type> {
-  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
-    collector.add('EXISTS (');
-    visitChild(this.expression);
-    collector.add(')');
+  constructor(expression: Type, alias?: ConvertibleToString) {
+    super(expression, alias, false);
+  }
 
-    // Eventually add "AS"
-    if (this.alias != null) {
-      collector.add(' AS ');
-      // todo: quote column name
-      collector.add(toString(this.alias));
-    }
+  public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
+    this.visitAggregate('EXISTS ', collector, visitChild);
   }
 }
 
