@@ -7,7 +7,7 @@ export class TestCollector extends Collector<string> {
 
   constructor() {
     super({
-      quote: inputValue => `${inputValue}`,
+      quote: inputValue => `'${inputValue}'`,
       sanitizeSqlComment: inputValue => inputValue,
       tableName: inputValue => `"${inputValue}"`,
       columnName: inputValue => `"${inputValue}"`,

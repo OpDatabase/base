@@ -9,7 +9,6 @@ import './nodes/binary/matches.node';
 import './nodes/binary/outer-join.node';
 import './nodes/binary/regex.node';
 import './nodes/binary/right-outer-join.node';
-import './nodes/binary/string-join.node';
 import './nodes/bind-param.node';
 import './nodes/comment.node';
 import './nodes/expressions.node';

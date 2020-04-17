@@ -34,7 +34,6 @@ export * from './nodes/binary/matches.node';
 export * from './nodes/binary/outer-join.node';
 export * from './nodes/binary/regex.node';
 export * from './nodes/binary/right-outer-join.node';
-export * from './nodes/binary/string-join.node';
 export * from './nodes/comment.node';
 export * from './nodes/expressions.node';
 export * from './nodes/expressions/and.node';
