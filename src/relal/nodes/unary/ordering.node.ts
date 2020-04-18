@@ -41,10 +41,6 @@ export class NullsLastNode<InnerType extends AnyNodeOrAttribute, Type extends Or
 
 @register('ascending')
 export class AscendingNode<Type extends AnyNodeOrAttribute> extends OrderingNode<Type> {
-  public readonly direction: string = 'asc';
-  public readonly isAscending: boolean = true;
-  public readonly isDescending: boolean = false;
-
   public reverse(): DescendingNode<Type> {
     return new DescendingNode(this.expression);
   }
@@ -57,10 +53,6 @@ export class AscendingNode<Type extends AnyNodeOrAttribute> extends OrderingNode
 
 @register('descending')
 export class DescendingNode<Type extends AnyNodeOrAttribute> extends OrderingNode<Type> {
-  public readonly direction: string = 'desc';
-  public readonly isAscending: boolean = false;
-  public readonly isDescending: boolean = true;
-
   public reverse(): AscendingNode<Type> {
     return new AscendingNode(this.expression);
   }

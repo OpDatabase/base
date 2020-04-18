@@ -9,11 +9,6 @@ import { UnaryNode } from '../unary.node';
  */
 @register('grouping')
 export class GroupingNode<Type extends Node> extends UnaryNode<Type> {
-  // todo: check relevance
-  // public fetchAttribute(...args: unknown[]): unknown {
-  //   return this.expression.fetchAttribute(args);
-  // }
-
   public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
     // Check if inner node is another GroupingNode
     if (this.value instanceof GroupingNode) {
