@@ -10,7 +10,6 @@ import { GroupingNode } from '../nodes/unary/grouping.node';
 import { QuotedNode } from '../nodes/unary/quoted.node';
 import { sql } from './sql-template-handler.func';
 
-// todo: typing
 export function grouping<Type extends Node>(expression: Type): GroupingNode<Type> {
   const groupingNode: typeof GroupingNode = node('grouping');
 
@@ -32,7 +31,6 @@ export function groupingAll(expressions: Node[]): GroupingNode<AndNode<Node[]>> 
   return new groupingNode(new andNode(expressions));
 }
 
-// todo: typing of Node
 export function collapse(...expressions: Array<Node | string>): AndNode<Node[]> | Node {
   const results: Node[] = [];
   for (const expression of expressions) {
@@ -48,40 +46,9 @@ export function collapse(...expressions: Array<Node | string>): AndNode<Node[]> 
   } else {
     const andNode: typeof AndNode = node('and');
 
-    return new andNode(results); // todo
+    return new andNode(results);
   }
 }
-
-/*
-export function buildQuoted(other: Node): Node;
-export function buildQuoted(other: Attribute): Attribute;
-export function buildQuoted<Schema>(other: Table<Schema>): Table<Schema>;
-export function buildQuoted(other: SelectManager): SelectManager;
-export function buildQuoted<ValueType>(other: BindParamNode<ValueType>): BindParamNode<ValueType>;
-export function buildQuoted<ValueType>(other: QuotedNode<ValueType>): QuotedNode<ValueType>;
-export function buildQuoted(other: SqlLiteralNode): SqlLiteralNode;
-export function buildQuoted<ValueType>(other: ValueType, attribute: Attribute): CastedNode<ValueType>;
-export function buildQuoted<ValueType>(other: ValueType): QuotedNode<ValueType>;
-export function buildQuoted<SchemaOrType>(
-  other: Node | Attribute | Table<SchemaOrType> | SelectManager | BindParamNode<SchemaOrType> | QuotedNode<SchemaOrType> | SqlLiteralNode | unknown,
-  attribute?: Attribute,
-): Node | Attribute | Table<SchemaOrType> | SelectManager |
-  BindParamNode<SchemaOrType> | QuotedNode<SchemaOrType> |
-  SqlLiteralNode | CastedNode<SchemaOrType> {
-  if (
-    other instanceof Node || other instanceof Attribute || other instanceof Table ||
-    other instanceof SelectManager || other instanceof BindParamNode ||
-    other instanceof QuotedNode || other instanceof SqlLiteralNode
-  ) {
-    return other;
-  } else {
-    if (attribute instanceof Attribute) {
-      return new CastedNode(other, attribute);
-    } else {
-      return new QuotedNode(other);
-    }
-  }
-}*/
 
 export function toString(input: ConvertibleToString): string {
   return typeof input === 'string' ? input : input.toString();
