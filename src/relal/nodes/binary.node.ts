@@ -1,11 +1,12 @@
 // tslint:disable:max-classes-per-file
 import { Collector } from '../collectors/collector.class';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
+import { TableWithAlias } from '../table-with-alias.class';
+import { Table } from '../table.class';
 import { InValuesNode } from './binary/equality/in.node';
 import { SelectStatementNode } from './expressions/select-statement.node';
 import { Node } from './node.class';
 import { node, register } from './nodes.register';
-import { SelectCoreNode } from './select-core.node';
 import { SqlLiteralNode } from './sql-literal.node';
 import { OnNode } from './unary.node';
 
@@ -147,7 +148,7 @@ export class AsNode<LhsType extends AnyNodeOrAttribute, RhsType extends SqlLiter
 
 // todo: OnNode<Node>
 @register('join')
-export abstract class JoinNode<LhsType extends SelectCoreNode | SqlLiteralNode, RhsType extends OnNode<Node> | null> extends BinaryNode<LhsType, RhsType | null> {
+export abstract class JoinNode<LhsType extends Table<unknown> | TableWithAlias<unknown> | SqlLiteralNode, RhsType extends OnNode<Node> | null> extends BinaryNode<LhsType, RhsType | null> {
 }
 
 export type SetNode = UnionNode | UnionAllNode;

@@ -2,7 +2,6 @@ import { Collector } from '../collectors/collector.class';
 import { Node } from './node.class';
 import { register } from './nodes.register';
 
-// todo: check purpose
 @register('bind-param')
 export class BindParamNode<ValueType> extends Node {
   constructor(

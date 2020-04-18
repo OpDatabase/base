@@ -16,10 +16,6 @@ import { GroupingNode } from './unary/grouping.node';
 
 @include(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
 export abstract class Node implements VisitInterface {
-  public fetchAttribute(): void {
-    // Intentionally blank
-  }
-
   public not(): NotNode<this> {
     const notNode: typeof NotNode = node('not');
 
