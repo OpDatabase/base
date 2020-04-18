@@ -12,7 +12,12 @@ import { SqlLiteralNode } from './sql-literal.node';
 import { DistinctOnNode, GroupNode, OnNode, OptimizerHintsNode } from './unary.node';
 import { NamedWindowNode } from './window.node';
 
-export type SourceType = JoinSourceNode<Table<unknown> | TableWithAlias<unknown>, JoinNode<SelectCoreNode | SqlLiteralNode, OnNode<Node>>>;
+export type SourceType = JoinSourceNode<Table<unknown> |
+  TableWithAlias<unknown>,
+  JoinNode<Table<unknown> |
+    TableWithAlias<unknown> |
+    SqlLiteralNode,
+    OnNode<Node>>>;
 
 /**
  * Renders the SELECT statement
@@ -35,15 +40,22 @@ export class SelectCoreNode extends Node {
     // Add optimizer hints
     if (this.optimizerHints != null) {
       visitChild(this.optimizerHints);
+      collector.add(' ');
     }
 
     // Add set quantifiers
     if (this.setQuantifier != null) {
       visitChild(this.setQuantifier);
+      collector.add(' ');
     }
 
     // Projections
-    this.visitEach(this.projections, ', ', collector, visitChild);
+    if (this.projections.length === 0) {
+      console.warn('Tried to visit a SELECT statement without projections. "1" has been added as projection.');
+      collector.add('1');
+    } else {
+      this.visitEach(this.projections, ', ', collector, visitChild);
+    }
 
     // Source
     if (!this.source.isEmpty()) {
@@ -59,7 +71,8 @@ export class SelectCoreNode extends Node {
 
     // Group by
     if (this.groups.length > 0) {
-      this.visitEach(this.groups, ' GROUP BY ', collector, visitChild);
+      collector.add(' GROUP BY ');
+      this.visitEach(this.groups, ', ', collector, visitChild);
     }
 
     // Havings
@@ -72,6 +85,7 @@ export class SelectCoreNode extends Node {
 
     // Comment
     if (this.comment != null) {
+      collector.add(' ');
       visitChild(this.comment);
     }
   }
