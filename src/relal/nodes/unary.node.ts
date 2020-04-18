@@ -44,7 +44,6 @@ export class DistinctOnNode extends UnaryNode<unknown> {
 /**
  * Wrapper for a statement passed into `GROUP BY`
  */
-// todo: likely not type Node
 @register('group')
 export class GroupNode extends UnaryNode<AnyNodeOrAttribute> {
   public visit(collector: Collector<unknown>, visitChild: (element: AnyNodeOrAttribute) => void): void {
