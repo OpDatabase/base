@@ -1,5 +1,5 @@
+import { mix } from 'ts-mixer';
 import { Collector } from '../collectors/collector.class';
-import { include } from '../helper/mixin';
 import { UnknownNativeType } from '../interfaces/node-types.interface';
 import { VisitInterface } from '../interfaces/visit.interface';
 import { InternalConstants } from '../internal-constants';
@@ -11,7 +11,7 @@ import { Predications } from '../mixins/predications.mixin';
 import { TableWithAlias } from '../table-with-alias.class';
 import { Table } from '../table.class';
 
-@include(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
+@mix(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
 export abstract class Attribute implements VisitInterface {
   constructor(
     public readonly table: Table<unknown> | TableWithAlias<unknown>,

@@ -19,7 +19,8 @@
   "homepage": "https://github.com/OpDatabase/base#readme",
   "dependencies": {
     "@types/is-blank": "^2.1.0",
-    "is-blank": "^2.1.0"
+    "is-blank": "^2.1.0",
+    "ts-mixer": "^5.1.0"
   },
   "devDependencies": {
     "create-ts-index": "^1.12.1"

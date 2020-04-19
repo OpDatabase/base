@@ -1,5 +1,5 @@
+import { mix } from 'ts-mixer';
 import { Collector } from '../collectors/collector.class';
-import { include } from '../helper/mixin';
 import { AnyNodeOrAttribute } from '../interfaces/node-types.interface';
 import { VisitInterface } from '../interfaces/visit.interface';
 import { InternalConstants } from '../internal-constants';
@@ -14,7 +14,7 @@ import { node } from './nodes.register';
 import { NotNode } from './unary.node';
 import { GroupingNode } from './unary/grouping.node';
 
-@include(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
+@mix(AliasPredications, Expressions, MathMethods, OrderPredications, Predications)
 export abstract class Node implements VisitInterface {
   public not(): NotNode<this> {
     const notNode: typeof NotNode = node('not');
